@@ -28,5 +28,17 @@
     "eslint-config-next": "16.2.11",
     "tailwindcss": "^4",
     "typescript": "^5"
-  }
+  },
+  "description": "A modern, production-ready boilerplate for building static websites using **Next.js 16 (App Router)**, **Tailwind CSS v4**, **Framer Motion 12**, and zero-config automated deployment to **GitHub Pages** via **GitHub Actions**.",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KunalPatilCode/coderithum.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KunalPatilCode/coderithum/issues"
+  },
+  "homepage": "https://github.com/KunalPatilCode/coderithum#readme"
 }

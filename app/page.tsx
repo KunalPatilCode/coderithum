@@ -48,9 +48,12 @@ interface TerminalRow {
 // Custom Integration Icons (SVGs)
 // ==========================================
 
-const CoderithumLogo = () => (
-  <img src={logo.src} alt="Coderithum Logo" className="w-6 h-6 object-contain" />
-);
+const CoderithumLogo = () => {
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH || "";
+  return (
+    <img src={`${basePath}${logo.src}`} alt="Coderithum Logo" className="w-6 h-6 object-contain" />
+  );
+};
 
 const FigmaIcon = () => (
   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" xmlns="http://www.w3.org/2000/svg">

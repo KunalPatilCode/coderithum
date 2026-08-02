@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import logo from "../public/logo.png";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -48,7 +49,7 @@ interface TerminalRow {
 // ==========================================
 
 const CoderithumLogo = () => (
-  <img src="/logo.png" alt="Coderithum Logo" className="w-6 h-6 object-contain" />
+  <img src={logo.src} alt="Coderithum Logo" className="w-6 h-6 object-contain" />
 );
 
 const FigmaIcon = () => (

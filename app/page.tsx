@@ -478,13 +478,12 @@ function ThreeLogoAnimation() {
     }
 
     // 8. Animation Loop
-    const clock = new THREE.Clock();
     let animationFrameId: number;
 
     function animate() {
       animationFrameId = requestAnimationFrame(animate);
       
-      const time = clock.getElapsedTime();
+      const time = performance.now() * 0.001;
 
       // Floating Levitation & Rotation Effect
       logoGroup.position.y = Math.sin(time * 2) * 0.3;

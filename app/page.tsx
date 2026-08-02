@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import * as THREE from "three";
 import {
   Search,
   Code,
@@ -290,9 +291,253 @@ const initialAchievements: ClubAchievement[] = [
   }
 ];
 
-// ============================================================================
-// Main Application Component
-// ============================================================================
+function ThreeLogoAnimation() {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    const container = containerRef.current;
+    const width = container.clientWidth || window.innerWidth;
+    const height = container.clientHeight || window.innerHeight;
+
+    // 1. Scene & Renderer Setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0F172A); // Matches deep slate website dark background
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(width, height);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.shadowMap.enabled = true;
+    container.appendChild(renderer.domElement);
+
+    // 2. Isometric Camera Setup
+    const aspect = width / height;
+    const d = 10;
+    const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
+    camera.position.set(20, 20, 20);
+    camera.lookAt(0, 0, 0);
+
+    // 3. Lighting
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+    scene.add(ambientLight);
+
+    const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
+    dirLight.position.set(20, 40, 20);
+    dirLight.castShadow = true;
+    scene.add(dirLight);
+
+    // Master Group
+    const logoGroup = new THREE.Group();
+    scene.add(logoGroup);
+
+    // 4. Materials Setup
+    const baseTopMaterial = new THREE.MeshStandardMaterial({
+      color: 0xffffff,
+      flatShading: true,
+      emissive: 0xffffff,
+      emissiveIntensity: 0.15
+    });
+
+    const baseSideMaterial = new THREE.MeshPhongMaterial({
+      color: 0x0055b8,
+      flatShading: true
+    });
+
+    const hashtagMaterial = new THREE.MeshPhongMaterial({
+      color: 0x0055b8,
+      flatShading: true,
+    });
+
+    const borderMaterial = new THREE.MeshPhongMaterial({
+      color: 0x0088ff,
+      flatShading: true
+    });
+
+    const lineMaterial = new THREE.LineBasicMaterial({
+      color: 0xffffff,
+      linewidth: 2
+    });
+
+    const baseBoxMaterials = [
+      baseSideMaterial, // Right side
+      baseSideMaterial, // Left side
+      baseTopMaterial,  // Top surface
+      baseSideMaterial, // Bottom
+      baseSideMaterial, // Front side
+      baseSideMaterial  // Back side
+    ];
+
+    // 5. Build Base Platform
+    const baseGeo = new THREE.BoxGeometry(9.6, 1.6, 9.6);
+    const baseMesh = new THREE.Mesh(baseGeo, baseBoxMaterials);
+    baseMesh.position.y = -0.8;
+    baseMesh.receiveShadow = true;
+    logoGroup.add(baseMesh);
+
+    // Outer Border Frame
+    const outerBoxGeo = new THREE.BoxGeometry(10.2, 1.8, 10.2);
+    const outerBorderMesh = new THREE.Mesh(outerBoxGeo, borderMaterial);
+    outerBorderMesh.position.y = -0.8;
+    logoGroup.add(outerBorderMesh);
+
+    // 6. Build 3D Hashtag (#)
+    const hashtagGroup = new THREE.Group();
+    const blockSize = 1.2;
+    const blockGeo = new THREE.BoxGeometry(blockSize, blockSize, blockSize);
+    const edgesGeo = new THREE.EdgesGeometry(blockGeo);
+
+    const hashtagGrid = [
+      [0, 1, 0, 1, 0],
+      [1, 1, 1, 1, 1],
+      [0, 1, 0, 1, 0],
+      [1, 1, 1, 1, 1],
+      [0, 1, 0, 1, 0]
+    ];
+
+    const offset = 2.4; 
+    const activeBlockPositions: { x: number; z: number }[] = [];
+
+    for (let r = 0; r < 5; r++) {
+      for (let c = 0; c < 5; c++) {
+        if (hashtagGrid[r][c] === 1) {
+          const posX = (c * 1.2) - offset;
+          const posZ = (r * 1.2) - offset;
+
+          const block = new THREE.Mesh(blockGeo, hashtagMaterial);
+          block.position.set(posX, 0.6, posZ);
+          block.castShadow = true;
+          block.receiveShadow = true;
+          hashtagGroup.add(block);
+
+          const line = new THREE.LineSegments(edgesGeo, lineMaterial);
+          line.position.copy(block.position);
+          hashtagGroup.add(line);
+
+          activeBlockPositions.push({ x: posX, z: posZ });
+        }
+      }
+    }
+    logoGroup.add(hashtagGroup);
+
+    // 7. Dynamic Binary Textures & Particles Setup
+    function createBinaryTexture(text: string) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return new THREE.CanvasTexture(canvas);
+      
+      ctx.font = 'Bold 48px monospace';
+      ctx.fillStyle = '#00f0ff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(text, 32, 32);
+
+      return new THREE.CanvasTexture(canvas);
+    }
+
+    const texture0 = createBinaryTexture('0');
+    const texture1 = createBinaryTexture('1');
+
+    const binaryParticles: THREE.Sprite[] = [];
+    const particleCount = 35;
+
+    function resetParticle(sprite: THREE.Sprite) {
+      const spawnPos = activeBlockPositions[Math.floor(Math.random() * activeBlockPositions.length)];
+      
+      sprite.position.x = spawnPos.x + (Math.random() - 0.5) * 0.6;
+      sprite.position.y = 1.2;
+      sprite.position.z = spawnPos.z + (Math.random() - 0.5) * 0.6;
+      
+      sprite.userData = {
+        speed: 0.03 + Math.random() * 0.04,
+        opacity: 1.0,
+        fadeSpeed: 0.01 + Math.random() * 0.015
+      };
+      
+      if (sprite.material instanceof THREE.SpriteMaterial) {
+        sprite.material.opacity = 1;
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      const isOne = Math.random() > 0.5;
+      const spriteMaterial = new THREE.SpriteMaterial({
+        map: isOne ? texture1 : texture0,
+        transparent: true,
+        opacity: 0
+      });
+
+      const sprite = new THREE.Sprite(spriteMaterial);
+      sprite.scale.set(0.9, 0.9, 1);
+      
+      resetParticle(sprite);
+      logoGroup.add(sprite);
+      binaryParticles.push(sprite);
+    }
+
+    // 8. Animation Loop
+    const clock = new THREE.Clock();
+    let animationFrameId: number;
+
+    function animate() {
+      animationFrameId = requestAnimationFrame(animate);
+      
+      const time = clock.getElapsedTime();
+
+      // Floating Levitation & Rotation Effect
+      logoGroup.position.y = Math.sin(time * 2) * 0.3;
+      logoGroup.rotation.y = Math.sin(time * 0.5) * 0.25;
+
+      // Animate Floating '0' and '1' Particles
+      binaryParticles.forEach(sprite => {
+        sprite.position.y += sprite.userData.speed;
+        sprite.userData.opacity -= sprite.userData.fadeSpeed;
+        if (sprite.material instanceof THREE.SpriteMaterial) {
+          sprite.material.opacity = Math.max(0, sprite.userData.opacity);
+        }
+
+        if (sprite.userData.opacity <= 0) {
+          resetParticle(sprite);
+        }
+      });
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+
+    // 9. Handle Resizing
+    const handleResize = () => {
+      if (!container) return;
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      
+      const aspect = w / h;
+      camera.left = -d * aspect;
+      camera.right = d * aspect;
+      camera.top = d;
+      camera.bottom = -d;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+      window.removeEventListener('resize', handleResize);
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
+      renderer.dispose();
+    };
+  }, []);
+
+  return <div ref={containerRef} className="w-full h-full min-h-[350px] lg:min-h-[450px] flex items-center justify-center overflow-hidden" />;
+}
 
 export default function Home() {
   // Navigation State
@@ -435,32 +680,38 @@ export default function Home() {
               className="space-y-24"
             >
               {/* Hero Section */}
-              <div className="text-center max-w-4xl mx-auto space-y-8 pt-12 pb-6">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono">
-                  <Sparkles className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
-                  <span>Welcome to the Official Innovation Hub</span>
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-8 pb-12">
+                <div className="lg:col-span-7 flex flex-col justify-center space-y-8 text-left max-w-2xl">
+                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono w-max">
+                    <Sparkles className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
+                    <span>Welcome to the Official Innovation Hub</span>
+                  </div>
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
+                    Where Innovation <br />
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500">Meets Execution</span>
+                  </h1>
+                  <p className="text-base sm:text-lg text-slate-400 font-normal leading-relaxed">
+                    The official tech club of engineering. Shaping the next generation of software engineers, cloud architects, and hardware designers.
+                  </p>
+                  <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
+                    <button
+                      onClick={() => setView("events")}
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm flex items-center justify-center gap-2 hover:bg-blue-500 shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                    >
+                      <span>View Upcoming Events</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setView("projects")}
+                      className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#1E293B] border border-slate-800 text-slate-300 font-semibold text-sm flex items-center justify-center hover:bg-slate-800 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                    >
+                      Explore Projects
+                    </button>
+                  </div>
                 </div>
-                <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white leading-tight">
-                  Where Innovation <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500">Meets Execution</span>
-                </h1>
-                <p className="text-lg sm:text-xl text-slate-400 max-w-2xl mx-auto font-normal leading-relaxed">
-                  The official tech club of engineering. Shaping the next generation of software engineers, cloud architects, and hardware designers.
-                </p>
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-                  <button
-                    onClick={() => setView("events")}
-                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm flex items-center justify-center gap-2 hover:bg-blue-500 shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                  >
-                    <span>View Upcoming Events</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={() => setView("projects")}
-                    className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#1E293B] border border-slate-800 text-slate-300 font-semibold text-sm hover:bg-slate-800 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                  >
-                    Explore Projects
-                  </button>
+
+                <div className="lg:col-span-5 relative flex items-center justify-center overflow-hidden min-h-[350px] lg:min-h-[450px]">
+                  <ThreeLogoAnimation />
                 </div>
               </div>
 

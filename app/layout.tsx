@@ -13,9 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next.js SSG + Tailwind + Framer Motion Template",
+  title: "Coderithum Tech Club Portal",
   description:
-    "A production-ready boilerplate to generate SSG static sites with Next.js 16, Tailwind CSS v4, Framer Motion animations, and zero-config deployment to GitHub Pages using GitHub Actions.",
+    "Official website of Coderithum Tech Club. Showcasing developer achievements, projects, workshops, and hackathons.",
 };
 
 export default function RootLayout({

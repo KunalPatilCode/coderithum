@@ -1600,33 +1600,54 @@ export default function Home() {
               className="space-y-16"
             >
               <div className="text-center max-w-2xl mx-auto space-y-3">
-                <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Interactive Timeline</h2>
-                <h1 className="text-4xl font-extrabold text-white tracking-tight">Workshops & Hackathons</h1>
-                <p className="text-xs sm:text-sm text-slate-400">Join our upcoming masterclasses or inspect past workshop agendas and resources.</p>
+                <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Interactive Timeline</h2>
+                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Workshops & Hackathons</h1>
+                <p className="text-xs sm:text-sm text-slate-600">Join our upcoming masterclasses or inspect past workshop agendas and resources.</p>
               </div>
 
               {/* Upcoming Events Grid */}
               <div className="space-y-8">
-                <h3 className="text-base font-mono text-white tracking-wider uppercase flex items-center gap-2">
+                <h3 className="text-base font-mono text-slate-900 tracking-wider uppercase flex items-center gap-2">
                   <span className="w-2 h-2 rounded-none bg-emerald-500 animate-pulse" />
                   Upcoming Innovation Sprints
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {events.filter(e => e.type === "upcoming").map(event => (
-                    <div key={event.id} className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 hover:border-blue-500 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A] group">
+                    <div key={event.id} className="p-6 rounded-none bg-white border-2 border-slate-900 hover:border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group">
                       <div className="space-y-4">
-                        <div className="w-full h-[180px] rounded-none border-2 border-slate-800 overflow-hidden relative">
-                          <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        <div className="w-full h-[180px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
+                          {/* Base Image */}
+                          <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
+                          
+                          {/* Red Glitch Overlay */}
+                          <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                            <img 
+                              src={event.banner} 
+                              alt="" 
+                              className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
+                              style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
+                            />
+                          </div>
+
+                          {/* Blue Glitch Overlay */}
+                          <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                            <img 
+                              src={event.banner} 
+                              alt="" 
+                              className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
+                              style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
+                            />
+                          </div>
                         </div>
-                        <div className="text-xs text-slate-400 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</div>
-                        <h4 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">{event.title}</h4>
-                        <p className="text-xs sm:text-sm text-slate-400 leading-relaxed line-clamp-3">{event.shortDesc}</p>
+                        <div className="text-xs text-slate-500 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</div>
+                        <h4 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{event.title}</h4>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">{event.shortDesc}</p>
                       </div>
-                      <div className="flex items-center justify-between border-t-2 border-slate-800 pt-4">
-                        <div className="text-xs text-slate-400 flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-cyan-400" />{event.venue}</div>
+                      <div className="flex items-center justify-between border-t-2 border-slate-200 pt-4">
+                        <div className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{event.venue}</div>
                         <button
                           onClick={() => { setView("event-detail"); setSelectedId(event.id); }}
-                          className="px-4 py-2 bg-blue-600 border-2 border-blue-700 hover:bg-blue-500 text-white rounded-none text-xs font-semibold shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all cursor-pointer"
+                          className="px-4 py-2 bg-blue-50 border-2 border-blue-600 rounded-none text-xs font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                         >
                           Details & Reg
                         </button>

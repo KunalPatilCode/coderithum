@@ -828,7 +828,7 @@ export default function Home() {
   const achievements = initialAchievements;
 
   // Tree helper rendering functions
-  const renderNode = (title: string, memberKey?: string) => {
+  const renderNode = (title: string, memberKey?: string, delay: number = 0) => {
     const member = memberKey ? team.find(t => {
       if (memberKey === "faculty") return t.category === "Faculty";
       if (memberKey === "president") return t.role.includes("President") && !t.role.includes("Vice");
@@ -840,10 +840,31 @@ export default function Home() {
       return false;
     }) : null;
 
+    const variants = {
+      hidden: { opacity: 0, y: 15, scale: 0.96 },
+      visible: {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        transition: { delay, type: "spring" as const, stiffness: 120, damping: 14 }
+      }
+    };
+
     if (member) {
       return (
-        <div className="w-full max-w-[280px] mx-auto p-4 bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] flex flex-col items-center text-center space-y-3 group hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#000] transition-all">
-          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-slate-900 bg-slate-100 shrink-0">
+        <motion.div
+          variants={variants}
+          initial="hidden"
+          animate="visible"
+          whileHover={{ 
+            y: -5, 
+            x: -2,
+            scale: 1.02,
+            transition: { duration: 0.15 } 
+          }}
+          className="w-full max-w-[280px] mx-auto p-4 bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] hover:shadow-[6px_6px_0px_#000] flex flex-col items-center text-center space-y-3 transition-shadow select-none z-10"
+        >
+          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-slate-900 bg-slate-100 shrink-0 shadow">
             <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
           </div>
           <div>
@@ -863,24 +884,35 @@ export default function Home() {
               </a>
             )}
           </div>
-        </div>
+        </motion.div>
       );
     }
 
     return (
-      <div className="w-full max-w-[280px] mx-auto p-4 bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center text-center justify-center h-24">
+      <motion.div
+        variants={variants}
+        initial="hidden"
+        animate="visible"
+        whileHover={{ scale: 1.01 }}
+        className="w-full max-w-[280px] mx-auto p-4 bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center text-center justify-center h-24"
+      >
         <div className="text-xs font-mono text-slate-500 uppercase tracking-wider font-bold">{title}</div>
         <div className="text-[10px] text-slate-400 font-mono mt-1">Vacant / Cohort Core</div>
-      </div>
+      </motion.div>
     );
   };
 
-  const renderArrow = () => (
-    <div className="flex justify-center my-2">
-      <svg className="w-4 h-6 text-slate-900 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+  const renderArrow = (delay: number = 0) => (
+    <motion.div 
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, duration: 0.3 }}
+      className="flex justify-center my-2"
+    >
+      <svg className="w-4 h-6 text-slate-900 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
       </svg>
-    </div>
+    </motion.div>
   );
 
   // Scroll to top on view changes
@@ -1647,24 +1679,24 @@ export default function Home() {
                 <div className="min-w-[760px] flex flex-col items-center py-4">
                   
                   {/* Level 1: Faculty Mentor */}
-                  {renderNode("Faculty Mentor", "faculty")}
-                  {renderArrow()}
+                  {renderNode("Faculty Mentor", "faculty", 0.1)}
+                  {renderArrow(0.25)}
 
                   {/* Level 2: President */}
-                  {renderNode("President", "president")}
-                  {renderArrow()}
+                  {renderNode("President", "president", 0.4)}
+                  {renderArrow(0.55)}
 
                   {/* Level 3: Vice President */}
-                  {renderNode("Vice President", "vp")}
+                  {renderNode("Vice President", "vp", 0.7)}
 
                   {/* VP to Column Connection Line */}
                   <div className="flex flex-col items-center w-full mt-2">
-                    <div className="w-[3px] h-6 bg-slate-900" />
-                    <div className="w-[66%] h-[3px] bg-slate-900" />
+                    <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 0.85, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
+                    <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.05, duration: 0.3 }} className="origin-center w-[66%] h-[3px] bg-slate-900" />
                     <div className="flex justify-between w-[66%] h-6">
-                      <div className="w-[3px] h-full bg-slate-900" />
-                      <div className="w-[3px] h-full bg-slate-900" />
-                      <div className="w-[3px] h-full bg-slate-900" />
+                      <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+                      <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+                      <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
                     </div>
                   </div>
 
@@ -1673,33 +1705,33 @@ export default function Home() {
                     
                     {/* Column 1: Technical Division */}
                     <div className="flex flex-col">
-                      {renderNode("Technical Director", "tech_dir")}
-                      {renderArrow()}
-                      {renderNode("Domain Leads (AI, Web, Cloud...)")}
-                      {renderArrow()}
-                      {renderNode("Project Managers / Tech Leads")}
-                      {renderArrow()}
-                      {renderNode("Senior Developers")}
-                      {renderArrow()}
-                      {renderNode("Junior Developers")}
+                      {renderNode("Technical Director", "tech_dir", 1.55)}
+                      {renderArrow(1.7)}
+                      {renderNode("Domain Leads (AI, Web, Cloud...)", undefined, 1.85)}
+                      {renderArrow(2.0)}
+                      {renderNode("Project Managers / Tech Leads", undefined, 2.15)}
+                      {renderArrow(2.3)}
+                      {renderNode("Senior Developers", undefined, 2.45)}
+                      {renderArrow(2.6)}
+                      {renderNode("Junior Developers", undefined, 2.75)}
                     </div>
 
                     {/* Column 2: Incubator & Ops Division */}
                     <div className="flex flex-col">
-                      {renderNode("Incubator & Ops Lead", "incubator_lead")}
-                      {renderArrow()}
-                      {renderNode("Functional Leads (Research, Startup)")}
-                      {renderArrow()}
-                      {renderNode("Incubator Teams / Research Fellows")}
+                      {renderNode("Incubator & Ops Lead", "incubator_lead", 1.55)}
+                      {renderArrow(1.7)}
+                      {renderNode("Functional Leads (Research, Startup)", undefined, 1.85)}
+                      {renderArrow(2.0)}
+                      {renderNode("Incubator Teams / Research Fellows", undefined, 2.15)}
                     </div>
 
                     {/* Column 3: Community & Brand Division */}
                     <div className="flex flex-col">
-                      {renderNode("Community & Brand Lead", "brand_lead")}
-                      {renderArrow()}
-                      {renderNode("Outreach Leads (Design, Event...)", "outreach_lead")}
-                      {renderArrow()}
-                      {renderNode("Operations Core (Media, HR, Fin)")}
+                      {renderNode("Community & Brand Lead", "brand_lead", 1.55)}
+                      {renderArrow(1.7)}
+                      {renderNode("Outreach Leads (Design, Event...)", "outreach_lead", 1.85)}
+                      {renderArrow(2.0)}
+                      {renderNode("Operations Core (Media, HR, Fin)", undefined, 2.15)}
                     </div>
 
                   </div>

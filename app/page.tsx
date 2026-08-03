@@ -827,6 +827,62 @@ export default function Home() {
   const team = initialTeam;
   const achievements = initialAchievements;
 
+  // Tree helper rendering functions
+  const renderNode = (title: string, memberKey?: string) => {
+    const member = memberKey ? team.find(t => {
+      if (memberKey === "faculty") return t.category === "Faculty";
+      if (memberKey === "president") return t.role.includes("President") && !t.role.includes("Vice");
+      if (memberKey === "vp") return t.role.includes("Vice President");
+      if (memberKey === "tech_dir") return t.role.includes("Technical Team Lead") || t.role.includes("Technical Director");
+      if (memberKey === "incubator_lead") return t.role.includes("Cybersecurity Head") || t.role.includes("Incubator & Ops");
+      if (memberKey === "brand_lead") return t.role.includes("Marketing & Outreach");
+      if (memberKey === "outreach_lead") return t.role.includes("Graphics & UI") || t.role.includes("Outreach Lead");
+      return false;
+    }) : null;
+
+    if (member) {
+      return (
+        <div className="w-full max-w-[280px] mx-auto p-4 bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] flex flex-col items-center text-center space-y-3 group hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[5px_5px_0px_#000] transition-all">
+          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-slate-900 bg-slate-100 shrink-0">
+            <img src={member.avatar} alt={member.name} className="w-full h-full object-cover" />
+          </div>
+          <div>
+            <div className="text-xs font-mono font-bold text-blue-600 uppercase tracking-wider">{title}</div>
+            <h4 className="text-sm font-black text-slate-900 mt-1">{member.name}</h4>
+            <p className="text-[10px] text-slate-500 mt-0.5">{member.role}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            {member.github && (
+              <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-black transition-colors p-1">
+                <Github className="w-3.5 h-3.5" />
+              </a>
+            )}
+            {member.linkedin && (
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-black transition-colors p-1">
+                <Linkedin className="w-3.5 h-3.5" />
+              </a>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="w-full max-w-[280px] mx-auto p-4 bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center text-center justify-center h-24">
+        <div className="text-xs font-mono text-slate-500 uppercase tracking-wider font-bold">{title}</div>
+        <div className="text-[10px] text-slate-400 font-mono mt-1">Vacant / Cohort Core</div>
+      </div>
+    );
+  };
+
+  const renderArrow = () => (
+    <div className="flex justify-center my-2">
+      <svg className="w-4 h-6 text-slate-900 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </div>
+  );
+
   // Scroll to top on view changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -1578,45 +1634,78 @@ export default function Home() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
-              className="space-y-16"
+              className="space-y-12"
             >
               <div className="text-center max-w-2xl mx-auto space-y-3">
-                <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Ecosystem Core</h2>
-                <h1 className="text-4xl font-extrabold text-white tracking-tight">The Tech Club Board</h1>
-                <p className="text-xs sm:text-sm text-slate-400">Empowering student engineering leaders under dedicated faculty guides.</p>
+                <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Ecosystem Core</h2>
+                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Organizational Structure</h1>
+                <p className="text-xs sm:text-sm text-slate-600">Explore Coderithum's board hierarchy, branching from faculty guidance to developers.</p>
               </div>
 
-              {/* Categories */}
-              {["Faculty", "Leadership", "Technical", "Design", "Marketing"].map(cat => (
-                <div key={cat} className="space-y-6">
-                  <h3 className="text-sm font-mono text-cyan-400 tracking-widest uppercase border-b-2 border-slate-800/80 pb-2">{cat}</h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {team.filter(t => t.category === cat).map((member, idx) => (
-                      <div key={idx} className="p-4 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 flex flex-col items-center text-center space-y-4 hover:border-blue-500 transition-all shadow-[4px_4px_0px_#0F172A] group">
-                        <div className="w-20 h-20 rounded-none overflow-hidden p-0.5 bg-blue-600/20 border-2 border-blue-500/30 group-hover:bg-blue-600/60 transition-colors shadow">
-                          <img src={member.avatar} alt={member.name} className="w-full h-full object-cover rounded-none bg-slate-900" />
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-bold text-white">{member.name}</h4>
-                          <p className="text-xs text-slate-400 mt-1">{member.role}</p>
-                        </div>
-                        <div className="flex items-center gap-3">
-                          {member.github && (
-                            <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
-                              <Github className="w-4 h-4" />
-                            </a>
-                          )}
-                          {member.linkedin && (
-                            <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition-colors">
-                              <Linkedin className="w-4 h-4" />
-                            </a>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+              {/* Dynamic Organizational Tree */}
+              <div className="w-full max-w-5xl mx-auto p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] space-y-8 overflow-x-auto">
+                <div className="min-w-[760px] flex flex-col items-center py-4">
+                  
+                  {/* Level 1: Faculty Mentor */}
+                  {renderNode("Faculty Mentor", "faculty")}
+                  {renderArrow()}
+
+                  {/* Level 2: President */}
+                  {renderNode("President", "president")}
+                  {renderArrow()}
+
+                  {/* Level 3: Vice President */}
+                  {renderNode("Vice President", "vp")}
+
+                  {/* VP to Column Connection Line */}
+                  <div className="flex flex-col items-center w-full mt-2">
+                    <div className="w-[3px] h-6 bg-slate-900" />
+                    <div className="w-[66%] h-[3px] bg-slate-900" />
+                    <div className="flex justify-between w-[66%] h-6">
+                      <div className="w-[3px] h-full bg-slate-900" />
+                      <div className="w-[3px] h-full bg-slate-900" />
+                      <div className="w-[3px] h-full bg-slate-900" />
+                    </div>
                   </div>
+
+                  {/* Columns Grid */}
+                  <div className="grid grid-cols-3 gap-6 w-full mt-2">
+                    
+                    {/* Column 1: Technical Division */}
+                    <div className="flex flex-col">
+                      {renderNode("Technical Director", "tech_dir")}
+                      {renderArrow()}
+                      {renderNode("Domain Leads (AI, Web, Cloud...)")}
+                      {renderArrow()}
+                      {renderNode("Project Managers / Tech Leads")}
+                      {renderArrow()}
+                      {renderNode("Senior Developers")}
+                      {renderArrow()}
+                      {renderNode("Junior Developers")}
+                    </div>
+
+                    {/* Column 2: Incubator & Ops Division */}
+                    <div className="flex flex-col">
+                      {renderNode("Incubator & Ops Lead", "incubator_lead")}
+                      {renderArrow()}
+                      {renderNode("Functional Leads (Research, Startup)")}
+                      {renderArrow()}
+                      {renderNode("Incubator Teams / Research Fellows")}
+                    </div>
+
+                    {/* Column 3: Community & Brand Division */}
+                    <div className="flex flex-col">
+                      {renderNode("Community & Brand Lead", "brand_lead")}
+                      {renderArrow()}
+                      {renderNode("Outreach Leads (Design, Event...)", "outreach_lead")}
+                      {renderArrow()}
+                      {renderNode("Operations Core (Media, HR, Fin)")}
+                    </div>
+
+                  </div>
+
                 </div>
-              ))}
+              </div>
             </motion.div>
           )}
 

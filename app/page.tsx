@@ -1080,37 +1080,58 @@ export default function Home() {
 
               {/* Featured Event Spotlight */}
               <div className="space-y-8">
-                <div className="flex justify-between items-end border-b-2 border-slate-800 pb-4">
+                <div className="flex justify-between items-end border-b-2 border-slate-900 pb-4">
                   <div>
-                    <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Spotlight Event</h2>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">Next Major Tech Workshop</h3>
+                    <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Spotlight Event</h2>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">Next Major Tech Workshop</h3>
                   </div>
-                  <button onClick={() => setView("events")} className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1 cursor-pointer">
+                  <button onClick={() => setView("events")} className="text-xs text-blue-600 hover:text-black font-semibold flex items-center gap-1 cursor-pointer">
                     <span>View All Events</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
                 </div>
 
                 {events.filter(e => e.type === "upcoming").slice(0, 1).map(event => (
-                  <div key={event.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-[#1E293B]/20 border-2 border-slate-800 rounded-none overflow-hidden group hover:border-blue-500 transition-all shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A]">
-                    <div className="lg:col-span-6 relative h-[250px] lg:h-auto overflow-hidden">
-                      <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A]/80 to-transparent lg:hidden" />
+                  <div key={event.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white border-2 border-slate-900 rounded-none overflow-hidden group hover:border-slate-900 transition-all shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000]">
+                    <div className="lg:col-span-6 relative h-[250px] lg:h-auto overflow-hidden group/glitch">
+                      {/* Base Image */}
+                      <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/80 to-transparent lg:hidden" />
+                      
+                      {/* Red Glitch Overlay */}
+                      <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                        <img 
+                          src={event.banner} 
+                          alt="" 
+                          className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
+                          style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
+                        />
+                      </div>
+
+                      {/* Blue Glitch Overlay */}
+                      <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                        <img 
+                          src={event.banner} 
+                          alt="" 
+                          className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
+                          style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
+                        />
+                      </div>
                     </div>
                     <div className="lg:col-span-6 p-8 flex flex-col justify-between space-y-6">
                       <div className="space-y-4">
                         <div className="flex flex-wrap items-center gap-3">
-                          <span className="px-2.5 py-0.5 rounded-none text-[10px] font-semibold bg-emerald-500/10 border-2 border-emerald-500/20 text-emerald-400 uppercase tracking-wider">Upcoming</span>
-                          <span className="text-xs text-slate-400 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</span>
+                          <span className="px-2.5 py-0.5 rounded-none text-[10px] font-semibold bg-emerald-50 border-2 border-emerald-200 text-emerald-700 uppercase tracking-wider">Upcoming</span>
+                          <span className="text-xs text-slate-500 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</span>
                         </div>
-                        <h4 className="text-xl sm:text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">{event.title}</h4>
-                        <p className="text-sm text-slate-400 leading-relaxed">{event.shortDesc}</p>
+                        <h4 className="text-xl sm:text-2xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{event.title}</h4>
+                        <p className="text-sm text-slate-600 leading-relaxed">{event.shortDesc}</p>
                       </div>
-                      <div className="flex flex-wrap items-center gap-4 justify-between border-t-2 border-slate-800 pt-6">
-                        <div className="text-xs text-slate-400 flex items-center gap-1.5"><MapPin className="w-4 h-4 text-cyan-400" />{event.venue}</div>
+                      <div className="flex flex-wrap items-center gap-4 justify-between border-t-2 border-slate-200 pt-6">
+                        <div className="text-xs text-slate-500 flex items-center gap-1.5"><MapPin className="w-4 h-4 text-blue-600" />{event.venue}</div>
                         <button
                           onClick={() => { setView("event-detail"); setSelectedId(event.id); }}
-                          className="px-4 py-2 bg-[#1E293B] border-2 border-slate-800 group-hover:border-blue-500/50 rounded-none text-xs font-semibold text-white hover:bg-slate-800 transition-all shadow-[3px_3px_0px_#050B14] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#050B14] cursor-pointer"
+                          className="px-4 py-2 bg-blue-50 border-2 border-blue-600 rounded-none text-xs font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] cursor-pointer"
                         >
                           View Details
                         </button>
@@ -1122,12 +1143,12 @@ export default function Home() {
 
               {/* Featured Projects */}
               <div className="space-y-8">
-                <div className="flex justify-between items-end border-b-2 border-slate-800 pb-4">
+                <div className="flex justify-between items-end border-b-2 border-slate-900 pb-4">
                   <div>
-                    <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Innovation Hub</h2>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">Featured Club Projects</h3>
+                    <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Innovation Hub</h2>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">Featured Club Projects</h3>
                   </div>
-                  <button onClick={() => setView("projects")} className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1 cursor-pointer">
+                  <button onClick={() => setView("projects")} className="text-xs text-blue-600 hover:text-black font-semibold flex items-center gap-1 cursor-pointer">
                     <span>View All Projects</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -1135,23 +1156,42 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {projects.slice(0, 2).map(project => (
-                    <div key={project.id} className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 hover:border-blue-500 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A] group">
+                    <div key={project.id} className="p-6 rounded-none bg-white border-2 border-slate-900 hover:border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group">
                       <div className="space-y-4">
-                        <div className="w-full h-[180px] rounded-none border-2 border-slate-800 overflow-hidden relative">
-                          <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                        <div className="w-full h-[180px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
+                          <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
+                          {/* Red Glitch Overlay */}
+                          <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                            <img 
+                              src={project.banner} 
+                              alt="" 
+                              className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
+                              style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
+                            />
+                          </div>
+
+                          {/* Blue Glitch Overlay */}
+                          <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                            <img 
+                              src={project.banner} 
+                              alt="" 
+                              className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
+                              style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
+                            />
+                          </div>
                         </div>
-                        <h4 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">{project.title}</h4>
-                        <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{project.shortDesc}</p>
+                        <h4 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{project.title}</h4>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{project.shortDesc}</p>
                       </div>
                       <div className="space-y-4">
                         <div className="flex flex-wrap gap-1.5">
                           {project.techStack.slice(0, 4).map((tech, idx) => (
-                            <span key={idx} className="px-2 py-0.5 rounded-none bg-slate-900 text-[10px] text-slate-400 font-mono border-2 border-slate-800">{tech}</span>
+                            <span key={idx} className="px-2 py-0.5 rounded-none bg-slate-50 text-[10px] text-slate-700 font-mono border-2 border-slate-200">{tech}</span>
                           ))}
                         </div>
                         <button
                           onClick={() => { setView("project-detail"); setSelectedId(project.id); }}
-                          className="w-full py-2 bg-blue-600/10 border-2 border-blue-500/30 rounded-none text-xs font-semibold text-blue-400 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#050B14] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#050B14] cursor-pointer"
+                          className="w-full py-2 bg-blue-50 border-2 border-blue-600 rounded-none text-xs font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] cursor-pointer"
                         >
                           View Project Details
                         </button>
@@ -1163,12 +1203,12 @@ export default function Home() {
 
               {/* Achievements Preview */}
               <div className="space-y-8">
-                <div className="flex justify-between items-end border-b-2 border-slate-800 pb-4">
+                <div className="flex justify-between items-end border-b-2 border-slate-900 pb-4">
                   <div>
-                    <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Hall of Fame</h2>
-                    <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">Latest Achievements</h3>
+                    <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Hall of Fame</h2>
+                    <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">Latest Achievements</h3>
                   </div>
-                  <button onClick={() => setView("achievements")} className="text-xs text-blue-400 hover:text-blue-300 font-semibold flex items-center gap-1 cursor-pointer">
+                  <button onClick={() => setView("achievements")} className="text-xs text-blue-600 hover:text-black font-semibold flex items-center gap-1 cursor-pointer">
                     <span>View All Achievements</span>
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -1176,13 +1216,13 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {achievements.slice(0, 3).map(ach => (
-                    <div key={ach.id} className="p-6 rounded-none bg-[#1E293B]/10 border-2 border-slate-800 flex flex-col justify-between space-y-4 shadow-[4px_4px_0px_#0F172A] hover:border-slate-700 transition-colors">
+                    <div key={ach.id} className="p-6 rounded-none bg-white border-2 border-slate-900 flex flex-col justify-between space-y-4 shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#000] transition-all">
                       <div className="space-y-3">
-                        <div className="w-8 h-8 rounded-none bg-blue-500/10 border-2 border-blue-500/20 flex items-center justify-center text-blue-400">
+                        <div className="w-8 h-8 rounded-none bg-blue-50 border-2 border-blue-200 flex items-center justify-center text-blue-600">
                           <Trophy className="w-4 h-4" />
                         </div>
-                        <h4 className="text-sm font-bold text-white">{ach.title}</h4>
-                        <p className="text-xs text-slate-400 leading-relaxed line-clamp-3">{ach.description}</p>
+                        <h4 className="text-sm font-bold text-slate-900">{ach.title}</h4>
+                        <p className="text-xs text-slate-600 leading-relaxed line-clamp-3">{ach.description}</p>
                       </div>
                       <div className="text-[10px] text-slate-500 font-mono uppercase tracking-wider">{ach.date}</div>
                     </div>
@@ -1191,25 +1231,25 @@ export default function Home() {
               </div>
 
               {/* Sponsors Section */}
-              <div className="border-t-2 border-slate-800/80 pt-16 text-center space-y-6">
+              <div className="border-t-2 border-slate-200 pt-16 text-center space-y-6">
                 <div className="text-xs text-slate-500 font-mono uppercase tracking-widest">Proudly Supported By</div>
-                <div className="flex flex-wrap items-center justify-center gap-12 opacity-40 hover:opacity-60 transition-opacity">
+                <div className="flex flex-wrap items-center justify-center gap-12 opacity-50 hover:opacity-80 transition-opacity">
                   {["GitHub", "Vercel", "AWS", "Google Cloud", "Meta", "Slack"].map((brand, idx) => (
-                    <div key={idx} className="text-lg sm:text-xl font-bold text-white font-mono tracking-tighter">{brand}</div>
+                    <div key={idx} className="text-lg sm:text-xl font-bold text-slate-900 font-mono tracking-tighter">{brand}</div>
                   ))}
                 </div>
               </div>
 
               {/* Call To Action */}
-              <div className="p-12 rounded-none bg-gradient-to-b from-[#1E293B]/60 to-[#0F172A] border-2 border-slate-800 text-center space-y-6 max-w-4xl mx-auto shadow-[8px_8px_0px_#0A0F1D] relative overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(37,99,235,0.08),transparent_50%)]" />
-                <h3 className="text-2xl sm:text-3xl font-extrabold text-white">Join the Community</h3>
-                <p className="text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
+              <div className="p-12 rounded-none bg-white border-2 border-slate-900 text-center space-y-6 max-w-4xl mx-auto shadow-[8px_8px_0px_#000] relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(37,99,235,0.04),transparent_50%)]" />
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Join the Community</h3>
+                <p className="text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">
                   Collaborate on open-source codebases, participate in coding sprints, and build projects with top student engineers.
                 </p>
                 <button
                   onClick={() => setView("contact")}
-                  className="px-6 py-3 rounded-none bg-blue-600 border-2 border-blue-700 text-white text-sm font-bold shadow-[4px_4px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#0F172A] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#0F172A] transition-all cursor-pointer"
+                  className="px-6 py-3 rounded-none bg-blue-600 border-2 border-blue-700 text-white text-sm font-bold shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#000] transition-all cursor-pointer"
                 >
                   Get In Touch
                 </button>
@@ -1338,23 +1378,43 @@ export default function Home() {
 
               {/* Past Events Grid */}
               <div className="space-y-8">
-                <h3 className="text-base font-mono text-slate-400 tracking-wider uppercase">Past Training Camps</h3>
+                <h3 className="text-base font-mono text-slate-900 tracking-wider uppercase">Past Training Camps</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {events.filter(e => e.type === "past").map(event => (
-                    <div key={event.id} className="p-6 rounded-none bg-[#1E293B]/5 border-2 border-slate-800 flex flex-col justify-between space-y-6 opacity-85 hover:opacity-100 transition-all shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A] group">
+                    <div key={event.id} className="p-6 rounded-none bg-white border-2 border-slate-900 flex flex-col justify-between space-y-6 opacity-95 hover:opacity-100 transition-all shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group">
                       <div className="space-y-4">
-                        <div className="w-full h-[180px] rounded-none border-2 border-slate-800 overflow-hidden relative">
-                          <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter grayscale hover:grayscale-0" />
+                        <div className="w-full h-[180px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
+                          <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105 filter grayscale group-hover/glitch:grayscale-0" />
+                          
+                          {/* Red Glitch Overlay */}
+                          <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                            <img 
+                              src={event.banner} 
+                              alt="" 
+                              className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
+                              style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
+                            />
+                          </div>
+
+                          {/* Blue Glitch Overlay */}
+                          <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                            <img 
+                              src={event.banner} 
+                              alt="" 
+                              className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
+                              style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
+                            />
+                          </div>
                         </div>
                         <div className="text-xs text-slate-500 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</div>
-                        <h4 className="text-lg font-bold text-slate-200 group-hover:text-blue-400 transition-colors">{event.title}</h4>
-                        <p className="text-xs sm:text-sm text-slate-400 leading-relaxed line-clamp-3">{event.shortDesc}</p>
+                        <h4 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{event.title}</h4>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">{event.shortDesc}</p>
                       </div>
-                      <div className="flex items-center justify-between border-t-2 border-slate-800 pt-4">
+                      <div className="flex items-center justify-between border-t-2 border-slate-200 pt-4">
                         <div className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{event.venue}</div>
                         <button
                           onClick={() => { setView("event-detail"); setSelectedId(event.id); }}
-                          className="px-4 py-2 bg-[#1E293B] border-2 border-slate-800 rounded-none text-xs font-semibold text-slate-300 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all cursor-pointer"
+                          className="px-4 py-2 bg-blue-50 border-2 border-blue-600 rounded-none text-xs font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                         >
                           View Agenda
                         </button>
@@ -1375,29 +1435,29 @@ export default function Home() {
               exit={{ opacity: 0, y: -15 }}
               className="space-y-12 max-w-4xl mx-auto"
             >
-              <button onClick={() => setView("events")} className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white transition-colors cursor-pointer">
+              <button onClick={() => setView("events")} className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-black transition-colors cursor-pointer">
                 <ChevronLeft className="w-4 h-4" /> Back to Events
               </button>
 
-              <div className="w-full h-[320px] rounded-none overflow-hidden relative border-2 border-slate-800 shadow-[6px_6px_0px_#0F172A]">
+              <div className="w-full h-[320px] rounded-none overflow-hidden relative border-2 border-slate-900 shadow-[6px_6px_0px_#000]">
                 <img src={currentEvent.banner} alt={currentEvent.title} className="w-full h-full object-cover" />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div className="lg:col-span-8 space-y-8">
                   <div className="space-y-4">
-                    <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">{currentEvent.title}</h1>
-                    <p className="text-sm sm:text-base text-slate-400 leading-relaxed">{currentEvent.description}</p>
+                    <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">{currentEvent.title}</h1>
+                    <p className="text-sm sm:text-base text-slate-600 leading-relaxed">{currentEvent.description}</p>
                   </div>
 
                   {/* Agenda */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-bold text-white">Event Agenda</h3>
-                    <div className="space-y-3 border-l-2 border-slate-800 pl-4 ml-2">
+                    <h3 className="text-lg font-bold text-slate-900">Event Agenda</h3>
+                    <div className="space-y-3 border-l-2 border-slate-200 pl-4 ml-2">
                       {currentEvent.agenda.map((agendaItem, idx) => (
                         <div key={idx} className="relative">
-                          <div className="absolute -left-[21px] top-1.5 w-1.5 h-1.5 rounded-none bg-blue-500" />
-                          <p className="text-xs sm:text-sm text-slate-300 font-mono">{agendaItem}</p>
+                          <div className="absolute -left-[21px] top-1.5 w-1.5 h-1.5 rounded-none bg-blue-600" />
+                          <p className="text-xs sm:text-sm text-slate-600 font-mono">{agendaItem}</p>
                         </div>
                       ))}
                     </div>
@@ -1405,15 +1465,15 @@ export default function Home() {
 
                   {/* Speakers */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-bold text-white">Event Speakers</h3>
+                    <h3 className="text-lg font-bold text-slate-900">Event Speakers</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {currentEvent.speakers.map((spk, idx) => (
-                        <div key={idx} className="p-4 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 flex items-center gap-3 shadow-[4px_4px_0px_#0F172A]">
-                          <img src={spk.avatar} alt={spk.name} className="w-12 h-12 rounded-none object-cover border-2 border-slate-800" />
+                        <div key={idx} className="p-4 rounded-none bg-white border-2 border-slate-900 flex items-center gap-3 shadow-[4px_4px_0px_#000]">
+                          <img src={spk.avatar} alt={spk.name} className="w-12 h-12 rounded-none object-cover border-2 border-slate-900" />
                           <div>
-                            <div className="text-sm font-semibold text-white">{spk.name}</div>
-                            <div className="text-xs text-slate-400 mt-0.5">{spk.role}</div>
-                            <div className="text-[10px] text-blue-400 font-mono mt-0.5">{spk.company}</div>
+                            <div className="text-sm font-semibold text-slate-900">{spk.name}</div>
+                            <div className="text-xs text-slate-600 mt-0.5">{spk.role}</div>
+                            <div className="text-[10px] text-blue-600 font-mono mt-0.5">{spk.company}</div>
                           </div>
                         </div>
                       ))}
@@ -1423,45 +1483,45 @@ export default function Home() {
 
                 {/* Sidebar details */}
                 <div className="lg:col-span-4 space-y-6">
-                  <div className="p-6 rounded-none bg-[#1E293B]/40 border-2 border-slate-800 space-y-6 shadow-[6px_6px_0px_#0F172A]">
-                    <h3 className="text-sm font-mono uppercase tracking-wider text-white border-b-2 border-slate-800 pb-3">Logistics</h3>
+                  <div className="p-6 rounded-none bg-white border-2 border-slate-900 space-y-6 shadow-[6px_6px_0px_#000]">
+                    <h3 className="text-sm font-mono uppercase tracking-wider text-slate-900 border-b-2 border-slate-200 pb-3">Logistics</h3>
                     
                     <div className="space-y-4">
                       <div className="flex items-start gap-2.5">
-                        <Calendar className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                        <Calendar className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                         <div>
-                          <div className="text-xs font-semibold text-white">Date</div>
-                          <div className="text-xs text-slate-400 mt-0.5">{currentEvent.date}</div>
+                          <div className="text-xs font-semibold text-slate-900">Date</div>
+                          <div className="text-xs text-slate-600 mt-0.5">{currentEvent.date}</div>
                         </div>
                       </div>
                       <div className="flex items-start gap-2.5">
-                        <Clock className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                        <Clock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                         <div>
-                          <div className="text-xs font-semibold text-white">Time</div>
-                          <div className="text-xs text-slate-400 mt-0.5">{currentEvent.time}</div>
+                          <div className="text-xs font-semibold text-slate-900">Time</div>
+                          <div className="text-xs text-slate-600 mt-0.5">{currentEvent.time}</div>
                         </div>
                       </div>
                       <div className="flex items-start gap-2.5">
-                        <MapPin className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                        <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
                         <div>
-                          <div className="text-xs font-semibold text-white">Venue</div>
-                          <div className="text-xs text-slate-400 mt-0.5">{currentEvent.venue}</div>
+                          <div className="text-xs font-semibold text-slate-900">Venue</div>
+                          <div className="text-xs text-slate-600 mt-0.5">{currentEvent.venue}</div>
                         </div>
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t-2 border-slate-800/80 space-y-3">
+                    <div className="pt-4 border-t-2 border-slate-200 space-y-3">
                       {currentEvent.type === "upcoming" ? (
                         <a
                           href={currentEvent.regLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all"
+                          className="w-full py-2.5 bg-blue-600 hover:bg-black text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all"
                         >
                           Register for Event <ArrowUpRight className="w-3.5 h-3.5" />
                         </a>
                       ) : (
-                        <span className="w-full py-2.5 bg-slate-800 text-slate-500 rounded-none text-xs font-bold flex items-center justify-center select-none border-2 border-slate-700">
+                        <span className="w-full py-2.5 bg-slate-50 text-slate-400 rounded-none text-xs font-bold flex items-center justify-center select-none border-2 border-slate-200">
                           Registration Closed
                         </span>
                       )}
@@ -1470,7 +1530,7 @@ export default function Home() {
                         href={currentEvent.feedbackLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 bg-zinc-900 border-2 border-slate-800 hover:bg-slate-800 text-slate-300 rounded-none text-xs font-semibold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all"
+                        className="w-full py-2.5 bg-white border-2 border-slate-900 hover:bg-slate-50 text-slate-700 rounded-none text-xs font-semibold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all"
                       >
                         Share Feedback
                       </a>
@@ -1619,7 +1679,7 @@ export default function Home() {
                         href={currentProject.demo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all"
+                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all"
                       >
                         Live Demonstration <ExternalLink className="w-3.5 h-3.5" />
                       </a>
@@ -1640,21 +1700,21 @@ export default function Home() {
               className="space-y-12"
             >
               <div className="text-center max-w-2xl mx-auto space-y-3">
-                <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Visual History</h2>
-                <h1 className="text-4xl font-extrabold text-white tracking-tight">Club Gallery</h1>
-                <p className="text-xs sm:text-sm text-slate-400">Sneak peek into our hack sprints, annual bootcamps, and workshop grids.</p>
+                <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Visual History</h2>
+                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Club Gallery</h1>
+                <p className="text-xs sm:text-sm text-slate-600">Sneak peek into our hack sprints, annual bootcamps, and workshop grids.</p>
               </div>
 
               {/* Album Selectors */}
-              <div className="flex justify-center flex-wrap gap-2">
+              <div className="flex justify-center flex-wrap gap-3">
                 {albums.map(album => (
                   <button
                     key={album.id}
                     onClick={() => setActiveAlbumId(album.id)}
-                    className={`px-4 py-2 rounded-none text-xs font-semibold border-2 transition-all cursor-pointer ${
+                    className={`px-4 py-2 rounded-none text-xs font-bold border-2 transition-all cursor-pointer shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] ${
                       activeAlbumId === album.id
-                        ? "bg-blue-600/20 border-blue-500/50 text-white shadow-[3px_3px_0px_#050B14]"
-                        : "bg-[#1E293B]/20 border-slate-800 text-slate-400 hover:text-slate-200"
+                        ? "bg-blue-50 border-blue-600 text-blue-600"
+                        : "bg-white border-slate-900 text-slate-700 hover:text-black"
                     }`}
                   >
                     {album.name}
@@ -1666,11 +1726,32 @@ export default function Home() {
               {currentAlbum ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
                   {currentAlbum.media.map((item, idx) => (
-                    <div key={idx} className="p-4 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 flex flex-col gap-4 shadow-[4px_4px_0px_#0F172A] group hover:border-blue-500 transition-all">
-                      <div className="w-full h-[220px] rounded-none border-2 border-slate-800 overflow-hidden relative">
-                        <img src={item.url} alt={item.caption} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                    <div key={idx} className="p-4 rounded-none bg-white border-2 border-slate-900 flex flex-col gap-4 shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#000] transition-all group">
+                      <div className="w-full h-[220px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
+                        {/* Base Image */}
+                        <img src={item.url} alt={item.caption} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
+                        
+                        {/* Red Glitch Overlay */}
+                        <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                          <img 
+                            src={item.url} 
+                            alt="" 
+                            className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
+                            style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
+                          />
+                        </div>
+
+                        {/* Blue Glitch Overlay */}
+                        <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                          <img 
+                            src={item.url} 
+                            alt="" 
+                            className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
+                            style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
+                          />
+                        </div>
                       </div>
-                      <p className="text-xs text-slate-400 leading-relaxed px-1">{item.caption}</p>
+                      <p className="text-xs text-slate-600 leading-relaxed px-1 font-mono">{item.caption}</p>
                     </div>
                   ))}
                 </div>
@@ -1772,26 +1853,26 @@ export default function Home() {
               className="space-y-12"
             >
               <div className="text-center max-w-2xl mx-auto space-y-3">
-                <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Achievements</h2>
-                <h1 className="text-4xl font-extrabold text-white tracking-tight">Hall of Achievements</h1>
-                <p className="text-xs sm:text-sm text-slate-400">Discover awards, SIH trophies, robotics shields, and publications bagged by the club.</p>
+                <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Achievements</h2>
+                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Hall of Achievements</h1>
+                <p className="text-xs sm:text-sm text-slate-600">Discover awards, SIH trophies, robotics shields, and publications bagged by the club.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {achievements.map(ach => (
-                  <div key={ach.id} className="p-6 rounded-none bg-[#1E293B]/10 border-2 border-slate-800 flex items-start gap-4 shadow-[4px_4px_0px_#0F172A] hover:border-slate-700 transition-colors">
-                    <div className="w-10 h-10 rounded-none bg-blue-500/10 border-2 border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                  <div key={ach.id} className="p-6 rounded-none bg-white border-2 border-slate-900 flex items-start gap-4 shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#000] transition-all">
+                    <div className="w-10 h-10 rounded-none bg-blue-50 border-2 border-blue-200 flex items-center justify-center text-blue-600 shrink-0">
                       <Trophy className="w-5 h-5" />
                     </div>
                     <div className="space-y-3">
                       <div className="flex items-center gap-3 justify-between">
-                        <h4 className="text-base font-bold text-white">{ach.title}</h4>
+                        <h4 className="text-base font-bold text-slate-900">{ach.title}</h4>
                         <span className="text-[10px] text-slate-500 font-mono shrink-0">{ach.date}</span>
                       </div>
-                      <p className="text-xs text-slate-400 leading-relaxed">{ach.description}</p>
+                      <p className="text-xs text-slate-600 leading-relaxed">{ach.description}</p>
                       <div className="flex flex-wrap items-center gap-4 text-[11px] text-slate-500 font-mono">
-                        <span className="flex items-center gap-1"><User className="w-3.5 h-3.5 text-cyan-400" />{ach.recipient}</span>
-                        <span className="flex items-center gap-1"><Award className="w-3.5 h-3.5 text-blue-400" />{ach.award}</span>
+                        <span className="flex items-center gap-1"><User className="w-3.5 h-3.5 text-blue-600" />{ach.recipient}</span>
+                        <span className="flex items-center gap-1"><Award className="w-3.5 h-3.5 text-blue-600" />{ach.award}</span>
                       </div>
                     </div>
                   </div>
@@ -1810,74 +1891,74 @@ export default function Home() {
               className="space-y-16"
             >
               <div className="text-center max-w-2xl mx-auto space-y-3">
-                <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Get In Touch</h2>
-                <h1 className="text-4xl font-extrabold text-white tracking-tight">Contact Coderithum</h1>
-                <p className="text-xs sm:text-sm text-slate-400">Have questions about upcoming sprints? Drop us a query or visit the campus block.</p>
+                <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Get In Touch</h2>
+                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Contact Coderithum</h1>
+                <p className="text-xs sm:text-sm text-slate-600">Have questions about upcoming sprints? Drop us a query or visit the campus block.</p>
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start max-w-5xl mx-auto">
                 {/* Left Panel Contact Details */}
                 <div className="lg:col-span-5 space-y-8">
-                  <div className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 space-y-6 shadow-[6px_6px_0px_#0F172A]">
-                    <h3 className="text-base font-bold text-white border-b-2 border-slate-800 pb-3">Club Info</h3>
+                  <div className="p-6 rounded-none bg-white border-2 border-slate-900 space-y-6 shadow-[6px_6px_0px_#000]">
+                    <h3 className="text-base font-bold text-slate-900 border-b-2 border-slate-200 pb-3">Club Info</h3>
                     
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
-                        <Mail className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" />
+                        <Mail className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
                         <div>
-                          <div className="text-xs font-semibold text-white">Email Address</div>
-                          <a href="mailto:coderithum.tech@gmail.com" className="text-xs text-slate-400 hover:text-white transition-colors">coderithum.tech@gmail.com</a>
+                          <div className="text-xs font-semibold text-slate-900">Email Address</div>
+                          <a href="mailto:coderithum.tech@gmail.com" className="text-xs text-slate-600 hover:text-black transition-colors">coderithum.tech@gmail.com</a>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
-                        <MapPin className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" />
+                        <MapPin className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
                         <div>
-                          <div className="text-xs font-semibold text-white">Office Location</div>
-                          <div className="text-xs text-slate-400 leading-relaxed mt-0.5">Tech Lab 402, Computer Science Block, Main University Campus</div>
+                          <div className="text-xs font-semibold text-slate-900">Office Location</div>
+                          <div className="text-xs text-slate-600 leading-relaxed mt-0.5">Tech Lab 402, Computer Science Block, Main University Campus</div>
                         </div>
                       </div>
                       <div className="flex items-start gap-3">
-                        <Phone className="w-4 h-4 text-cyan-400 mt-0.5 shrink-0" />
+                        <Phone className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
                         <div>
-                          <div className="text-xs font-semibold text-white">Technical Support</div>
-                          <div className="text-xs text-slate-400 mt-0.5">+91 98765 43210</div>
+                          <div className="text-xs font-semibold text-slate-900">Technical Support</div>
+                          <div className="text-xs text-slate-600 mt-0.5">+91 98765 43210</div>
                         </div>
                       </div>
                     </div>
                   </div>
 
                   {/* Styled Mock map */}
-                  <div className="w-full h-[220px] rounded-none border-2 border-slate-800 overflow-hidden relative group shadow-[6px_6px_0px_#0F172A]">
-                    <div className="absolute inset-0 bg-[#0F172A] bg-grid-pattern opacity-60 flex items-center justify-center">
+                  <div className="w-full h-[220px] rounded-none border-2 border-slate-900 overflow-hidden relative group shadow-[6px_6px_0px_#000]">
+                    <div className="absolute inset-0 bg-white bg-grid-pattern opacity-80 flex items-center justify-center">
                       <div className="text-center space-y-2 z-10">
-                        <MapPin className="w-8 h-8 text-blue-500 animate-bounce mx-auto" />
-                        <div className="text-xs font-mono text-white">CS Block Tech Lab (Campus Map Grid)</div>
+                        <MapPin className="w-8 h-8 text-blue-600 animate-bounce mx-auto" />
+                        <div className="text-xs font-mono text-slate-900">CS Block Tech Lab (Campus Map Grid)</div>
                         <div className="text-[10px] text-slate-500">12.9716° N, 77.5946° E</div>
                       </div>
                     </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-blue-600/10 to-transparent pointer-events-none" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-blue-600/5 to-transparent pointer-events-none" />
                   </div>
                 </div>
 
                 {/* Right Panel Contact Form */}
                 <div className="lg:col-span-7">
-                  <div className="p-8 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 space-y-6 shadow-[6px_6px_0px_#0F172A]">
-                    <h3 className="text-lg font-bold text-white">Send us a direct message</h3>
+                  <div className="p-8 rounded-none bg-white border-2 border-slate-900 space-y-6 shadow-[6px_6px_0px_#000]">
+                    <h3 className="text-lg font-bold text-slate-900">Send us a direct message</h3>
                     
                     {contactSuccess ? (
                       <motion.div
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="p-6 rounded-none bg-emerald-500/10 border-2 border-emerald-500/20 text-center space-y-4"
+                        className="p-6 rounded-none bg-emerald-50 border-2 border-emerald-200 text-center space-y-4"
                       >
-                        <div className="w-10 h-10 rounded-none bg-emerald-500/20 border-2 border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
+                        <div className="w-10 h-10 rounded-none bg-emerald-100 border-2 border-emerald-300 text-emerald-600 flex items-center justify-center mx-auto">
                           <Sparkles className="w-5 h-5" />
                         </div>
-                        <h4 className="text-sm font-bold text-white">Message Dispatched!</h4>
-                        <p className="text-xs text-slate-400">Thank you for writing. Our Technical Board will review your query and write back shortly.</p>
+                        <h4 className="text-sm font-bold text-slate-900">Message Dispatched!</h4>
+                        <p className="text-xs text-slate-600">Thank you for writing. Our Technical Board will review your query and write back shortly.</p>
                         <button
                           onClick={() => setContactSuccess(false)}
-                          className="px-4 py-2 bg-emerald-600 border-2 border-emerald-700 hover:bg-emerald-500 text-white rounded-none text-xs font-semibold shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all cursor-pointer"
+                          className="px-4 py-2 bg-emerald-600 border-2 border-emerald-700 hover:bg-emerald-500 text-white rounded-none text-xs font-semibold shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                         >
                           Send another message
                         </button>
@@ -1889,25 +1970,25 @@ export default function Home() {
                       >
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
-                            <label className="text-[10px] font-mono text-slate-400 uppercase">First Name</label>
-                            <input required type="text" placeholder="Kunal" className="w-full bg-[#0F172A] border-2 border-slate-800 rounded-none p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+                            <label className="text-[10px] font-mono text-slate-600 uppercase">First Name</label>
+                            <input required type="text" placeholder="Kunal" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" />
                           </div>
                           <div className="space-y-1.5">
-                            <label className="text-[10px] font-mono text-slate-400 uppercase">Email Address</label>
-                            <input required type="email" placeholder="kunal@example.com" className="w-full bg-[#0F172A] border-2 border-slate-800 rounded-none p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+                            <label className="text-[10px] font-mono text-slate-600 uppercase">Email Address</label>
+                            <input required type="email" placeholder="kunal@example.com" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" />
                           </div>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono text-slate-400 uppercase">Topic / Subject</label>
-                          <input required type="text" placeholder="DevHack 2026 Participation Query" className="w-full bg-[#0F172A] border-2 border-slate-800 rounded-none p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+                          <label className="text-[10px] font-mono text-slate-600 uppercase">Topic / Subject</label>
+                          <input required type="text" placeholder="DevHack 2026 Participation Query" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="text-[10px] font-mono text-slate-400 uppercase">Message Body</label>
-                          <textarea required rows={4} placeholder="Hi Coderithum technical team, I wanted to inquire if students from second year..." className="w-full bg-[#0F172A] border-2 border-slate-800 rounded-none p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+                          <label className="text-[10px] font-mono text-slate-600 uppercase">Message Body</label>
+                          <textarea required rows={4} placeholder="Hi Coderithum technical team, I wanted to inquire if students from second year..." className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" />
                         </div>
                         <button
                           type="submit"
-                          className="w-full py-2.5 bg-blue-600 border-2 border-blue-700 hover:bg-blue-500 text-white rounded-none text-xs font-bold shadow-[4px_4px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#0F172A] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#0F172A] transition-all cursor-pointer"
+                          className="w-full py-2.5 bg-blue-600 border-2 border-blue-700 hover:bg-blue-500 text-white rounded-none text-xs font-bold shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#000] transition-all cursor-pointer"
                         >
                           Submit Inquiry
                         </button>

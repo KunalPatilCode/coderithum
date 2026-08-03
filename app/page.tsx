@@ -291,251 +291,525 @@ const initialAchievements: ClubAchievement[] = [
   }
 ];
 
-function ThreeLogoAnimation() {
+function InteractivePixelArt() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const trailRef = useRef<{ c: number; r: number; alpha: number }[]>([]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
-
+    const canvas = canvasRef.current;
     const container = containerRef.current;
-    const width = container.clientWidth || window.innerWidth;
-    const height = container.clientHeight || window.innerHeight;
+    if (!canvas || !container) return;
 
-    // 1. Scene & Renderer Setup
-    const scene = new THREE.Scene();
+    // Find the nearest parent container that captures mouse events
+    const eventTarget = container.closest(".relative") || container;
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(width, height);
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.shadowMap.enabled = true;
-    renderer.setClearColor(0x000000, 0); // Transparent background
-    container.appendChild(renderer.domElement);
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    // 2. Isometric Camera Setup
-    const aspect = width / height;
-    const d = 10;
-    const camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
-    camera.position.set(20, 20, 20);
-    camera.lookAt(0, 0, 0);
-
-    // 3. Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    scene.add(ambientLight);
-
-    const dirLight = new THREE.DirectionalLight(0xffffff, 0.9);
-    dirLight.position.set(20, 40, 20);
-    dirLight.castShadow = true;
-    scene.add(dirLight);
-
-    // Master Group
-    const logoGroup = new THREE.Group();
-    scene.add(logoGroup);
-
-    // 4. Materials Setup
-    const baseTopMaterial = new THREE.MeshStandardMaterial({
-      color: 0xffffff,
-      flatShading: true,
-      emissive: 0xffffff,
-      emissiveIntensity: 0.15
-    });
-
-    const baseSideMaterial = new THREE.MeshPhongMaterial({
-      color: 0x0055b8,
-      flatShading: true
-    });
-
-    const hashtagMaterial = new THREE.MeshPhongMaterial({
-      color: 0x0055b8,
-      flatShading: true,
-    });
-
-    const borderMaterial = new THREE.MeshPhongMaterial({
-      color: 0x0088ff,
-      flatShading: true
-    });
-
-    const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0xffffff,
-      linewidth: 2
-    });
-
-    const baseBoxMaterials = [
-      baseSideMaterial, // Right side
-      baseSideMaterial, // Left side
-      baseTopMaterial,  // Top surface
-      baseSideMaterial, // Bottom
-      baseSideMaterial, // Front side
-      baseSideMaterial  // Back side
-    ];
-
-    // 5. Build Base Platform
-    const baseGeo = new THREE.BoxGeometry(9.6, 1.6, 9.6);
-    const baseMesh = new THREE.Mesh(baseGeo, baseBoxMaterials);
-    baseMesh.position.y = -0.8;
-    baseMesh.receiveShadow = true;
-    logoGroup.add(baseMesh);
-
-    // Outer Border Frame
-    const outerBoxGeo = new THREE.BoxGeometry(10.2, 1.8, 10.2);
-    const outerBorderMesh = new THREE.Mesh(outerBoxGeo, borderMaterial);
-    outerBorderMesh.position.y = -0.8;
-    logoGroup.add(outerBorderMesh);
-
-    // 6. Build 3D Hashtag (#)
-    const hashtagGroup = new THREE.Group();
-    const blockSize = 1.2;
-    const blockGeo = new THREE.BoxGeometry(blockSize, blockSize, blockSize);
-    const edgesGeo = new THREE.EdgesGeometry(blockGeo);
-
-    const hashtagGrid = [
-      [0, 1, 0, 1, 0],
-      [1, 1, 1, 1, 1],
-      [0, 1, 0, 1, 0],
-      [1, 1, 1, 1, 1],
-      [0, 1, 0, 1, 0]
-    ];
-
-    const offset = 2.4; 
-    const activeBlockPositions: { x: number; z: number }[] = [];
-
-    for (let r = 0; r < 5; r++) {
-      for (let c = 0; c < 5; c++) {
-        if (hashtagGrid[r][c] === 1) {
-          const posX = (c * 1.2) - offset;
-          const posZ = (r * 1.2) - offset;
-
-          const block = new THREE.Mesh(blockGeo, hashtagMaterial);
-          block.position.set(posX, 0.6, posZ);
-          block.castShadow = true;
-          block.receiveShadow = true;
-          hashtagGroup.add(block);
-
-          const line = new THREE.LineSegments(edgesGeo, lineMaterial);
-          line.position.copy(block.position);
-          hashtagGroup.add(line);
-
-          activeBlockPositions.push({ x: posX, z: posZ });
-        }
-      }
-    }
-    logoGroup.add(hashtagGroup);
-
-    // 7. Dynamic Binary Textures & Particles Setup
-    function createBinaryTexture(text: string) {
-      const canvas = document.createElement('canvas');
-      canvas.width = 64;
-      canvas.height = 64;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) return new THREE.CanvasTexture(canvas);
-      
-      ctx.font = 'Bold 48px monospace';
-      ctx.fillStyle = '#00f0ff';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(text, 32, 32);
-
-      return new THREE.CanvasTexture(canvas);
-    }
-
-    const texture0 = createBinaryTexture('0');
-    const texture1 = createBinaryTexture('1');
-
-    const binaryParticles: THREE.Sprite[] = [];
-    const particleCount = 35;
-
-    function resetParticle(sprite: THREE.Sprite) {
-      const spawnPos = activeBlockPositions[Math.floor(Math.random() * activeBlockPositions.length)];
-      
-      sprite.position.x = spawnPos.x + (Math.random() - 0.5) * 0.6;
-      sprite.position.y = 1.2;
-      sprite.position.z = spawnPos.z + (Math.random() - 0.5) * 0.6;
-      
-      sprite.userData = {
-        speed: 0.03 + Math.random() * 0.04,
-        opacity: 1.0,
-        fadeSpeed: 0.01 + Math.random() * 0.015
-      };
-      
-      if (sprite.material instanceof THREE.SpriteMaterial) {
-        sprite.material.opacity = 1;
-      }
-    }
-
-    for (let i = 0; i < particleCount; i++) {
-      const isOne = Math.random() > 0.5;
-      const spriteMaterial = new THREE.SpriteMaterial({
-        map: isOne ? texture1 : texture0,
-        transparent: true,
-        opacity: 0
-      });
-
-      const sprite = new THREE.Sprite(spriteMaterial);
-      sprite.scale.set(0.9, 0.9, 1);
-      
-      resetParticle(sprite);
-      logoGroup.add(sprite);
-      binaryParticles.push(sprite);
-    }
-
-    // 8. Animation Loop
     let animationFrameId: number;
+    let width = 0;
+    let height = 0;
+    let cols = 0;
+    let rows = 0;
+    let cellSize = 10;
 
-    function animate() {
-      animationFrameId = requestAnimationFrame(animate);
-      
-      const time = performance.now() * 0.001;
+    // Mouse coordinates
+    let mouseX = -1000;
+    let mouseY = -1000;
+    let mouseInCanvas = false;
 
-      // Floating Levitation & Rotation Effect
-      logoGroup.position.y = Math.sin(time * 2) * 0.3;
-      logoGroup.rotation.y = Math.sin(time * 0.5) * 0.25;
+    // Popping circles
+    let poppingCircles: { x: number; y: number; radius: number; maxRadius: number; speed: number; alpha: number }[] = [];
 
-      // Animate Floating '0' and '1' Particles
-      binaryParticles.forEach(sprite => {
-        sprite.position.y += sprite.userData.speed;
-        sprite.userData.opacity -= sprite.userData.fadeSpeed;
-        if (sprite.material instanceof THREE.SpriteMaterial) {
-          sprite.material.opacity = Math.max(0, sprite.userData.opacity);
-        }
+    // Dripping ice cube droplets
+    let droplets: { c: number; r: number; speedY: number; alpha: number }[] = [];
 
-        if (sprite.userData.opacity <= 0) {
-          resetParticle(sprite);
-        }
-      });
+    // Theme Index and color definitions
+    let themeIndex = 0;
+    const themes = [
+      {
+        primary: "#EF4444",   // Red nose/fins
+        secondary: "#2563EB", // Blue details
+        window: "#06B6D4",    // Cyan window
+        body: "#FFFFFF"       // White body
+      },
+      {
+        primary: "#06B6D4",   // Cyan nose/fins
+        secondary: "#A855F7", // Purple details
+        window: "#FDE047",    // Yellow window
+        body: "#FFFFFF"
+      },
+      {
+        primary: "#22C55E",   // Green nose/fins
+        secondary: "#FDE047", // Yellow details
+        window: "#06B6D4",    // Cyan window
+        body: "#FFFFFF"
+      },
+      {
+        primary: "#F97316",   // Orange nose/fins
+        secondary: "#EF4444", // Red details
+        window: "#22D3EE",    // Cyan window
+        body: "#FFFFFF"
+      }
+    ];
 
-      renderer.render(scene, camera);
-    }
+    // Easing circle coordinates
+    let circleC = 0;
+    let circleR = 0;
 
-    animate();
-
-    // 9. Handle Resizing
-    const handleResize = () => {
-      if (!container) return;
-      const w = container.clientWidth || window.innerWidth;
-      const h = container.clientHeight || window.innerHeight;
-      
-      const aspect = w / h;
-      camera.left = -d * aspect;
-      camera.right = d * aspect;
-      camera.top = d;
-      camera.bottom = -d;
-      camera.updateProjectionMatrix();
-      renderer.setSize(w, h);
+    // Font representation for "CODERITHUM" (4x5 pixel grid)
+    const font: Record<string, string[]> = {
+      C: ["1111", "1000", "1000", "1000", "1111"],
+      O: ["1111", "1001", "1001", "1001", "1111"],
+      D: ["1110", "1001", "1001", "1001", "1110"],
+      E: ["1111", "1000", "1110", "1000", "1111"],
+      R: ["1110", "1001", "1110", "1010", "1001"],
+      I: ["111", "010", "010", "010", "111"],
+      T: ["11111", "00100", "00100", "00100", "00100"],
+      H: ["1001", "1001", "1111", "1001", "1001"],
+      U: ["1001", "1001", "1001", "1001", "1111"],
+      M: ["10001", "11011", "10101", "10001", "10001"]
     };
 
-    window.addEventListener('resize', handleResize);
+    const hashtag = [
+      "01010",
+      "11111",
+      "01010",
+      "11111",
+      "01010"
+    ];
 
-    // Clean up
+    const resize = () => {
+      width = container.clientWidth;
+      height = container.clientHeight || 400;
+
+      // Handle high DPI screens
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.scale(dpr, dpr);
+
+      // Determine cell size dynamically based on width to fit "CODERITHUM" (needs at least 55 cells)
+      cellSize = Math.max(6, Math.min(10, Math.floor(width / 60)));
+      cols = Math.ceil(width / cellSize);
+      rows = Math.ceil(height / cellSize);
+    };
+
+    resize();
+    window.addEventListener("resize", resize);
+
+    // Initial positions
+    circleC = 0;
+    circleR = 0;
+
+    const handleMouseMove = (e: MouseEvent) => {
+      mouseInCanvas = true;
+      const rect = canvas.getBoundingClientRect();
+      mouseX = e.clientX - rect.left;
+      mouseY = e.clientY - rect.top;
+    };
+
+    const handleMouseLeave = () => {
+      mouseInCanvas = false;
+    };
+
+    eventTarget.addEventListener("mousemove", handleMouseMove as EventListener);
+    eventTarget.addEventListener("mouseleave", handleMouseLeave as EventListener);
+
+    const handleDblClick = () => {
+      themeIndex = (themeIndex + 1) % themes.length;
+    };
+    eventTarget.addEventListener("dblclick", handleDblClick as EventListener);
+
+    // Color definitions (Theme of Ice)
+    const GLACIER_WHITE = "#FFFFFF";
+    const PALE_ICE = "#F0F9FF";
+    const ICE_BLUE = "#E0F2FE";
+    const SKY_BLUE = "#7DD3FC";
+    const CYAN = "#06B6D4";
+    const CRYSTAL_BLUE = "#2563EB";
+    const DEEP_NAVY = "#0F172A";
+    const SLATE_BLUE = "#475569";
+
+    const getBackgroundPixelColor = (c: number, r: number, time: number) => {
+      const pct = c / cols;
+      const noise = Math.sin(c * 0.2 + r * 0.1 + time * 0.003);
+
+      if (pct < 0.3) {
+        if (noise > 0.6) return GLACIER_WHITE;
+        if (noise > 0.1) return DEEP_NAVY;
+        if (noise > -0.4) return CRYSTAL_BLUE;
+        return SLATE_BLUE;
+      } else if (pct < 0.7) {
+        if (noise > 0.5) return GLACIER_WHITE;
+        if (noise > 0.0) return PALE_ICE;
+        if (noise > -0.4) return ICE_BLUE;
+        return CYAN;
+      } else {
+        if (noise > 0.5) return GLACIER_WHITE;
+        if (noise > 0.0) return SKY_BLUE;
+        if (noise > -0.4) return ICE_BLUE;
+        return CYAN;
+      }
+    };
+
+    const animate = () => {
+      const time = performance.now();
+
+      // Clear canvas with white background
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw light grey grid lines
+      ctx.strokeStyle = "#F1F5F9";
+      ctx.lineWidth = 1;
+
+      // Vertical lines
+      for (let c = 0; c <= cols; c++) {
+        ctx.beginPath();
+        ctx.moveTo(c * cellSize, 0);
+        ctx.lineTo(c * cellSize, height);
+        ctx.stroke();
+      }
+
+      // Horizontal lines
+      for (let r = 0; r <= rows; r++) {
+        ctx.beginPath();
+        ctx.moveTo(0, r * cellSize);
+        ctx.lineTo(width, r * cellSize);
+        ctx.stroke();
+      }
+
+      // 1. Update interactive circle coordinates (easing)
+      let targetC = 15;
+      let targetR = Math.floor(rows * 0.7);
+
+      if (mouseInCanvas) {
+        targetC = mouseX / cellSize;
+        targetR = mouseY / cellSize;
+      } else {
+        // Float around a bit when resting
+        targetC = Math.max(12, Math.min(cols - 12, cols * 0.25 + Math.sin(time * 0.001) * 3));
+        targetR = Math.max(12, Math.min(rows - 12, rows * 0.7 + Math.cos(time * 0.0015) * 2));
+      }
+
+      const prevC = circleC;
+      const prevR = circleR;
+
+      circleC += (targetC - circleC) * 0.08;
+      circleR += (targetR - circleR) * 0.08;
+
+      // Add to trail if moving
+      const moveDist = Math.sqrt(Math.pow(circleC - prevC, 2) + Math.pow(circleR - prevR, 2));
+      if (moveDist > 0.1) {
+        const trail = trailRef.current;
+        if (trail.length === 0) {
+          trail.push({ c: circleC, r: circleR, alpha: 1.0 });
+        } else {
+          const last = trail[trail.length - 1];
+          const distFromLast = Math.sqrt(Math.pow(circleC - last.c, 2) + Math.pow(circleR - last.r, 2));
+          if (distFromLast > 1.8) {
+            trail.push({ c: circleC, r: circleR, alpha: 1.0 });
+          }
+        }
+      }
+
+      // Update trail opacity
+      trailRef.current.forEach(pt => {
+        pt.alpha -= 0.015;
+      });
+      trailRef.current = trailRef.current.filter(pt => pt.alpha > 0);
+
+      // Set of coordinates occupied by the rocket
+      const getRocketPixelColor = (dc: number, dr: number) => {
+        // Nose Cone (dr = -3, -2)
+        if (dr === -3) {
+          if (dc === 0) return themes[themeIndex].primary;
+        }
+        if (dr === -2) {
+          if (dc === 0) return themes[themeIndex].primary;
+          if (dc === -1 || dc === 1) return themes[themeIndex].body;
+        }
+
+        // Main Body Tube (dr = -1, 0, 1)
+        if (dr >= -1 && dr <= 1) {
+          if (dc === 0) {
+            if (dr === 0) return themes[themeIndex].window;
+            return themes[themeIndex].body;
+          }
+          if (dc === -1 || dc === 1) {
+            return themes[themeIndex].body;
+          }
+        }
+
+        // Fins (dr = 2)
+        if (dr === 2) {
+          if (dc === -2 || dc === 2) return themes[themeIndex].primary;
+          if (dc === -1 || dc === 1) return themes[themeIndex].secondary;
+          if (dc === 0) return themes[themeIndex].body;
+        }
+
+        // Flame (dr = 3, 4)
+        if (dr === 3) {
+          if (dc === 0) return "#FB923C"; // Orange flame core
+          if (dc === -1 || dc === 1) return "#FDE047"; // Yellow flame sides
+        }
+        if (dr === 4) {
+          if (dc === 0) {
+            return Math.sin(time * 0.05) > 0 ? "#FDE047" : null;
+          }
+        }
+
+        return null;
+      };
+
+      const circleCells = new Set<string>();
+      for (let dc = -2; dc <= 2; dc++) {
+        for (let dr = -3; dr <= 4; dr++) {
+          if (getRocketPixelColor(dc, dr) !== null) {
+            const cc = Math.floor(circleC + dc);
+            const cr = Math.floor(circleR + dr);
+            circleCells.add(`${cc},${cr}`);
+          }
+        }
+      }
+
+      // Draw pixelated city skyline silhouette with twinkling windows & blinking warning lights
+      const getBuildingHeight = (col: number) => {
+        const blockId = Math.floor(col / 6);
+        const phase = blockId % 5;
+        let h = 5;
+        if (phase === 0) h = 10;
+        else if (phase === 1) h = 6;
+        else if (phase === 2) h = 14;
+        else if (phase === 3) h = 8;
+        else if (phase === 4) h = 12;
+
+        const isCenter = (col % 6) === 2;
+        if (isCenter && (blockId % 2 === 0)) return h + 3;
+
+        const isGap = (col % 6) === 5;
+        if (isGap) return 0;
+
+        return h;
+      };
+
+      for (let c = 0; c < cols; c++) {
+        const buildingH = getBuildingHeight(c);
+        if (buildingH <= 0) continue;
+
+        const startRow = Math.floor(rows - buildingH);
+        for (let r = Math.max(0, startRow); r < rows; r++) {
+          if (circleCells.has(`${c},${r}`)) continue;
+
+          if (r === startRow) {
+            // Draw flashing red warning light on antenna tips, or slate building tops
+            const isAntenna = (c % 6) === 2 && (buildingH > 12);
+            if (isAntenna) {
+              ctx.fillStyle = (Math.sin(time * 0.005) > 0) ? "#EF4444" : "#475569";
+            } else {
+              ctx.fillStyle = "#334155"; // Slate building top
+            }
+          } else {
+            // Draw twinkling window lights inside building body
+            const isWindowCol = (c % 6) === 1 || (c % 6) === 3;
+            const isWindowRow = (rows - r) % 3 === 0;
+            const isBelowAntenna = (rows - r) < buildingH - 2;
+
+            if (isWindowCol && isWindowRow && isBelowAntenna) {
+              const blockId = Math.floor(c / 6);
+              const windowOn = Math.sin(blockId * 7 + r * 13 + time * 0.001) > -0.2;
+              ctx.fillStyle = windowOn ? ((blockId % 2 === 0) ? "#FDE047" : "#22D3EE") : "#0F172A";
+            } else {
+              ctx.fillStyle = "#0F172A"; // Solid deep navy building silhouette
+            }
+          }
+          ctx.fillRect(c * cellSize + 0.5, r * cellSize + 0.5, cellSize - 1, cellSize - 1);
+        }
+      }
+
+      // Draw random popping circles (digital rain ripple effect)
+      if (Math.random() < 0.015) {
+        poppingCircles.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          radius: 0,
+          maxRadius: 25 + Math.random() * 45,
+          speed: 0.6 + Math.random() * 0.8,
+          alpha: 1.0
+        });
+      }
+
+      poppingCircles.forEach(pc => {
+        pc.radius += pc.speed;
+        pc.alpha = 1.0 - (pc.radius / pc.maxRadius);
+      });
+      poppingCircles = poppingCircles.filter(pc => pc.radius < pc.maxRadius && pc.alpha > 0);
+
+      poppingCircles.forEach(pc => {
+        // Outer cyan ring
+        ctx.strokeStyle = `rgba(6, 182, 212, ${pc.alpha * 0.45})`; 
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(pc.x, pc.y, pc.radius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Inner blue ring
+        ctx.strokeStyle = `rgba(37, 99, 235, ${pc.alpha * 0.25})`; 
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(pc.x, pc.y, pc.radius * 0.7, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      // 3. Render brand text "CODERITHUM" & logo inside grid
+      const textWidth = 45;
+      const brandHeight = 5;
+      const logoWidth = 5;
+      
+      const sideBySide = cols >= 58;
+      
+      let logoStartC = 0;
+      let logoStartR = 0;
+      let textStartC = 0;
+      let textStartR = 0;
+
+      if (sideBySide) {
+        const totalBrandWidth = logoWidth + 2 + textWidth;
+        logoStartC = Math.max(2, Math.floor((cols - totalBrandWidth) / 2));
+        logoStartR = Math.max(10, Math.floor(rows * 0.45));
+        textStartC = logoStartC + logoWidth + 2;
+        textStartR = logoStartR;
+      } else {
+        logoStartC = Math.max(2, Math.floor((cols - logoWidth) / 2));
+        logoStartR = Math.max(6, Math.floor(rows * 0.35));
+        textStartC = Math.max(2, Math.floor((cols - textWidth) / 2));
+        textStartR = logoStartR + logoWidth + 2;
+      }
+
+      const drawPixel = (cc: number, cr: number, color: string) => {
+        if (circleCells.has(`${cc},${cr}`)) return;
+        ctx.fillStyle = color;
+        ctx.fillRect(cc * cellSize + 0.5, cr * cellSize + 0.5, cellSize - 1, cellSize - 1);
+      };
+
+      // Draw Hashtag Logo
+      for (let r = 0; r < 5; r++) {
+        for (let c = 0; c < 5; c++) {
+          if (hashtag[r][c] === "1") {
+            const pulse = Math.sin(time * 0.003 + r + c) > 0;
+            drawPixel(logoStartC + c, logoStartR + r, pulse ? CYAN : CRYSTAL_BLUE);
+          }
+        }
+      }
+
+      // Draw "CODERITHUM" word
+      const word = "CODERITHUM";
+      let currentOffsetC = 0;
+      for (let i = 0; i < word.length; i++) {
+        const char = word[i];
+        const glyph = font[char];
+        if (!glyph) continue;
+        
+        const charWidth = glyph[0].length;
+        for (let r = 0; r < brandHeight; r++) {
+          const rowStr = glyph[r];
+          for (let c = 0; c < charWidth; c++) {
+            if (rowStr[c] === "1") {
+              const pulse = Math.sin(time * 0.002 + r + currentOffsetC * 0.2) > 0.1;
+              const color = pulse ? CRYSTAL_BLUE : DEEP_NAVY;
+              drawPixel(textStartC + currentOffsetC + c, textStartR + r, color);
+            }
+          }
+        }
+        currentOffsetC += charWidth + 1;
+      }
+
+      // 4. Update and draw rocket combustion sparks
+      if (Math.random() < 0.35) {
+        droplets.push({
+          c: circleC + (Math.random() * 2 - 1),
+          r: circleR + 3.8,
+          speedY: 0.18 + Math.random() * 0.18,
+          alpha: 1.0
+        });
+      }
+
+      droplets.forEach(d => {
+        d.r += d.speedY;
+        d.c += (Math.random() * 0.3 - 0.15); // drift slightly sideways
+        d.alpha -= 0.035;
+      });
+      droplets = droplets.filter(d => d.alpha > 0 && d.r < rows);
+
+      droplets.forEach(d => {
+        const cc = Math.floor(d.c);
+        const cr = Math.floor(d.r);
+        if (cc >= 0 && cc < cols && cr >= 0 && cr < rows) {
+          let color = `rgba(253, 224, 71, ${d.alpha})`; // yellow spark
+          if (d.alpha < 0.35) {
+            color = `rgba(239, 68, 68, ${d.alpha})`; // red embers
+          } else if (d.alpha < 0.7) {
+            color = `rgba(251, 146, 60, ${d.alpha})`; // orange flame
+          }
+          ctx.fillStyle = color;
+          ctx.fillRect(cc * cellSize + 0.5, cr * cellSize + 0.5, cellSize - 1, cellSize - 1);
+        }
+      });
+
+      // 5. Draw interactive rocket smoke trail
+      trailRef.current.forEach(pt => {
+        const cc = Math.floor(pt.c);
+        const cr = Math.floor(pt.r);
+        if (getRocketPixelColor(cc - circleC, cr - circleR) === null) {
+          if (cc >= 0 && cc < cols && cr >= 0 && cr < rows) {
+            ctx.fillStyle = `rgba(148, 163, 184, ${pt.alpha * 0.55})`; // Fading slate-grey smoke
+            ctx.fillRect(cc * cellSize + 0.5, cr * cellSize + 0.5, cellSize - 1, cellSize - 1);
+          }
+        }
+      });
+
+      // 6. Draw interactive pixel rocket
+      for (let dc = -2; dc <= 2; dc++) {
+        for (let dr = -3; dr <= 4; dr++) {
+          const color = getRocketPixelColor(dc, dr);
+          if (color !== null) {
+            const cc = Math.floor(circleC + dc);
+            const cr = Math.floor(circleR + dr);
+
+            if (cc >= 0 && cc < cols && cr >= 0 && cr < rows) {
+              ctx.fillStyle = color;
+              ctx.fillRect(cc * cellSize + 0.5, cr * cellSize + 0.5, cellSize - 1, cellSize - 1);
+            }
+          }
+        }
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animationFrameId = requestAnimationFrame(animate);
+
     return () => {
       cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', handleResize);
-      if (container.contains(renderer.domElement)) {
-        container.removeChild(renderer.domElement);
-      }
-      renderer.dispose();
+      window.removeEventListener("resize", resize);
+      eventTarget.removeEventListener("mousemove", handleMouseMove as EventListener);
+      eventTarget.removeEventListener("mouseleave", handleMouseLeave as EventListener);
+      eventTarget.removeEventListener("dblclick", handleDblClick as EventListener);
     };
   }, []);
 
-  return <div ref={containerRef} className="w-full h-full min-h-[350px] lg:min-h-[450px] flex items-center justify-center overflow-hidden" />;
+  return (
+    <div 
+      ref={containerRef} 
+      className="w-full h-full absolute inset-0 overflow-hidden bg-transparent p-0 pointer-events-none"
+    >
+      <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full" />
+    </div>
+  );
 }
 
 export default function Home() {
@@ -583,18 +857,18 @@ export default function Home() {
       {/* ======================================================================
           Navigation Header
           ====================================================================== */}
-      <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0F172A]/80 border-b border-slate-800/80">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-4 z-50 px-4 md:px-6 w-full max-w-7xl mx-auto pointer-events-none">
+        <div className="w-full backdrop-blur-md bg-[#0F172A]/80 border-2 border-slate-800/80 px-6 h-14 rounded-full flex items-center justify-between shadow-lg pointer-events-auto">
           <button onClick={() => { setView("home"); setSelectedId(null); }} className="flex items-center gap-2.5 group cursor-pointer">
             <img src={logo.src} alt="Coderithum Logo" className="w-7 h-7 object-contain transition-transform group-hover:scale-105" />
             <span className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
               Coderithum
-              <span className="px-2 py-0.5 text-[10px] font-mono font-normal rounded bg-blue-500/10 border border-blue-500/20 text-blue-400">Tech Club</span>
+              <span className="px-2 py-0.5 text-[10px] font-mono font-normal rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400">Tech Club</span>
             </span>
           </button>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-400">
+          <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-400 uppercase">
             {[
               { id: "home", label: "Home" },
               { id: "about", label: "About" },
@@ -616,7 +890,7 @@ export default function Home() {
               >
                 {tab.label}
                 {(view === tab.id || (tab.id === "events" && view === "event-detail") || (tab.id === "projects" && view === "project-detail")) && (
-                  <motion.span layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-600 rounded-full" />
+                  <motion.span layoutId="activeHeaderTab" className="absolute bottom-0 left-0 right-0 h-[3px] bg-blue-600 rounded-full" />
                 )}
               </button>
             ))}
@@ -636,7 +910,7 @@ export default function Home() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-0 top-16 bg-[#0F172A] border-b border-slate-800 z-40 p-6 flex flex-col gap-4 shadow-2xl md:hidden"
+            className="fixed inset-x-4 top-20 bg-[#0F172A]/95 backdrop-blur-md border-2 border-slate-800 z-40 p-6 flex flex-col gap-4 shadow-2xl md:hidden uppercase font-bold rounded-2xl"
           >
             {[
               { id: "home", label: "Home" },
@@ -651,7 +925,7 @@ export default function Home() {
               <button
                 key={tab.id}
                 onClick={() => { setView(tab.id); setSelectedId(null); setMobileMenuOpen(false); }}
-                className={`text-left text-base font-semibold py-2 transition-colors ${
+                className={`text-left text-base py-2 transition-colors ${
                   view === tab.id ? "text-blue-500" : "text-slate-400"
                 }`}
               >
@@ -678,44 +952,16 @@ export default function Home() {
               transition={{ duration: 0.4 }}
               className="space-y-24"
             >
-              {/* Hero Section */}
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-8 pb-12">
-                <div className="lg:col-span-7 flex flex-col justify-center space-y-8 text-left max-w-2xl">
-                  <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono w-max">
-                    <Sparkles className="w-3.5 h-3.5 text-blue-400 animate-pulse" />
-                    <span>Welcome to the Official Innovation Hub</span>
-                  </div>
-                  <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                    Where Innovation <br />
-                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-cyan-400 to-indigo-500">Meets Execution</span>
-                  </h1>
-                  <p className="text-base sm:text-lg text-slate-400 font-normal leading-relaxed">
-                    The official tech club of engineering. Shaping the next generation of software engineers, cloud architects, and hardware designers.
-                  </p>
-                  <div className="flex flex-col sm:flex-row items-center gap-4 pt-2">
-                    <button
-                      onClick={() => setView("events")}
-                      className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-600 text-white font-semibold text-sm flex items-center justify-center gap-2 hover:bg-blue-500 shadow-lg shadow-blue-500/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                    >
-                      <span>View Upcoming Events</span>
-                      <ArrowRight className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setView("projects")}
-                      className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#1E293B] border border-slate-800 text-slate-300 font-semibold text-sm flex items-center justify-center hover:bg-slate-800 hover:text-white transition-all hover:scale-105 active:scale-95 cursor-pointer"
-                    >
-                      Explore Projects
-                    </button>
-                  </div>
-                </div>
-
-                <div className="lg:col-span-5 relative flex items-center justify-center overflow-hidden min-h-[350px] lg:min-h-[450px]">
-                  <ThreeLogoAnimation />
+              {/* Hero Section - Full Bleed Ice Theme Banner */}
+              <div className="w-screen h-[50vh] relative left-1/2 right-1/2 -translate-x-1/2 bg-white border-b border-slate-200 -mt-[120px] mb-16 overflow-hidden flex justify-center items-center cursor-none">
+                {/* Background Canvas */}
+                <div className="absolute inset-0 w-full h-full z-0 opacity-90 pointer-events-none">
+                  <InteractivePixelArt />
                 </div>
               </div>
 
               {/* Statistics Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-[#1E293B]/40 border border-slate-800/80 p-8 rounded-2xl backdrop-blur-sm">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-[#1E293B]/20 border-2 border-slate-800 p-8 rounded-none shadow-[6px_6px_0px_#0A1224] backdrop-blur-sm">
                 {[
                   { value: `${totalEventsCount}+`, label: "Workshops & Hackathons" },
                   { value: `${totalProjectsCount}+`, label: "Active Tech Projects" },
@@ -723,16 +969,16 @@ export default function Home() {
                   { value: `${totalAwardsCount}+`, label: "National Achievements" }
                 ].map((stat, i) => (
                   <div key={i} className="text-center p-4">
-                    <div className="text-4xl sm:text-5xl font-black text-white bg-clip-text text-transparent bg-gradient-to-b from-white to-slate-400">{stat.value}</div>
+                    <div className="text-4xl sm:text-5xl font-black text-white">{stat.value}</div>
                     <div className="text-xs sm:text-sm text-slate-400 mt-2 font-mono uppercase tracking-wider">{stat.label}</div>
                   </div>
                 ))}
               </div>
 
               {/* Latest Announcement Banner */}
-              <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-900/30 via-indigo-900/20 to-cyan-900/30 border border-blue-500/20 flex flex-col md:flex-row items-center justify-between gap-6">
+              <div className="p-6 rounded-none bg-gradient-to-r from-blue-900/30 via-indigo-900/20 to-cyan-900/30 border-2 border-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[4px_4px_0px_#0F172A]">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400">
+                  <div className="w-10 h-10 rounded-none bg-blue-500/10 border-2 border-blue-500/30 flex items-center justify-center text-blue-400">
                     <Info className="w-5 h-5" />
                   </div>
                   <div>
@@ -742,7 +988,7 @@ export default function Home() {
                 </div>
                 <button
                   onClick={() => { setView("event-detail"); setSelectedId("devhack-2026"); }}
-                  className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium text-xs whitespace-nowrap transition-colors cursor-pointer"
+                  className="px-5 py-2.5 rounded-none bg-blue-600 border-2 border-blue-700 text-white font-medium text-xs whitespace-nowrap shadow-[3px_3px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#0F172A] transition-all cursor-pointer"
                 >
                   Register Now
                 </button>
@@ -750,7 +996,7 @@ export default function Home() {
 
               {/* Featured Event Spotlight */}
               <div className="space-y-8">
-                <div className="flex justify-between items-end border-b border-slate-800 pb-4">
+                <div className="flex justify-between items-end border-b-2 border-slate-800 pb-4">
                   <div>
                     <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Spotlight Event</h2>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">Next Major Tech Workshop</h3>
@@ -762,7 +1008,7 @@ export default function Home() {
                 </div>
 
                 {events.filter(e => e.type === "upcoming").slice(0, 1).map(event => (
-                  <div key={event.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-[#1E293B]/40 border border-slate-800 rounded-2xl overflow-hidden group hover:border-slate-700/80 transition-all shadow-xl">
+                  <div key={event.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-[#1E293B]/20 border-2 border-slate-800 rounded-none overflow-hidden group hover:border-blue-500 transition-all shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A]">
                     <div className="lg:col-span-6 relative h-[250px] lg:h-auto overflow-hidden">
                       <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                       <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A]/80 to-transparent lg:hidden" />
@@ -770,17 +1016,17 @@ export default function Home() {
                     <div className="lg:col-span-6 p-8 flex flex-col justify-between space-y-6">
                       <div className="space-y-4">
                         <div className="flex flex-wrap items-center gap-3">
-                          <span className="px-2.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 uppercase tracking-wider">Upcoming</span>
+                          <span className="px-2.5 py-0.5 rounded-none text-[10px] font-semibold bg-emerald-500/10 border-2 border-emerald-500/20 text-emerald-400 uppercase tracking-wider">Upcoming</span>
                           <span className="text-xs text-slate-400 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</span>
                         </div>
                         <h4 className="text-xl sm:text-2xl font-bold text-white group-hover:text-blue-400 transition-colors">{event.title}</h4>
                         <p className="text-sm text-slate-400 leading-relaxed">{event.shortDesc}</p>
                       </div>
-                      <div className="flex flex-wrap items-center gap-4 justify-between border-t border-slate-800 pt-6">
+                      <div className="flex flex-wrap items-center gap-4 justify-between border-t-2 border-slate-800 pt-6">
                         <div className="text-xs text-slate-400 flex items-center gap-1.5"><MapPin className="w-4 h-4 text-cyan-400" />{event.venue}</div>
                         <button
                           onClick={() => { setView("event-detail"); setSelectedId(event.id); }}
-                          className="px-4 py-2 bg-[#1E293B] border border-slate-800 group-hover:border-blue-500/50 rounded-lg text-xs font-semibold text-white hover:bg-slate-800 transition-all cursor-pointer"
+                          className="px-4 py-2 bg-[#1E293B] border-2 border-slate-800 group-hover:border-blue-500/50 rounded-none text-xs font-semibold text-white hover:bg-slate-800 transition-all shadow-[3px_3px_0px_#050B14] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#050B14] cursor-pointer"
                         >
                           View Details
                         </button>
@@ -792,7 +1038,7 @@ export default function Home() {
 
               {/* Featured Projects */}
               <div className="space-y-8">
-                <div className="flex justify-between items-end border-b border-slate-800 pb-4">
+                <div className="flex justify-between items-end border-b-2 border-slate-800 pb-4">
                   <div>
                     <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Innovation Hub</h2>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">Featured Club Projects</h3>
@@ -805,9 +1051,9 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {projects.slice(0, 2).map(project => (
-                    <div key={project.id} className="p-6 rounded-2xl bg-[#1E293B]/40 border border-slate-800/80 hover:border-slate-700/80 transition-all flex flex-col justify-between space-y-6 shadow-md hover:-translate-y-1 group">
+                    <div key={project.id} className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 hover:border-blue-500 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A] group">
                       <div className="space-y-4">
-                        <div className="w-full h-[180px] rounded-xl overflow-hidden relative">
+                        <div className="w-full h-[180px] rounded-none border-2 border-slate-800 overflow-hidden relative">
                           <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                         </div>
                         <h4 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">{project.title}</h4>
@@ -816,12 +1062,12 @@ export default function Home() {
                       <div className="space-y-4">
                         <div className="flex flex-wrap gap-1.5">
                           {project.techStack.slice(0, 4).map((tech, idx) => (
-                            <span key={idx} className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-400 font-mono border border-slate-800">{tech}</span>
+                            <span key={idx} className="px-2 py-0.5 rounded-none bg-slate-900 text-[10px] text-slate-400 font-mono border-2 border-slate-800">{tech}</span>
                           ))}
                         </div>
                         <button
                           onClick={() => { setView("project-detail"); setSelectedId(project.id); }}
-                          className="w-full py-2 bg-blue-600/10 border border-blue-500/20 rounded-xl text-xs font-semibold text-blue-400 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                          className="w-full py-2 bg-blue-600/10 border-2 border-blue-500/30 rounded-none text-xs font-semibold text-blue-400 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#050B14] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#050B14] cursor-pointer"
                         >
                           View Project Details
                         </button>
@@ -833,7 +1079,7 @@ export default function Home() {
 
               {/* Achievements Preview */}
               <div className="space-y-8">
-                <div className="flex justify-between items-end border-b border-slate-800 pb-4">
+                <div className="flex justify-between items-end border-b-2 border-slate-800 pb-4">
                   <div>
                     <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Hall of Fame</h2>
                     <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mt-1">Latest Achievements</h3>
@@ -846,9 +1092,9 @@ export default function Home() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {achievements.slice(0, 3).map(ach => (
-                    <div key={ach.id} className="p-6 rounded-2xl bg-[#1E293B]/20 border border-slate-800/80 flex flex-col justify-between space-y-4 shadow-sm">
+                    <div key={ach.id} className="p-6 rounded-none bg-[#1E293B]/10 border-2 border-slate-800 flex flex-col justify-between space-y-4 shadow-[4px_4px_0px_#0F172A] hover:border-slate-700 transition-colors">
                       <div className="space-y-3">
-                        <div className="w-8 h-8 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                        <div className="w-8 h-8 rounded-none bg-blue-500/10 border-2 border-blue-500/20 flex items-center justify-center text-blue-400">
                           <Trophy className="w-4 h-4" />
                         </div>
                         <h4 className="text-sm font-bold text-white">{ach.title}</h4>
@@ -861,7 +1107,7 @@ export default function Home() {
               </div>
 
               {/* Sponsors Section */}
-              <div className="border-t border-slate-800/80 pt-16 text-center space-y-6">
+              <div className="border-t-2 border-slate-800/80 pt-16 text-center space-y-6">
                 <div className="text-xs text-slate-500 font-mono uppercase tracking-widest">Proudly Supported By</div>
                 <div className="flex flex-wrap items-center justify-center gap-12 opacity-40 hover:opacity-60 transition-opacity">
                   {["GitHub", "Vercel", "AWS", "Google Cloud", "Meta", "Slack"].map((brand, idx) => (
@@ -871,7 +1117,7 @@ export default function Home() {
               </div>
 
               {/* Call To Action */}
-              <div className="p-12 rounded-2xl bg-gradient-to-b from-[#1E293B] to-[#0F172A] border border-slate-800 text-center space-y-6 max-w-4xl mx-auto shadow-2xl relative overflow-hidden">
+              <div className="p-12 rounded-none bg-gradient-to-b from-[#1E293B]/60 to-[#0F172A] border-2 border-slate-800 text-center space-y-6 max-w-4xl mx-auto shadow-[8px_8px_0px_#0A0F1D] relative overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(37,99,235,0.08),transparent_50%)]" />
                 <h3 className="text-2xl sm:text-3xl font-extrabold text-white">Join the Community</h3>
                 <p className="text-sm text-slate-400 max-w-lg mx-auto leading-relaxed">
@@ -879,7 +1125,7 @@ export default function Home() {
                 </p>
                 <button
                   onClick={() => setView("contact")}
-                  className="px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition-colors cursor-pointer"
+                  className="px-6 py-3 rounded-none bg-blue-600 border-2 border-blue-700 text-white text-sm font-bold shadow-[4px_4px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#0F172A] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#0F172A] transition-all cursor-pointer"
                 >
                   Get In Touch
                 </button>
@@ -906,13 +1152,13 @@ export default function Home() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="p-6 rounded-2xl bg-[#1E293B]/40 border border-slate-800 space-y-3">
+                <div className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 space-y-3 shadow-[4px_4px_0px_#0F172A]">
                   <h3 className="text-lg font-bold text-white">Our Vision</h3>
                   <p className="text-sm text-slate-400 leading-relaxed">
                     To cultivate a self-sustaining ecosystem of developers and researchers who innovate continuously, contributing to open source, enterprise engineering, and cutting-edge publications.
                   </p>
                 </div>
-                <div className="p-6 rounded-2xl bg-[#1E293B]/40 border border-slate-800 space-y-3">
+                <div className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 space-y-3 shadow-[4px_4px_0px_#0F172A]">
                   <h3 className="text-lg font-bold text-white">Our Mission</h3>
                   <p className="text-sm text-slate-400 leading-relaxed">
                     We host weekly code reviews, cloud deployments, and hack sprints. We enable future committees to inherit a strong technical base and build projects directly deployed on modern cloud backends.
@@ -925,8 +1171,8 @@ export default function Home() {
                 <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Faculty Advisors</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                   {team.filter(t => t.category === "Faculty").map((fac, idx) => (
-                    <div key={idx} className="p-6 rounded-2xl bg-[#1E293B]/20 border border-slate-800 flex items-center gap-4">
-                      <img src={fac.avatar} alt={fac.name} className="w-16 h-16 rounded-full object-cover border border-slate-800" />
+                    <div key={idx} className="p-6 rounded-none bg-[#1E293B]/10 border-2 border-slate-800 flex items-center gap-4 shadow-[4px_4px_0px_#0F172A]">
+                      <img src={fac.avatar} alt={fac.name} className="w-16 h-16 rounded-none object-cover border-2 border-slate-800" />
                       <div>
                         <h4 className="text-base font-bold text-white">{fac.name}</h4>
                         <p className="text-xs text-slate-400 mt-1">{fac.role}</p>
@@ -942,14 +1188,14 @@ export default function Home() {
               {/* Journey Timeline */}
               <div className="space-y-8">
                 <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Our Journey Timeline</h2>
-                <div className="relative border-l border-slate-800 pl-6 ml-4 space-y-8">
+                <div className="relative border-l-2 border-slate-800 pl-6 ml-4 space-y-8">
                   {[
                     { year: "2024", title: "Club Conception", desc: "Club founded by a small group of open-source enthusiasts, hosting local compiler building sessions." },
                     { year: "2025", title: "Smart India Hackathon Triumph", desc: "Our developer cohort secured first place at Smart India Hackathon in smart grid management." },
                     { year: "2026", title: "Coderithum Portal Release", desc: "Designed, built, and static-deployed the new visual portfolio portal and resource ecosystem." }
                   ].map((item, idx) => (
                     <div key={idx} className="relative">
-                      <div className="absolute -left-[31px] top-1 w-2.5 h-2.5 rounded-full bg-blue-600 border border-[#0F172A]" />
+                      <div className="absolute -left-[31px] top-1.5 w-2 h-2 rounded-none bg-blue-600 border-2 border-[#0F172A]" />
                       <div className="text-xs font-mono text-cyan-400 uppercase tracking-widest">{item.year}</div>
                       <h4 className="text-base font-bold text-white mt-1">{item.title}</h4>
                       <p className="text-xs sm:text-sm text-slate-400 mt-1 leading-relaxed">{item.desc}</p>
@@ -978,25 +1224,25 @@ export default function Home() {
               {/* Upcoming Events Grid */}
               <div className="space-y-8">
                 <h3 className="text-base font-mono text-white tracking-wider uppercase flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                  <span className="w-2 h-2 rounded-none bg-emerald-500 animate-pulse" />
                   Upcoming Innovation Sprints
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {events.filter(e => e.type === "upcoming").map(event => (
-                    <div key={event.id} className="p-6 rounded-2xl bg-[#1E293B]/30 border border-slate-800 hover:border-slate-700/80 transition-all flex flex-col justify-between space-y-6 shadow-md hover:-translate-y-1 group">
+                    <div key={event.id} className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 hover:border-blue-500 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A] group">
                       <div className="space-y-4">
-                        <div className="w-full h-[180px] rounded-xl overflow-hidden relative">
+                        <div className="w-full h-[180px] rounded-none border-2 border-slate-800 overflow-hidden relative">
                           <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                         </div>
                         <div className="text-xs text-slate-400 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</div>
                         <h4 className="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">{event.title}</h4>
                         <p className="text-xs sm:text-sm text-slate-400 leading-relaxed line-clamp-3">{event.shortDesc}</p>
                       </div>
-                      <div className="flex items-center justify-between border-t border-slate-800/80 pt-4">
+                      <div className="flex items-center justify-between border-t-2 border-slate-800 pt-4">
                         <div className="text-xs text-slate-400 flex items-center gap-1"><MapPin className="w-3.5 h-3.5 text-cyan-400" />{event.venue}</div>
                         <button
                           onClick={() => { setView("event-detail"); setSelectedId(event.id); }}
-                          className="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-semibold transition-all cursor-pointer"
+                          className="px-4 py-2 bg-blue-600 border-2 border-blue-700 hover:bg-blue-500 text-white rounded-none text-xs font-semibold shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all cursor-pointer"
                         >
                           Details & Reg
                         </button>
@@ -1011,20 +1257,20 @@ export default function Home() {
                 <h3 className="text-base font-mono text-slate-400 tracking-wider uppercase">Past Training Camps</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   {events.filter(e => e.type === "past").map(event => (
-                    <div key={event.id} className="p-6 rounded-2xl bg-[#1E293B]/10 border border-slate-800 flex flex-col justify-between space-y-6 opacity-85 hover:opacity-100 hover:border-slate-800 transition-all group">
+                    <div key={event.id} className="p-6 rounded-none bg-[#1E293B]/5 border-2 border-slate-800 flex flex-col justify-between space-y-6 opacity-85 hover:opacity-100 transition-all shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A] group">
                       <div className="space-y-4">
-                        <div className="w-full h-[180px] rounded-xl overflow-hidden relative">
+                        <div className="w-full h-[180px] rounded-none border-2 border-slate-800 overflow-hidden relative">
                           <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter grayscale hover:grayscale-0" />
                         </div>
                         <div className="text-xs text-slate-500 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</div>
                         <h4 className="text-lg font-bold text-slate-200 group-hover:text-blue-400 transition-colors">{event.title}</h4>
                         <p className="text-xs sm:text-sm text-slate-400 leading-relaxed line-clamp-3">{event.shortDesc}</p>
                       </div>
-                      <div className="flex items-center justify-between border-t border-slate-800/85 pt-4">
+                      <div className="flex items-center justify-between border-t-2 border-slate-800 pt-4">
                         <div className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{event.venue}</div>
                         <button
                           onClick={() => { setView("event-detail"); setSelectedId(event.id); }}
-                          className="px-4 py-2 bg-[#1E293B] border border-slate-800 hover:border-slate-700 rounded-lg text-xs font-semibold text-slate-300 transition-all cursor-pointer"
+                          className="px-4 py-2 bg-[#1E293B] border-2 border-slate-800 rounded-none text-xs font-semibold text-slate-300 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all cursor-pointer"
                         >
                           View Agenda
                         </button>
@@ -1049,7 +1295,7 @@ export default function Home() {
                 <ChevronLeft className="w-4 h-4" /> Back to Events
               </button>
 
-              <div className="w-full h-[320px] rounded-2xl overflow-hidden relative border border-slate-800 shadow-lg">
+              <div className="w-full h-[320px] rounded-none overflow-hidden relative border-2 border-slate-800 shadow-[6px_6px_0px_#0F172A]">
                 <img src={currentEvent.banner} alt={currentEvent.title} className="w-full h-full object-cover" />
               </div>
 
@@ -1063,10 +1309,10 @@ export default function Home() {
                   {/* Agenda */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-bold text-white">Event Agenda</h3>
-                    <div className="space-y-3 border-l border-slate-800 pl-4 ml-2">
+                    <div className="space-y-3 border-l-2 border-slate-800 pl-4 ml-2">
                       {currentEvent.agenda.map((agendaItem, idx) => (
                         <div key={idx} className="relative">
-                          <div className="absolute -left-[21px] top-1.5 w-1.5 h-1.5 rounded-full bg-blue-500" />
+                          <div className="absolute -left-[21px] top-1.5 w-1.5 h-1.5 rounded-none bg-blue-500" />
                           <p className="text-xs sm:text-sm text-slate-300 font-mono">{agendaItem}</p>
                         </div>
                       ))}
@@ -1078,8 +1324,8 @@ export default function Home() {
                     <h3 className="text-lg font-bold text-white">Event Speakers</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {currentEvent.speakers.map((spk, idx) => (
-                        <div key={idx} className="p-4 rounded-xl bg-[#1E293B]/20 border border-slate-800 flex items-center gap-3">
-                          <img src={spk.avatar} alt={spk.name} className="w-12 h-12 rounded-full object-cover border border-slate-800" />
+                        <div key={idx} className="p-4 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 flex items-center gap-3 shadow-[4px_4px_0px_#0F172A]">
+                          <img src={spk.avatar} alt={spk.name} className="w-12 h-12 rounded-none object-cover border-2 border-slate-800" />
                           <div>
                             <div className="text-sm font-semibold text-white">{spk.name}</div>
                             <div className="text-xs text-slate-400 mt-0.5">{spk.role}</div>
@@ -1093,8 +1339,8 @@ export default function Home() {
 
                 {/* Sidebar details */}
                 <div className="lg:col-span-4 space-y-6">
-                  <div className="p-6 rounded-2xl bg-[#1E293B]/40 border border-slate-800 space-y-6 shadow-sm">
-                    <h3 className="text-sm font-mono uppercase tracking-wider text-white border-b border-slate-800 pb-3">Logistics</h3>
+                  <div className="p-6 rounded-none bg-[#1E293B]/40 border-2 border-slate-800 space-y-6 shadow-[6px_6px_0px_#0F172A]">
+                    <h3 className="text-sm font-mono uppercase tracking-wider text-white border-b-2 border-slate-800 pb-3">Logistics</h3>
                     
                     <div className="space-y-4">
                       <div className="flex items-start gap-2.5">
@@ -1120,18 +1366,18 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-slate-800/80 space-y-3">
+                    <div className="pt-4 border-t-2 border-slate-800/80 space-y-3">
                       {currentEvent.type === "upcoming" ? (
                         <a
                           href={currentEvent.regLink}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+                          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all"
                         >
                           Register for Event <ArrowUpRight className="w-3.5 h-3.5" />
                         </a>
                       ) : (
-                        <span className="w-full py-2.5 bg-slate-800 text-slate-500 rounded-xl text-xs font-bold flex items-center justify-center select-none border border-slate-800">
+                        <span className="w-full py-2.5 bg-slate-800 text-slate-500 rounded-none text-xs font-bold flex items-center justify-center select-none border-2 border-slate-700">
                           Registration Closed
                         </span>
                       )}
@@ -1140,7 +1386,7 @@ export default function Home() {
                         href={currentEvent.feedbackLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 bg-zinc-900 border border-slate-800 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"
+                        className="w-full py-2.5 bg-zinc-900 border-2 border-slate-800 hover:bg-slate-800 text-slate-300 rounded-none text-xs font-semibold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all"
                       >
                         Share Feedback
                       </a>
@@ -1168,9 +1414,9 @@ export default function Home() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {projects.map(project => (
-                  <div key={project.id} className="p-6 rounded-2xl bg-[#1E293B]/30 border border-slate-800 hover:border-slate-700/80 transition-all flex flex-col justify-between space-y-6 shadow-md hover:-translate-y-1 group">
+                  <div key={project.id} className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 hover:border-blue-500 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A] group">
                     <div className="space-y-4">
-                      <div className="w-full h-[200px] rounded-xl overflow-hidden relative">
+                      <div className="w-full h-[200px] rounded-none border-2 border-slate-800 overflow-hidden relative">
                         <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                       </div>
                       <h4 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">{project.title}</h4>
@@ -1179,12 +1425,12 @@ export default function Home() {
                     <div className="space-y-4">
                       <div className="flex flex-wrap gap-1.5">
                         {project.techStack.map((tech, idx) => (
-                          <span key={idx} className="px-2 py-0.5 rounded bg-slate-800 text-[10px] text-slate-400 font-mono border border-slate-800">{tech}</span>
+                          <span key={idx} className="px-2 py-0.5 rounded-none bg-slate-900 text-[10px] text-slate-400 font-mono border-2 border-slate-800">{tech}</span>
                         ))}
                       </div>
                       <button
                         onClick={() => { setView("project-detail"); setSelectedId(project.id); }}
-                        className="w-full py-2.5 bg-blue-600/10 border border-blue-500/20 rounded-xl text-xs font-semibold text-blue-400 hover:bg-blue-600 hover:text-white transition-all cursor-pointer"
+                        className="w-full py-2.5 bg-blue-600/10 border-2 border-blue-500/30 rounded-none text-xs font-semibold text-blue-400 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#050B14] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#050B14] cursor-pointer"
                       >
                         View Project Details
                       </button>
@@ -1208,7 +1454,7 @@ export default function Home() {
                 <ChevronLeft className="w-4 h-4" /> Back to Projects
               </button>
 
-              <div className="w-full h-[320px] rounded-2xl overflow-hidden relative border border-slate-800 shadow-lg">
+              <div className="w-full h-[320px] rounded-none overflow-hidden relative border-2 border-slate-800 shadow-[6px_6px_0px_#0F172A]">
                 <img src={currentProject.banner} alt={currentProject.title} className="w-full h-full object-cover" />
               </div>
 
@@ -1224,7 +1470,7 @@ export default function Home() {
                     <h3 className="text-lg font-bold text-white">Technology Stack</h3>
                     <div className="flex flex-wrap gap-2">
                       {currentProject.techStack.map((tech, idx) => (
-                        <span key={idx} className="px-3 py-1 rounded bg-[#1E293B]/40 text-xs text-slate-300 font-mono border border-slate-800">{tech}</span>
+                        <span key={idx} className="px-3 py-1 rounded-none bg-[#1E293B]/20 text-xs text-slate-300 font-mono border-2 border-slate-800">{tech}</span>
                       ))}
                     </div>
                   </div>
@@ -1234,7 +1480,7 @@ export default function Home() {
                     <h3 className="text-lg font-bold text-white">Project Members</h3>
                     <div className="flex flex-wrap gap-2">
                       {currentProject.team.map((member, idx) => (
-                        <span key={idx} className="px-3 py-1.5 rounded-full bg-slate-800 text-xs font-semibold text-slate-200 border border-slate-800 flex items-center gap-2">
+                        <span key={idx} className="px-3 py-1.5 rounded-none bg-slate-900 text-xs font-semibold text-slate-200 border-2 border-slate-800 flex items-center gap-2">
                           <User className="w-3.5 h-3.5 text-cyan-400" />
                           {member}
                         </span>
@@ -1245,8 +1491,8 @@ export default function Home() {
 
                 {/* Sidebar details */}
                 <div className="lg:col-span-4 space-y-6">
-                  <div className="p-6 rounded-2xl bg-[#1E293B]/40 border border-slate-800 space-y-6 shadow-sm">
-                    <h3 className="text-sm font-mono uppercase tracking-wider text-white border-b border-slate-800 pb-3">Project Metadata</h3>
+                  <div className="p-6 rounded-none bg-[#1E293B]/40 border-2 border-slate-800 space-y-6 shadow-[6px_6px_0px_#0F172A]">
+                    <h3 className="text-sm font-mono uppercase tracking-wider text-white border-b-2 border-slate-800 pb-3">Project Metadata</h3>
 
                     <div className="space-y-4">
                       <div>
@@ -1255,12 +1501,12 @@ export default function Home() {
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-slate-800/80 space-y-3">
+                    <div className="pt-4 border-t-2 border-slate-800/80 space-y-3">
                       <a
                         href={currentProject.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+                        className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-none border-2 border-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all"
                       >
                         <Github className="w-4 h-4" /> Github Repository
                       </a>
@@ -1268,7 +1514,7 @@ export default function Home() {
                         href={currentProject.demo}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition-all"
+                        className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all"
                       >
                         Live Demonstration <ExternalLink className="w-3.5 h-3.5" />
                       </a>
@@ -1300,9 +1546,9 @@ export default function Home() {
                   <button
                     key={album.id}
                     onClick={() => setActiveAlbumId(album.id)}
-                    className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all cursor-pointer ${
+                    className={`px-4 py-2 rounded-none text-xs font-semibold border-2 transition-all cursor-pointer ${
                       activeAlbumId === album.id
-                        ? "bg-blue-600/10 border-blue-500/40 text-white"
+                        ? "bg-blue-600/20 border-blue-500/50 text-white shadow-[3px_3px_0px_#050B14]"
                         : "bg-[#1E293B]/20 border-slate-800 text-slate-400 hover:text-slate-200"
                     }`}
                   >
@@ -1315,8 +1561,8 @@ export default function Home() {
               {currentAlbum ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 pt-4">
                   {currentAlbum.media.map((item, idx) => (
-                    <div key={idx} className="p-4 rounded-2xl bg-[#1E293B]/30 border border-slate-800 flex flex-col gap-4 shadow group hover:border-slate-700/80 transition-all">
-                      <div className="w-full h-[220px] rounded-xl overflow-hidden relative">
+                    <div key={idx} className="p-4 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 flex flex-col gap-4 shadow-[4px_4px_0px_#0F172A] group hover:border-blue-500 transition-all">
+                      <div className="w-full h-[220px] rounded-none border-2 border-slate-800 overflow-hidden relative">
                         <img src={item.url} alt={item.caption} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                       </div>
                       <p className="text-xs text-slate-400 leading-relaxed px-1">{item.caption}</p>
@@ -1347,12 +1593,12 @@ export default function Home() {
               {/* Categories */}
               {["Faculty", "Leadership", "Technical", "Design", "Marketing"].map(cat => (
                 <div key={cat} className="space-y-6">
-                  <h3 className="text-sm font-mono text-cyan-400 tracking-widest uppercase border-b border-slate-800/80 pb-2">{cat}</h3>
+                  <h3 className="text-sm font-mono text-cyan-400 tracking-widest uppercase border-b-2 border-slate-800/80 pb-2">{cat}</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                     {team.filter(t => t.category === cat).map((member, idx) => (
-                      <div key={idx} className="p-4 rounded-2xl bg-[#1E293B]/30 border border-slate-800 flex flex-col items-center text-center space-y-4 hover:-translate-y-1 transition-transform group">
-                        <div className="w-20 h-20 rounded-full overflow-hidden p-0.5 bg-blue-600/20 group-hover:bg-blue-600/60 transition-colors shadow">
-                          <img src={member.avatar} alt={member.name} className="w-full h-full object-cover rounded-full bg-slate-900" />
+                      <div key={idx} className="p-4 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 flex flex-col items-center text-center space-y-4 hover:border-blue-500 transition-all shadow-[4px_4px_0px_#0F172A] group">
+                        <div className="w-20 h-20 rounded-none overflow-hidden p-0.5 bg-blue-600/20 border-2 border-blue-500/30 group-hover:bg-blue-600/60 transition-colors shadow">
+                          <img src={member.avatar} alt={member.name} className="w-full h-full object-cover rounded-none bg-slate-900" />
                         </div>
                         <div>
                           <h4 className="text-sm font-bold text-white">{member.name}</h4>
@@ -1395,8 +1641,8 @@ export default function Home() {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {achievements.map(ach => (
-                  <div key={ach.id} className="p-6 rounded-2xl bg-[#1E293B]/30 border border-slate-800 flex items-start gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                  <div key={ach.id} className="p-6 rounded-none bg-[#1E293B]/10 border-2 border-slate-800 flex items-start gap-4 shadow-[4px_4px_0px_#0F172A] hover:border-slate-700 transition-colors">
+                    <div className="w-10 h-10 rounded-none bg-blue-500/10 border-2 border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
                       <Trophy className="w-5 h-5" />
                     </div>
                     <div className="space-y-3">
@@ -1434,8 +1680,8 @@ export default function Home() {
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start max-w-5xl mx-auto">
                 {/* Left Panel Contact Details */}
                 <div className="lg:col-span-5 space-y-8">
-                  <div className="p-6 rounded-2xl bg-[#1E293B]/40 border border-slate-800 space-y-6">
-                    <h3 className="text-base font-bold text-white border-b border-slate-800 pb-3">Club Info</h3>
+                  <div className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 space-y-6 shadow-[6px_6px_0px_#0F172A]">
+                    <h3 className="text-base font-bold text-white border-b-2 border-slate-800 pb-3">Club Info</h3>
                     
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
@@ -1463,7 +1709,7 @@ export default function Home() {
                   </div>
 
                   {/* Styled Mock map */}
-                  <div className="w-full h-[220px] rounded-2xl border border-slate-800 overflow-hidden relative group">
+                  <div className="w-full h-[220px] rounded-none border-2 border-slate-800 overflow-hidden relative group shadow-[6px_6px_0px_#0F172A]">
                     <div className="absolute inset-0 bg-[#0F172A] bg-grid-pattern opacity-60 flex items-center justify-center">
                       <div className="text-center space-y-2 z-10">
                         <MapPin className="w-8 h-8 text-blue-500 animate-bounce mx-auto" />
@@ -1477,23 +1723,23 @@ export default function Home() {
 
                 {/* Right Panel Contact Form */}
                 <div className="lg:col-span-7">
-                  <div className="p-8 rounded-2xl bg-[#1E293B]/40 border border-slate-800 space-y-6">
+                  <div className="p-8 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 space-y-6 shadow-[6px_6px_0px_#0F172A]">
                     <h3 className="text-lg font-bold text-white">Send us a direct message</h3>
                     
                     {contactSuccess ? (
                       <motion.div
                         initial={{ scale: 0.95, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="p-6 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-center space-y-4"
+                        className="p-6 rounded-none bg-emerald-500/10 border-2 border-emerald-500/20 text-center space-y-4"
                       >
-                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto">
+                        <div className="w-10 h-10 rounded-none bg-emerald-500/20 border-2 border-emerald-500/30 text-emerald-400 flex items-center justify-center mx-auto">
                           <Sparkles className="w-5 h-5" />
                         </div>
                         <h4 className="text-sm font-bold text-white">Message Dispatched!</h4>
                         <p className="text-xs text-slate-400">Thank you for writing. Our Technical Board will review your query and write back shortly.</p>
                         <button
                           onClick={() => setContactSuccess(false)}
-                          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-semibold transition-colors cursor-pointer"
+                          className="px-4 py-2 bg-emerald-600 border-2 border-emerald-700 hover:bg-emerald-500 text-white rounded-none text-xs font-semibold shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all cursor-pointer"
                         >
                           Send another message
                         </button>
@@ -1506,24 +1752,24 @@ export default function Home() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           <div className="space-y-1.5">
                             <label className="text-[10px] font-mono text-slate-400 uppercase">First Name</label>
-                            <input required type="text" placeholder="Kunal" className="w-full bg-[#0F172A] border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+                            <input required type="text" placeholder="Kunal" className="w-full bg-[#0F172A] border-2 border-slate-800 rounded-none p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
                           </div>
                           <div className="space-y-1.5">
                             <label className="text-[10px] font-mono text-slate-400 uppercase">Email Address</label>
-                            <input required type="email" placeholder="kunal@example.com" className="w-full bg-[#0F172A] border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+                            <input required type="email" placeholder="kunal@example.com" className="w-full bg-[#0F172A] border-2 border-slate-800 rounded-none p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
                           </div>
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-[10px] font-mono text-slate-400 uppercase">Topic / Subject</label>
-                          <input required type="text" placeholder="DevHack 2026 Participation Query" className="w-full bg-[#0F172A] border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+                          <input required type="text" placeholder="DevHack 2026 Participation Query" className="w-full bg-[#0F172A] border-2 border-slate-800 rounded-none p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
                         </div>
                         <div className="space-y-1.5">
                           <label className="text-[10px] font-mono text-slate-400 uppercase">Message Body</label>
-                          <textarea required rows={4} placeholder="Hi Coderithum technical team, I wanted to inquire if students from second year..." className="w-full bg-[#0F172A] border border-slate-800 rounded-lg p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
+                          <textarea required rows={4} placeholder="Hi Coderithum technical team, I wanted to inquire if students from second year..." className="w-full bg-[#0F172A] border-2 border-slate-800 rounded-none p-2.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-colors" />
                         </div>
                         <button
                           type="submit"
-                          className="w-full py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-all cursor-pointer"
+                          className="w-full py-2.5 bg-blue-600 border-2 border-blue-700 hover:bg-blue-500 text-white rounded-none text-xs font-bold shadow-[4px_4px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#0F172A] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#0F172A] transition-all cursor-pointer"
                         >
                           Submit Inquiry
                         </button>
@@ -1551,7 +1797,7 @@ export default function Home() {
               </p>
               <button
                 onClick={() => setView("home")}
-                className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-blue-600 border-2 border-blue-700 hover:bg-blue-500 text-white rounded-none text-xs font-bold shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all cursor-pointer"
               >
                 Return to Index Grid
               </button>
@@ -1574,7 +1820,7 @@ export default function Home() {
               </p>
               <button
                 onClick={() => setView("home")}
-                className="px-6 py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-xs font-bold transition-colors cursor-pointer"
+                className="px-6 py-2.5 bg-slate-800 border-2 border-slate-700 hover:bg-slate-700 text-white rounded-none text-xs font-bold shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all cursor-pointer"
               >
                 Re-initialize State
               </button>
@@ -1587,7 +1833,7 @@ export default function Home() {
       {/* ======================================================================
           General Footer
           ====================================================================== */}
-      <footer className="border-t border-slate-800/80 py-16 px-6 bg-[#090D1A] text-xs text-slate-500 relative z-10">
+      <footer className="border-t-2 border-slate-800/80 py-16 px-6 bg-[#090D1A] text-xs text-slate-500 relative z-10 font-mono">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <div className="md:col-span-6 space-y-4">
@@ -1622,7 +1868,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="border-t-2 border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p>© {new Date().getFullYear()} Coderithum. All rights reserved. Open source under MIT license.</p>
             <div className="flex items-center gap-4 text-slate-400">
               <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Linkedin className="w-4 h-4" /></a>

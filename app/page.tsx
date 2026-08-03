@@ -26,20 +26,19 @@ import {
   X,
   Trophy,
   ChevronLeft,
-  ArrowUpRight,
-  Megaphone
+  ArrowUpRight
 } from "lucide-react";
 
 // Custom SVG Icons because older Lucide versions lack standard brand exports
 const Github = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z"/>
+    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33.85 0 1.71.11 2.5.33 1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0012 2z" />
   </svg>
 );
 
 const Linkedin = ({ className = "w-4 h-4" }: { className?: string }) => (
   <svg viewBox="0 0 24 24" className={className} fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+    <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
   </svg>
 );
 import logo from "../public/logo.png";
@@ -659,14 +658,14 @@ function InteractivePixelArt() {
 
       poppingCircles.forEach(pc => {
         // Outer cyan ring
-        ctx.strokeStyle = `rgba(6, 182, 212, ${pc.alpha * 0.45})`; 
+        ctx.strokeStyle = `rgba(6, 182, 212, ${pc.alpha * 0.45})`;
         ctx.lineWidth = 1.5;
         ctx.beginPath();
         ctx.arc(pc.x, pc.y, pc.radius, 0, Math.PI * 2);
         ctx.stroke();
 
         // Inner blue ring
-        ctx.strokeStyle = `rgba(37, 99, 235, ${pc.alpha * 0.25})`; 
+        ctx.strokeStyle = `rgba(37, 99, 235, ${pc.alpha * 0.25})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.arc(pc.x, pc.y, pc.radius * 0.7, 0, Math.PI * 2);
@@ -677,9 +676,9 @@ function InteractivePixelArt() {
       const textWidth = 45;
       const brandHeight = 5;
       const logoWidth = 5;
-      
+
       const sideBySide = cols >= 58;
-      
+
       let logoStartC = 0;
       let logoStartR = 0;
       let textStartC = 0;
@@ -767,7 +766,7 @@ function InteractivePixelArt() {
         }
         const glyph = font[char];
         if (!glyph) continue;
-        
+
         const charWidth = glyph[0].length;
         for (let r = 0; r < brandHeight; r++) {
           const rowStr = glyph[r];
@@ -797,13 +796,49 @@ function InteractivePixelArt() {
   }, []);
 
   return (
-    <div 
-      ref={containerRef} 
+    <div
+      ref={containerRef}
       className="w-full h-full absolute inset-0 overflow-hidden bg-transparent p-0 pointer-events-none"
     >
       <canvas ref={canvasRef} className="absolute inset-0 block w-full h-full" />
     </div>
   );
+}
+
+function AnimatedCounter({ target, duration = 1200 }: { target: number; duration?: number }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    let start = 0;
+    const end = target;
+    if (start === end) {
+      setCount(end);
+      return;
+    }
+
+    const startTime = performance.now();
+
+    const updateCounter = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Easing outQuad: progress * (2 - progress)
+      const easedProgress = progress * (2 - progress);
+      const currentVal = Math.floor(easedProgress * (end - start) + start);
+      
+      setCount(currentVal);
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        setCount(end);
+      }
+    };
+
+    requestAnimationFrame(updateCounter);
+  }, [target, duration]);
+
+  return <>{count}</>;
 }
 
 function GlobalRocketCursor() {
@@ -1030,9 +1065,9 @@ function GlobalRocketCursor() {
   }, []);
 
   return (
-    <canvas 
-      ref={canvasRef} 
-      className="fixed inset-0 w-screen h-screen pointer-events-none z-[9999] block" 
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-screen h-screen pointer-events-none z-[9999] block"
     />
   );
 }
@@ -1081,11 +1116,11 @@ export default function Home() {
           variants={variants}
           initial="hidden"
           animate="visible"
-          whileHover={{ 
-            y: -5, 
+          whileHover={{
+            y: -5,
             x: -2,
             scale: 1.02,
-            transition: { duration: 0.15 } 
+            transition: { duration: 0.15 }
           }}
           className="w-full max-w-[280px] mx-auto p-4 bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] hover:shadow-[6px_6px_0px_#000] flex flex-col items-center text-center space-y-3 transition-shadow select-none z-10"
         >
@@ -1128,7 +1163,7 @@ export default function Home() {
   };
 
   const renderArrow = (delay: number = 0) => (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.5 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ delay, duration: 0.3 }}
@@ -1158,7 +1193,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-transparent text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-blue-900">
-      
+
       {/* Decorative Glow Elements */}
       <div className="absolute top-[800px] left-[10%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[400px] right-[10%] w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
@@ -1191,11 +1226,10 @@ export default function Home() {
               <button
                 key={tab.id}
                 onClick={() => { setView(tab.id); setSelectedId(null); }}
-                className={`hover:text-black transition-colors cursor-pointer relative py-1 ${
-                  view === tab.id || (tab.id === "events" && view === "event-detail") || (tab.id === "projects" && view === "project-detail")
+                className={`hover:text-black transition-colors cursor-pointer relative py-1 ${view === tab.id || (tab.id === "events" && view === "event-detail") || (tab.id === "projects" && view === "project-detail")
                     ? "text-black"
                     : ""
-                }`}
+                  }`}
               >
                 {tab.label}
                 {(view === tab.id || (tab.id === "events" && view === "event-detail") || (tab.id === "projects" && view === "project-detail")) && (
@@ -1234,9 +1268,8 @@ export default function Home() {
               <button
                 key={tab.id}
                 onClick={() => { setView(tab.id); setSelectedId(null); setMobileMenuOpen(false); }}
-                className={`text-left text-base py-2 transition-colors ${
-                  view === tab.id ? "text-blue-600" : "text-slate-600"
-                }`}
+                className={`text-left text-base py-2 transition-colors ${view === tab.id ? "text-blue-600" : "text-slate-600"
+                  }`}
               >
                 {tab.label}
               </button>
@@ -1250,7 +1283,7 @@ export default function Home() {
           ====================================================================== */}
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 min-h-[75vh]">
         <AnimatePresence mode="wait">
-          
+
           {/* ==================== HOME VIEW ==================== */}
           {view === "home" && (
             <motion.div
@@ -1270,50 +1303,36 @@ export default function Home() {
               </div>
 
               {/* Latest Announcement Banner */}
-              <div className="relative overflow-hidden rounded-none bg-yellow-50 border-2 border-slate-900 flex flex-col shadow-[6px_6px_0px_#000] transition-all hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group/banner">
-                {/* Hazard Stripe Tape Top Header */}
-                <div className="h-4 w-full bg-[repeating-linear-gradient(-45deg,#EAB308,#EAB308_12px,#000000_12px,#000000_24px)] border-b-2 border-slate-900" />
-                
-                <div className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-                  <div className="flex items-center gap-4">
-                    {/* Blinking Hazard Beacon Box */}
-                    <div className="w-12 h-12 rounded-none bg-yellow-100 border-2 border-slate-900 flex items-center justify-center text-slate-900 relative shrink-0">
-                      <Megaphone className="w-6 h-6 animate-[bounce_1.5s_infinite]" />
-                      <span className="absolute -top-1 -right-1 flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
-                      </span>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-red-100 border-2 border-red-400 text-red-700 animate-pulse uppercase">LIVE ALERT</span>
-                        <h3 className="text-xs font-mono font-bold text-slate-900 uppercase tracking-widest">CRITICAL BROADCAST</h3>
-                      </div>
-                      <p className="text-sm text-slate-800 font-bold leading-relaxed">
-                        Registrations are now open for <span className="underline decoration-blue-600 decoration-2">DevHack 2026: National Hackathon</span>! Secure your team spot before slots run out.
-                      </p>
-                    </div>
+              <div className="p-6 rounded-none bg-blue-50 border-2 border-blue-600/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[4px_4px_0px_#000]">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-none bg-blue-100 border-2 border-blue-300 flex items-center justify-center text-blue-600">
+                    <Info className="w-5 h-5" />
                   </div>
-                  
-                  <button
-                    onClick={() => { setView("event-detail"); setSelectedId("devhack-2026"); }}
-                    className="px-6 py-3 rounded-none bg-blue-600 border-2 border-slate-900 text-white font-bold text-xs uppercase tracking-wider whitespace-nowrap shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#000] transition-all cursor-pointer"
-                  >
-                    Register Now &rarr;
-                  </button>
+                  <div>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Announcement</h3>
+                    <p className="text-sm text-slate-600 mt-1">Registrations are now open for DevHack 2026: National Hackathon! Secure your team spot today.</p>
+                  </div>
                 </div>
+                <button
+                  onClick={() => { setView("event-detail"); setSelectedId("devhack-2026"); }}
+                  className="px-5 py-2.5 rounded-none bg-blue-600 border-2 border-blue-700 text-white font-medium text-xs whitespace-nowrap shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
+                >
+                  Register Now
+                </button>
               </div>
 
               {/* Statistics Grid */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-white border-2 border-slate-900 p-8 rounded-none shadow-[6px_6px_0px_#000] backdrop-blur-sm">
                 {[
-                  { value: `${totalEventsCount}+`, label: "Workshops & Hackathons" },
-                  { value: `${totalProjectsCount}+`, label: "Active Tech Projects" },
-                  { value: `${totalMembersCount}+`, label: "Dedicated Members" },
-                  { value: `${totalAwardsCount}+`, label: "National Achievements" }
+                  { target: totalEventsCount, label: "Workshops & Hackathons" },
+                  { target: totalProjectsCount, label: "Active Tech Projects" },
+                  { target: totalMembersCount, label: "Dedicated Members" },
+                  { target: totalAwardsCount, label: "National Achievements" }
                 ].map((stat, i) => (
                   <div key={i} className="text-center p-4">
-                    <div className="text-4xl sm:text-5xl font-black text-slate-900">{stat.value}</div>
+                    <div className="text-4xl sm:text-5xl font-black text-slate-900">
+                      <AnimatedCounter target={stat.target} />+
+                    </div>
                     <div className="text-xs sm:text-sm text-slate-600 mt-2 font-mono uppercase tracking-wider">{stat.label}</div>
                   </div>
                 ))}
@@ -1338,12 +1357,12 @@ export default function Home() {
                       {/* Base Image */}
                       <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
                       <div className="absolute inset-0 bg-gradient-to-r from-white/80 to-transparent lg:hidden" />
-                      
+
                       {/* Red Glitch Overlay */}
                       <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                        <img 
-                          src={event.banner} 
-                          alt="" 
+                        <img
+                          src={event.banner}
+                          alt=""
                           className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
                           style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
                         />
@@ -1351,9 +1370,9 @@ export default function Home() {
 
                       {/* Blue Glitch Overlay */}
                       <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                        <img 
-                          src={event.banner} 
-                          alt="" 
+                        <img
+                          src={event.banner}
+                          alt=""
                           className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
                           style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
                         />
@@ -1403,9 +1422,9 @@ export default function Home() {
                           <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
                           {/* Red Glitch Overlay */}
                           <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                            <img 
-                              src={project.banner} 
-                              alt="" 
+                            <img
+                              src={project.banner}
+                              alt=""
                               className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
                               style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
                             />
@@ -1413,9 +1432,9 @@ export default function Home() {
 
                           {/* Blue Glitch Overlay */}
                           <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                            <img 
-                              src={project.banner} 
-                              alt="" 
+                            <img
+                              src={project.banner}
+                              alt=""
                               className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
                               style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
                             />
@@ -1626,12 +1645,12 @@ export default function Home() {
                       <div className="space-y-4">
                         <div className="w-full h-[180px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
                           <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105 filter grayscale group-hover/glitch:grayscale-0" />
-                          
+
                           {/* Red Glitch Overlay */}
                           <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                            <img 
-                              src={event.banner} 
-                              alt="" 
+                            <img
+                              src={event.banner}
+                              alt=""
                               className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
                               style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
                             />
@@ -1639,9 +1658,9 @@ export default function Home() {
 
                           {/* Blue Glitch Overlay */}
                           <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                            <img 
-                              src={event.banner} 
-                              alt="" 
+                            <img
+                              src={event.banner}
+                              alt=""
                               className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
                               style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
                             />
@@ -1726,7 +1745,7 @@ export default function Home() {
                 <div className="lg:col-span-4 space-y-6">
                   <div className="p-6 rounded-none bg-white border-2 border-slate-900 space-y-6 shadow-[6px_6px_0px_#000]">
                     <h3 className="text-sm font-mono uppercase tracking-wider text-slate-900 border-b-2 border-slate-200 pb-3">Logistics</h3>
-                    
+
                     <div className="space-y-4">
                       <div className="flex items-start gap-2.5">
                         <Calendar className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
@@ -1766,7 +1785,7 @@ export default function Home() {
                           Registration Closed
                         </span>
                       )}
-                      
+
                       <a
                         href={currentEvent.feedbackLink}
                         target="_blank"
@@ -1804,12 +1823,12 @@ export default function Home() {
                       <div className="w-full h-[200px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
                         {/* Base Image */}
                         <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
-                        
+
                         {/* Red Glitch Overlay */}
                         <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                          <img 
-                            src={project.banner} 
-                            alt="" 
+                          <img
+                            src={project.banner}
+                            alt=""
                             className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
                             style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
                           />
@@ -1817,9 +1836,9 @@ export default function Home() {
 
                         {/* Blue Glitch Overlay */}
                         <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                          <img 
-                            src={project.banner} 
-                            alt="" 
+                          <img
+                            src={project.banner}
+                            alt=""
                             className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
                             style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
                           />
@@ -1952,11 +1971,10 @@ export default function Home() {
                   <button
                     key={album.id}
                     onClick={() => setActiveAlbumId(album.id)}
-                    className={`px-4 py-2 rounded-none text-xs font-bold border-2 transition-all cursor-pointer shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] ${
-                      activeAlbumId === album.id
+                    className={`px-4 py-2 rounded-none text-xs font-bold border-2 transition-all cursor-pointer shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] ${activeAlbumId === album.id
                         ? "bg-blue-50 border-blue-600 text-blue-600"
                         : "bg-white border-slate-900 text-slate-700 hover:text-black"
-                    }`}
+                      }`}
                   >
                     {album.name}
                   </button>
@@ -1971,12 +1989,12 @@ export default function Home() {
                       <div className="w-full h-[220px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
                         {/* Base Image */}
                         <img src={item.url} alt={item.caption} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
-                        
+
                         {/* Red Glitch Overlay */}
                         <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                          <img 
-                            src={item.url} 
-                            alt="" 
+                          <img
+                            src={item.url}
+                            alt=""
                             className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
                             style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
                           />
@@ -1984,9 +2002,9 @@ export default function Home() {
 
                         {/* Blue Glitch Overlay */}
                         <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
-                          <img 
-                            src={item.url} 
-                            alt="" 
+                          <img
+                            src={item.url}
+                            alt=""
                             className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
                             style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
                           />
@@ -2020,7 +2038,7 @@ export default function Home() {
               {/* Dynamic Organizational Tree */}
               <div className="w-full max-w-5xl mx-auto p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] space-y-8 overflow-x-auto">
                 <div className="min-w-[760px] flex flex-col items-center py-4">
-                  
+
                   {/* Level 1: Faculty Mentor */}
                   {renderNode("Faculty Mentor", "faculty", 0.1)}
                   {renderArrow(0.25)}
@@ -2045,7 +2063,7 @@ export default function Home() {
 
                   {/* Columns Grid */}
                   <div className="grid grid-cols-3 gap-6 w-full mt-2">
-                    
+
                     {/* Column 1: Technical Division */}
                     <div className="flex flex-col">
                       {renderNode("Technical Director", "tech_dir", 1.55)}
@@ -2142,7 +2160,7 @@ export default function Home() {
                 <div className="lg:col-span-5 space-y-8">
                   <div className="p-6 rounded-none bg-white border-2 border-slate-900 space-y-6 shadow-[6px_6px_0px_#000]">
                     <h3 className="text-base font-bold text-slate-900 border-b-2 border-slate-200 pb-3">Club Info</h3>
-                    
+
                     <div className="space-y-4">
                       <div className="flex items-start gap-3">
                         <Mail className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
@@ -2185,7 +2203,7 @@ export default function Home() {
                 <div className="lg:col-span-7">
                   <div className="p-8 rounded-none bg-white border-2 border-slate-900 space-y-6 shadow-[6px_6px_0px_#000]">
                     <h3 className="text-lg font-bold text-slate-900">Send us a direct message</h3>
-                    
+
                     {contactSuccess ? (
                       <motion.div
                         initial={{ scale: 0.95, opacity: 0 }}

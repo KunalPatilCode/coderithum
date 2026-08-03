@@ -880,6 +880,12 @@ function GlobalRocketCursor() {
       // Clear canvas with transparent clearRect
       ctx.clearRect(0, 0, width, height);
 
+      const angle = -Math.PI / 4; // Rotate 45 degrees counter-clockwise to point to top-left
+      const pixelSize = 4; // Render size of rocket pixels
+      const localExhaustY = 7 * pixelSize; // 28px
+      const exhaustX = rocketX - localExhaustY * Math.sin(angle);
+      const exhaustY = rocketY + localExhaustY * Math.cos(angle);
+
       // 1. Easing rocket position towards mouse coordinates
       if (mouseX !== -1000 && mouseY !== -1000) {
         const prevX = rocketX;
@@ -890,8 +896,8 @@ function GlobalRocketCursor() {
 
         const moveDist = Math.sqrt(Math.pow(rocketX - prevX, 2) + Math.pow(rocketY - prevY, 2));
         if (moveDist > 1) {
-          if (smoke.length === 0 || Math.sqrt(Math.pow(rocketX - smoke[smoke.length - 1].x, 2) + Math.pow(rocketY - smoke[smoke.length - 1].y, 2)) > 15) {
-            smoke.push({ x: rocketX, y: rocketY, alpha: 1.0 });
+          if (smoke.length === 0 || Math.sqrt(Math.pow(exhaustX - smoke[smoke.length - 1].x, 2) + Math.pow(exhaustY - smoke[smoke.length - 1].y, 2)) > 15) {
+            smoke.push({ x: exhaustX, y: exhaustY, alpha: 1.0 });
           }
         }
       }
@@ -902,20 +908,22 @@ function GlobalRocketCursor() {
       });
       smoke = smoke.filter(s => s.alpha > 0);
 
-      const pixelSize = 4; // Render size of rocket pixels
-
       smoke.forEach(s => {
         ctx.fillStyle = `rgba(148, 163, 184, ${s.alpha * 0.4})`;
-        ctx.fillRect(s.x - 4, s.y + 12, 8, 8);
+        ctx.fillRect(s.x - 4, s.y - 4, 8, 8);
       });
 
       // 3. Update and draw rocket engine sparks
       if (Math.random() < 0.45 && mouseX !== -1000) {
+        const sparkSpeed = 1.8 + Math.random() * 2.2;
+        // Direction vector out of the rotated exhaust (dx=0.707, dy=0.707)
+        const exVectorX = 0.707;
+        const exVectorY = 0.707;
         sparks.push({
-          x: rocketX + (Math.random() * 8 - 4),
-          y: rocketY + 16,
-          speedX: Math.random() * 1.5 - 0.75,
-          speedY: 1.5 + Math.random() * 2,
+          x: exhaustX + (Math.random() * 6 - 3),
+          y: exhaustY + (Math.random() * 6 - 3),
+          speedX: sparkSpeed * exVectorX + (Math.random() * 1.0 - 0.5),
+          speedY: sparkSpeed * exVectorY + (Math.random() * 1.0 - 0.5),
           alpha: 1.0
         });
       }
@@ -939,15 +947,20 @@ function GlobalRocketCursor() {
       });
 
       // 4. Draw pixel rocket cursor
+      ctx.save();
+      ctx.translate(rocketX, rocketY);
+      ctx.rotate(angle);
+      ctx.translate(0, 3 * pixelSize); // Align the nose cone tip with mouse click position
       for (let dc = -2; dc <= 2; dc++) {
         for (let dr = -3; dr <= 4; dr++) {
           const color = getRocketPixelColor(dc, dr, time);
           if (color !== null) {
             ctx.fillStyle = color;
-            ctx.fillRect(rocketX + dc * pixelSize, rocketY + dr * pixelSize, pixelSize, pixelSize);
+            ctx.fillRect(dc * pixelSize, dr * pixelSize, pixelSize, pixelSize);
           }
         }
       }
+      ctx.restore();
 
       animationFrameId = requestAnimationFrame(animate);
     };

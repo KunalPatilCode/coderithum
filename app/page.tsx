@@ -2052,46 +2052,46 @@ export default function Home() {
       {/* ======================================================================
           General Footer
           ====================================================================== */}
-      <footer className="border-t-2 border-slate-800/80 py-16 px-6 bg-[#090D1A] text-xs text-slate-500 relative z-10 font-mono">
+      <footer className="border-t-2 border-slate-900 py-16 px-6 bg-white text-xs text-slate-600 relative z-10 font-mono">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
             <div className="md:col-span-6 space-y-4">
               <div className="flex items-center gap-2">
                 <img src={logo.src} alt="Coderithum Logo" className="w-5 h-5 object-contain" />
-                <span className="font-bold text-white text-sm">Coderithum Tech Club</span>
+                <span className="font-bold text-slate-900 text-sm">Coderithum Tech Club</span>
               </div>
-              <p className="max-w-xs leading-relaxed text-slate-400">
+              <p className="max-w-xs leading-relaxed text-slate-600">
                 Official student computing division showcasing innovation, annual events, and collaborative codebases.
               </p>
             </div>
 
             <div className="md:col-span-3 space-y-3">
-              <h4 className="text-white text-sm font-bold">Quick Navigation</h4>
+              <h4 className="text-slate-900 text-sm font-bold">Quick Navigation</h4>
               <div className="flex flex-col gap-2">
-                <button onClick={() => { setView("home"); setSelectedId(null); }} className="text-left hover:text-white transition-colors cursor-pointer">Index Grid</button>
-                <button onClick={() => { setView("about"); setSelectedId(null); }} className="text-left hover:text-white transition-colors cursor-pointer">Our Journey</button>
-                <button onClick={() => { setView("events"); setSelectedId(null); }} className="text-left hover:text-white transition-colors cursor-pointer">Events Board</button>
-                <button onClick={() => { setView("projects"); setSelectedId(null); }} className="text-left hover:text-white transition-colors cursor-pointer">Tech Projects</button>
+                <button onClick={() => { setView("home"); setSelectedId(null); }} className="text-left hover:text-black transition-colors cursor-pointer">Index Grid</button>
+                <button onClick={() => { setView("about"); setSelectedId(null); }} className="text-left hover:text-black transition-colors cursor-pointer">Our Journey</button>
+                <button onClick={() => { setView("events"); setSelectedId(null); }} className="text-left hover:text-black transition-colors cursor-pointer">Events Board</button>
+                <button onClick={() => { setView("projects"); setSelectedId(null); }} className="text-left hover:text-black transition-colors cursor-pointer">Tech Projects</button>
               </div>
             </div>
 
             <div className="md:col-span-3 space-y-3">
-              <h4 className="text-white text-sm font-bold">Developer Utilities</h4>
+              <h4 className="text-slate-900 text-sm font-bold">Developer Utilities</h4>
               <div className="flex flex-col gap-2">
-                <button onClick={() => setView("404-test")} className="text-left hover:text-white transition-colors cursor-pointer">View Mock 404 View</button>
-                <button onClick={() => setView("500-test")} className="text-left hover:text-white transition-colors cursor-pointer">View Mock 500 View</button>
-                <a href="https://github.com/KunalPatilCode/coderithum" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors flex items-center gap-1.5">
+                <button onClick={() => setView("404-test")} className="text-left hover:text-black transition-colors cursor-pointer">View Mock 404 View</button>
+                <button onClick={() => setView("500-test")} className="text-left hover:text-black transition-colors cursor-pointer">View Mock 500 View</button>
+                <a href="https://github.com/KunalPatilCode/coderithum" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors flex items-center gap-1.5">
                   <Github className="w-3.5 h-3.5" /> Code Repository
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="border-t-2 border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="border-t-2 border-slate-200 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <p>© {new Date().getFullYear()} Coderithum. All rights reserved. Open source under MIT license.</p>
-            <div className="flex items-center gap-4 text-slate-400">
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Linkedin className="w-4 h-4" /></a>
-              <a href="https://github.com/KunalPatilCode/coderithum" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors"><Github className="w-4 h-4" /></a>
+            <div className="flex items-center gap-4 text-slate-500">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><Linkedin className="w-4 h-4" /></a>
+              <a href="https://github.com/KunalPatilCode/coderithum" target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors"><Github className="w-4 h-4" /></a>
             </div>
           </div>
         </div>

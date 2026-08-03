@@ -22,8 +22,8 @@ html {
 body {
   background-color: #FFFFFF;
   background-image: 
-    linear-gradient(to right, #E2E8F0 1px, transparent 1px),
-    linear-gradient(to bottom, #E2E8F0 1px, transparent 1px);
+    linear-gradient(to right, #CBD5E1 1px, transparent 1px),
+    linear-gradient(to bottom, #CBD5E1 1px, transparent 1px);
   background-size: 32px 32px;
   color: var(--foreground);
   font-family: "Share Tech Mono", var(--font-geist-mono), monospace;
@@ -49,8 +49,8 @@ body {
 .bg-grid-pattern {
   background-size: 32px 32px;
   background-image: 
-    linear-gradient(to right, #E2E8F0 1px, transparent 1px),
-    linear-gradient(to bottom, #E2E8F0 1px, transparent 1px);
+    linear-gradient(to right, #CBD5E1 1px, transparent 1px),
+    linear-gradient(to bottom, #CBD5E1 1px, transparent 1px);
 }
 
 /* Radial glow gradient overlay */

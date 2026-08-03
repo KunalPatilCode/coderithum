@@ -464,7 +464,7 @@ function InteractivePixelArt() {
       ctx.fillRect(0, 0, width, height);
 
       // Draw light grey grid lines
-      ctx.strokeStyle = "#F1F5F9";
+      ctx.strokeStyle = "#CBD5E1";
       ctx.lineWidth = 1;
 
       // Vertical lines

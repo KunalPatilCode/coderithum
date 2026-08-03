@@ -369,8 +369,15 @@ function InteractivePixelArt() {
       T: ["11111", "00100", "00100", "00100", "00100"],
       H: ["1001", "1001", "1111", "1001", "1001"],
       U: ["1001", "1001", "1001", "1001", "1111"],
-      M: ["10001", "11011", "10101", "10001", "10001"]
+      M: ["10001", "11011", "10101", "10001", "10001"],
+      L: ["1000", "1000", "1000", "1000", "1111"],
+      B: ["1110", "1001", "1110", "1001", "1110"]
     };
+
+    // Typewriter state variables
+    let textState = 0; // 0 = typing CODERITHUM, 1 = pause, 2 = erasing CODERITHUM, 3 = typing TECH CLUB, 4 = pause, 5 = erasing TECH CLUB
+    let currentText = "";
+    let lastTextChangeTime = 0;
 
     const hashtag = [
       "01010",
@@ -706,11 +713,57 @@ function InteractivePixelArt() {
         }
       }
 
-      // Draw "CODERITHUM" word
-      const word = "CODERITHUM";
+      // Typewriter state updates
+      const phaseDuration = textState === 1 || textState === 4 ? 2000 : (textState === 2 || textState === 5 ? 75 : 150);
+      if (time - lastTextChangeTime > phaseDuration) {
+        lastTextChangeTime = time;
+        if (textState === 0) {
+          // Typing CODERITHUM
+          const target = "CODERITHUM";
+          if (currentText.length < target.length) {
+            currentText = target.slice(0, currentText.length + 1);
+          } else {
+            textState = 1; // pause
+          }
+        } else if (textState === 1) {
+          // Pause after CODERITHUM
+          textState = 2; // start erasing
+        } else if (textState === 2) {
+          // Erasing CODERITHUM
+          if (currentText.length > 0) {
+            currentText = currentText.slice(0, -1);
+          } else {
+            textState = 3; // start typing tagline
+          }
+        } else if (textState === 3) {
+          // Typing TECH CLUB
+          const target = "TECH CLUB";
+          if (currentText.length < target.length) {
+            currentText = target.slice(0, currentText.length + 1);
+          } else {
+            textState = 4; // pause
+          }
+        } else if (textState === 4) {
+          // Pause after TECH CLUB
+          textState = 5; // start erasing
+        } else if (textState === 5) {
+          // Erasing TECH CLUB
+          if (currentText.length > 0) {
+            currentText = currentText.slice(0, -1);
+          } else {
+            textState = 0; // cycle back to typing CODERITHUM
+          }
+        }
+      }
+
+      // Draw typed characters from currentText
       let currentOffsetC = 0;
-      for (let i = 0; i < word.length; i++) {
-        const char = word[i];
+      for (let i = 0; i < currentText.length; i++) {
+        const char = currentText[i];
+        if (char === " ") {
+          currentOffsetC += 4; // space width is 3 cells + 1 gap
+          continue;
+        }
         const glyph = font[char];
         if (!glyph) continue;
         

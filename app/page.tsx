@@ -1491,30 +1491,51 @@ export default function Home() {
               className="space-y-16"
             >
               <div className="text-center max-w-2xl mx-auto space-y-3">
-                <h2 className="text-xs font-mono tracking-widest text-cyan-400 uppercase">Innovation Hub</h2>
-                <h1 className="text-4xl font-extrabold text-white tracking-tight">Technical Projects</h1>
-                <p className="text-xs sm:text-sm text-slate-400">Discover open-source packages, network grids, and AI agents fully built by club members.</p>
+                <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Innovation Hub</h2>
+                <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Technical Projects</h1>
+                <p className="text-xs sm:text-sm text-slate-600">Discover open-source packages, network grids, and AI agents fully built by club members.</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {projects.map(project => (
-                  <div key={project.id} className="p-6 rounded-none bg-[#1E293B]/20 border-2 border-slate-800 hover:border-blue-500 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#0F172A] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#0F172A] group">
+                  <div key={project.id} className="p-6 rounded-none bg-white border-2 border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group relative">
                     <div className="space-y-4">
-                      <div className="w-full h-[200px] rounded-none border-2 border-slate-800 overflow-hidden relative">
-                        <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                      <div className="w-full h-[200px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
+                        {/* Base Image */}
+                        <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
+                        
+                        {/* Red Glitch Overlay */}
+                        <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                          <img 
+                            src={project.banner} 
+                            alt="" 
+                            className="absolute inset-0 w-full h-full object-cover animate-glitch-1 scale-105"
+                            style={{ filter: 'hue-rotate(90deg) saturate(2.5)' }}
+                          />
+                        </div>
+
+                        {/* Blue Glitch Overlay */}
+                        <div className="absolute inset-0 opacity-0 group-hover/glitch:opacity-85 pointer-events-none transition-opacity duration-150 mix-blend-screen">
+                          <img 
+                            src={project.banner} 
+                            alt="" 
+                            className="absolute inset-0 w-full h-full object-cover animate-glitch-2 scale-105"
+                            style={{ filter: 'hue-rotate(220deg) saturate(2.5)' }}
+                          />
+                        </div>
                       </div>
-                      <h4 className="text-xl font-bold text-white group-hover:text-blue-400 transition-colors">{project.title}</h4>
-                      <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">{project.shortDesc}</p>
+                      <h4 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{project.title}</h4>
+                      <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{project.shortDesc}</p>
                     </div>
                     <div className="space-y-4">
                       <div className="flex flex-wrap gap-1.5">
                         {project.techStack.map((tech, idx) => (
-                          <span key={idx} className="px-2 py-0.5 rounded-none bg-slate-900 text-[10px] text-slate-400 font-mono border-2 border-slate-800">{tech}</span>
+                          <span key={idx} className="px-2 py-0.5 rounded-none bg-slate-50 text-[10px] text-slate-700 font-mono border-2 border-slate-200">{tech}</span>
                         ))}
                       </div>
                       <button
                         onClick={() => { setView("project-detail"); setSelectedId(project.id); }}
-                        className="w-full py-2.5 bg-blue-600/10 border-2 border-blue-500/30 rounded-none text-xs font-semibold text-blue-400 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#050B14] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#050B14] cursor-pointer"
+                        className="w-full py-2.5 bg-blue-50 border-2 border-blue-600 rounded-none text-xs font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] cursor-pointer"
                       >
                         View Project Details
                       </button>
@@ -1534,38 +1555,38 @@ export default function Home() {
               exit={{ opacity: 0, y: -15 }}
               className="space-y-12 max-w-4xl mx-auto"
             >
-              <button onClick={() => setView("projects")} className="flex items-center gap-1.5 text-xs font-bold text-slate-400 hover:text-white transition-colors cursor-pointer">
+              <button onClick={() => setView("projects")} className="flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-black transition-colors cursor-pointer">
                 <ChevronLeft className="w-4 h-4" /> Back to Projects
               </button>
 
-              <div className="w-full h-[320px] rounded-none overflow-hidden relative border-2 border-slate-800 shadow-[6px_6px_0px_#0F172A]">
+              <div className="w-full h-[320px] rounded-none overflow-hidden relative border-2 border-slate-900 shadow-[6px_6px_0px_#000]">
                 <img src={currentProject.banner} alt={currentProject.title} className="w-full h-full object-cover" />
               </div>
 
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
                 <div className="lg:col-span-8 space-y-8">
                   <div className="space-y-4">
-                    <h1 className="text-3xl font-extrabold text-white tracking-tight">{currentProject.title}</h1>
-                    <p className="text-sm sm:text-base text-slate-400 leading-relaxed">{currentProject.description}</p>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{currentProject.title}</h1>
+                    <p className="text-sm sm:text-base text-slate-600 leading-relaxed">{currentProject.description}</p>
                   </div>
 
                   {/* Tech Stack details */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-bold text-white">Technology Stack</h3>
+                    <h3 className="text-lg font-bold text-slate-900">Technology Stack</h3>
                     <div className="flex flex-wrap gap-2">
                       {currentProject.techStack.map((tech, idx) => (
-                        <span key={idx} className="px-3 py-1 rounded-none bg-[#1E293B]/20 text-xs text-slate-300 font-mono border-2 border-slate-800">{tech}</span>
+                        <span key={idx} className="px-3 py-1 rounded-none bg-slate-50 text-xs text-slate-700 font-mono border-2 border-slate-200">{tech}</span>
                       ))}
                     </div>
                   </div>
 
                   {/* Team */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-bold text-white">Project Members</h3>
+                    <h3 className="text-lg font-bold text-slate-900">Project Members</h3>
                     <div className="flex flex-wrap gap-2">
                       {currentProject.team.map((member, idx) => (
-                        <span key={idx} className="px-3 py-1.5 rounded-none bg-slate-900 text-xs font-semibold text-slate-200 border-2 border-slate-800 flex items-center gap-2">
-                          <User className="w-3.5 h-3.5 text-cyan-400" />
+                        <span key={idx} className="px-3 py-1.5 rounded-none bg-slate-50 text-xs font-semibold text-slate-700 border-2 border-slate-200 flex items-center gap-2">
+                          <User className="w-3.5 h-3.5 text-blue-600" />
                           {member}
                         </span>
                       ))}
@@ -1575,22 +1596,22 @@ export default function Home() {
 
                 {/* Sidebar details */}
                 <div className="lg:col-span-4 space-y-6">
-                  <div className="p-6 rounded-none bg-[#1E293B]/40 border-2 border-slate-800 space-y-6 shadow-[6px_6px_0px_#0F172A]">
-                    <h3 className="text-sm font-mono uppercase tracking-wider text-white border-b-2 border-slate-800 pb-3">Project Metadata</h3>
+                  <div className="p-6 rounded-none bg-white border-2 border-slate-900 space-y-6 shadow-[6px_6px_0px_#000]">
+                    <h3 className="text-sm font-mono uppercase tracking-wider text-slate-900 border-b-2 border-slate-200 pb-3">Project Metadata</h3>
 
                     <div className="space-y-4">
                       <div>
-                        <div className="text-xs font-semibold text-white">Mentor</div>
-                        <div className="text-xs text-slate-400 mt-1">{currentProject.mentor}</div>
+                        <div className="text-xs font-semibold text-slate-900">Mentor</div>
+                        <div className="text-xs text-slate-600 mt-1">{currentProject.mentor}</div>
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t-2 border-slate-800/80 space-y-3">
+                    <div className="pt-4 border-t-2 border-slate-200 space-y-3">
                       <a
                         href={currentProject.github}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-white rounded-none border-2 border-slate-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#050B14] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#050B14] transition-all"
+                        className="w-full py-2.5 bg-slate-900 hover:bg-black text-white rounded-none border-2 border-slate-900 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all"
                       >
                         <Github className="w-4 h-4" /> Github Repository
                       </a>

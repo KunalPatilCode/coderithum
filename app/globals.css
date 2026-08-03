@@ -67,3 +67,26 @@ body {
   animation: pulseGlow 6s ease-in-out infinite;
 }
 
+@keyframes glitch-strip-1 {
+  0%, 100% { clip-path: inset(12% 0 82% 0); transform: translate(-4px, -1px) skew(-2deg); }
+  20% { clip-path: inset(55% 0 32% 0); transform: translate(4px, 2px) skew(1deg); }
+  40% { clip-path: inset(28% 0 58% 0); transform: translate(-2px, 1px) skew(0deg); }
+  60% { clip-path: inset(78% 0 6% 0); transform: translate(3px, -2px) skew(2deg); }
+  80% { clip-path: inset(42% 0 48% 0); transform: translate(-1px, 2px) skew(-1deg); }
+}
+
+@keyframes glitch-strip-2 {
+  0%, 100% { clip-path: inset(68% 0 12% 0); transform: translate(4px, 1px) skew(2deg); }
+  25% { clip-path: inset(18% 0 72% 0); transform: translate(-3px, -2px) skew(-1deg); }
+  50% { clip-path: inset(48% 0 38% 0); transform: translate(2px, -1px) skew(0deg); }
+  75% { clip-path: inset(8% 0 82% 0); transform: translate(-2px, 2px) skew(-2deg); }
+}
+
+.animate-glitch-1 {
+  animation: glitch-strip-1 0.6s steps(2, end) infinite;
+}
+
+.animate-glitch-2 {
+  animation: glitch-strip-2 0.5s steps(2, end) infinite;
+}
+

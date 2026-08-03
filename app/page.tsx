@@ -26,7 +26,8 @@ import {
   X,
   Trophy,
   ChevronLeft,
-  ArrowUpRight
+  ArrowUpRight,
+  Megaphone
 } from "lucide-react";
 
 // Custom SVG Icons because older Lucide versions lack standard brand exports
@@ -1269,22 +1270,38 @@ export default function Home() {
               </div>
 
               {/* Latest Announcement Banner */}
-              <div className="p-6 rounded-none bg-blue-50 border-2 border-blue-600/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[4px_4px_0px_#000]">
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-none bg-blue-100 border-2 border-blue-300 flex items-center justify-center text-blue-600">
-                    <Info className="w-5 h-5" />
+              <div className="relative overflow-hidden rounded-none bg-yellow-50 border-2 border-slate-900 flex flex-col shadow-[6px_6px_0px_#000] transition-all hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group/banner">
+                {/* Hazard Stripe Tape Top Header */}
+                <div className="h-4 w-full bg-[repeating-linear-gradient(-45deg,#EAB308,#EAB308_12px,#000000_12px,#000000_24px)] border-b-2 border-slate-900" />
+                
+                <div className="p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+                  <div className="flex items-center gap-4">
+                    {/* Blinking Hazard Beacon Box */}
+                    <div className="w-12 h-12 rounded-none bg-yellow-100 border-2 border-slate-900 flex items-center justify-center text-slate-900 relative shrink-0">
+                      <Megaphone className="w-6 h-6 animate-[bounce_1.5s_infinite]" />
+                      <span className="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-red-600"></span>
+                      </span>
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 text-[10px] font-mono font-bold bg-red-100 border-2 border-red-400 text-red-700 animate-pulse uppercase">LIVE ALERT</span>
+                        <h3 className="text-xs font-mono font-bold text-slate-900 uppercase tracking-widest">CRITICAL BROADCAST</h3>
+                      </div>
+                      <p className="text-sm text-slate-800 font-bold leading-relaxed">
+                        Registrations are now open for <span className="underline decoration-blue-600 decoration-2">DevHack 2026: National Hackathon</span>! Secure your team spot before slots run out.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Announcement</h3>
-                    <p className="text-sm text-slate-600 mt-1">Registrations are now open for DevHack 2026: National Hackathon! Secure your team spot today.</p>
-                  </div>
+                  
+                  <button
+                    onClick={() => { setView("event-detail"); setSelectedId("devhack-2026"); }}
+                    className="px-6 py-3 rounded-none bg-blue-600 border-2 border-slate-900 text-white font-bold text-xs uppercase tracking-wider whitespace-nowrap shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#000] transition-all cursor-pointer"
+                  >
+                    Register Now &rarr;
+                  </button>
                 </div>
-                <button
-                  onClick={() => { setView("event-detail"); setSelectedId("devhack-2026"); }}
-                  className="px-5 py-2.5 rounded-none bg-blue-600 border-2 border-blue-700 text-white font-medium text-xs whitespace-nowrap shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
-                >
-                  Register Now
-                </button>
               </div>
 
               {/* Statistics Grid */}

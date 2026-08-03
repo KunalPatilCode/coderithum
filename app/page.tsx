@@ -956,21 +956,6 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Statistics Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-white border-2 border-slate-900 p-8 rounded-none shadow-[6px_6px_0px_#000] backdrop-blur-sm">
-                {[
-                  { value: `${totalEventsCount}+`, label: "Workshops & Hackathons" },
-                  { value: `${totalProjectsCount}+`, label: "Active Tech Projects" },
-                  { value: `${totalMembersCount}+`, label: "Dedicated Members" },
-                  { value: `${totalAwardsCount}+`, label: "National Achievements" }
-                ].map((stat, i) => (
-                  <div key={i} className="text-center p-4">
-                    <div className="text-4xl sm:text-5xl font-black text-slate-900">{stat.value}</div>
-                    <div className="text-xs sm:text-sm text-slate-600 mt-2 font-mono uppercase tracking-wider">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-
               {/* Latest Announcement Banner */}
               <div className="p-6 rounded-none bg-blue-50 border-2 border-blue-600/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[4px_4px_0px_#000]">
                 <div className="flex items-center gap-4">
@@ -988,6 +973,21 @@ export default function Home() {
                 >
                   Register Now
                 </button>
+              </div>
+
+              {/* Statistics Grid */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-white border-2 border-slate-900 p-8 rounded-none shadow-[6px_6px_0px_#000] backdrop-blur-sm">
+                {[
+                  { value: `${totalEventsCount}+`, label: "Workshops & Hackathons" },
+                  { value: `${totalProjectsCount}+`, label: "Active Tech Projects" },
+                  { value: `${totalMembersCount}+`, label: "Dedicated Members" },
+                  { value: `${totalAwardsCount}+`, label: "National Achievements" }
+                ].map((stat, i) => (
+                  <div key={i} className="text-center p-4">
+                    <div className="text-4xl sm:text-5xl font-black text-slate-900">{stat.value}</div>
+                    <div className="text-xs sm:text-sm text-slate-600 mt-2 font-mono uppercase tracking-wider">{stat.label}</div>
+                  </div>
+                ))}
               </div>
 
               {/* Featured Event Spotlight */}

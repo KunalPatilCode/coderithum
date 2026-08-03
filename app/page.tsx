@@ -844,31 +844,27 @@ export default function Home() {
   const totalAwardsCount = achievements.length;
 
   return (
-    <div className="min-h-screen bg-[#0F172A] text-slate-100 font-sans antialiased selection:bg-blue-600/30 selection:text-blue-200">
+    <div className="min-h-screen bg-transparent text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-blue-900">
       
       {/* Decorative Glow Elements */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-[radial-gradient(circle_at_50%_0%,rgba(37,99,235,0.12),rgba(6,182,212,0.06)_40%,transparent_70%)] pointer-events-none z-0" />
-      <div className="absolute top-[800px] left-[10%] w-[300px] h-[300px] bg-blue-600/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-[800px] left-[10%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[400px] right-[10%] w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
-
-      {/* Grid Pattern overlay */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.012)_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] pointer-events-none z-0" />
 
       {/* ======================================================================
           Navigation Header
           ====================================================================== */}
       <header className="sticky top-4 z-50 px-4 md:px-6 w-full max-w-7xl mx-auto pointer-events-none">
-        <div className="w-full backdrop-blur-md bg-[#0F172A]/80 border-2 border-slate-800/80 px-6 h-14 rounded-full flex items-center justify-between shadow-lg pointer-events-auto">
+        <div className="w-full backdrop-blur-md bg-white/85 border-2 border-slate-900/80 px-6 h-14 rounded-full flex items-center justify-between shadow-lg pointer-events-auto">
           <button onClick={() => { setView("home"); setSelectedId(null); }} className="flex items-center gap-2.5 group cursor-pointer">
             <img src={logo.src} alt="Coderithum Logo" className="w-7 h-7 object-contain transition-transform group-hover:scale-105" />
-            <span className="font-bold text-base tracking-tight text-white flex items-center gap-1.5">
+            <span className="font-bold text-base tracking-tight text-slate-900 flex items-center gap-1.5">
               Coderithum
-              <span className="px-2 py-0.5 text-[10px] font-mono font-normal rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400">Tech Club</span>
+              <span className="px-2 py-0.5 text-[10px] font-mono font-normal rounded-full bg-blue-50 border border-blue-200 text-blue-600">Tech Club</span>
             </span>
           </button>
 
           {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-400 uppercase">
+          <nav className="hidden md:flex items-center gap-8 text-sm font-bold text-slate-600 uppercase">
             {[
               { id: "home", label: "Home" },
               { id: "about", label: "About" },
@@ -882,9 +878,9 @@ export default function Home() {
               <button
                 key={tab.id}
                 onClick={() => { setView(tab.id); setSelectedId(null); }}
-                className={`hover:text-white transition-colors cursor-pointer relative py-1 ${
+                className={`hover:text-black transition-colors cursor-pointer relative py-1 ${
                   view === tab.id || (tab.id === "events" && view === "event-detail") || (tab.id === "projects" && view === "project-detail")
-                    ? "text-white"
+                    ? "text-black"
                     : ""
                 }`}
               >
@@ -897,7 +893,7 @@ export default function Home() {
           </nav>
 
           {/* Mobile Menu Toggle */}
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-slate-400 hover:text-white transition-colors">
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden p-2 text-slate-600 hover:text-black transition-colors">
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
         </div>
@@ -910,7 +906,7 @@ export default function Home() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-x-4 top-20 bg-[#0F172A]/95 backdrop-blur-md border-2 border-slate-800 z-40 p-6 flex flex-col gap-4 shadow-2xl md:hidden uppercase font-bold rounded-2xl"
+            className="fixed inset-x-4 top-20 bg-white/95 backdrop-blur-md border-2 border-slate-900 z-40 p-6 flex flex-col gap-4 shadow-2xl md:hidden uppercase font-bold rounded-2xl"
           >
             {[
               { id: "home", label: "Home" },
@@ -926,7 +922,7 @@ export default function Home() {
                 key={tab.id}
                 onClick={() => { setView(tab.id); setSelectedId(null); setMobileMenuOpen(false); }}
                 className={`text-left text-base py-2 transition-colors ${
-                  view === tab.id ? "text-blue-500" : "text-slate-400"
+                  view === tab.id ? "text-blue-600" : "text-slate-600"
                 }`}
               >
                 {tab.label}
@@ -953,7 +949,7 @@ export default function Home() {
               className="space-y-24"
             >
               {/* Hero Section - Full Bleed Ice Theme Banner */}
-              <div className="w-screen h-[50vh] relative left-1/2 right-1/2 -translate-x-1/2 bg-white border-b border-slate-200 -mt-[120px] mb-16 overflow-hidden flex justify-center items-center cursor-none">
+              <div className="w-screen h-[50vh] relative left-1/2 right-1/2 -translate-x-1/2 bg-white border-b-2 border-slate-900 -mt-[120px] mb-16 overflow-hidden flex justify-center items-center cursor-none">
                 {/* Background Canvas */}
                 <div className="absolute inset-0 w-full h-full z-0 opacity-90 pointer-events-none">
                   <InteractivePixelArt />
@@ -961,7 +957,7 @@ export default function Home() {
               </div>
 
               {/* Statistics Grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-[#1E293B]/20 border-2 border-slate-800 p-8 rounded-none shadow-[6px_6px_0px_#0A1224] backdrop-blur-sm">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 bg-white border-2 border-slate-900 p-8 rounded-none shadow-[6px_6px_0px_#000] backdrop-blur-sm">
                 {[
                   { value: `${totalEventsCount}+`, label: "Workshops & Hackathons" },
                   { value: `${totalProjectsCount}+`, label: "Active Tech Projects" },
@@ -969,26 +965,26 @@ export default function Home() {
                   { value: `${totalAwardsCount}+`, label: "National Achievements" }
                 ].map((stat, i) => (
                   <div key={i} className="text-center p-4">
-                    <div className="text-4xl sm:text-5xl font-black text-white">{stat.value}</div>
-                    <div className="text-xs sm:text-sm text-slate-400 mt-2 font-mono uppercase tracking-wider">{stat.label}</div>
+                    <div className="text-4xl sm:text-5xl font-black text-slate-900">{stat.value}</div>
+                    <div className="text-xs sm:text-sm text-slate-600 mt-2 font-mono uppercase tracking-wider">{stat.label}</div>
                   </div>
                 ))}
               </div>
 
               {/* Latest Announcement Banner */}
-              <div className="p-6 rounded-none bg-gradient-to-r from-blue-900/30 via-indigo-900/20 to-cyan-900/30 border-2 border-blue-500/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[4px_4px_0px_#0F172A]">
+              <div className="p-6 rounded-none bg-blue-50 border-2 border-blue-600/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[4px_4px_0px_#000]">
                 <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-none bg-blue-500/10 border-2 border-blue-500/30 flex items-center justify-center text-blue-400">
+                  <div className="w-10 h-10 rounded-none bg-blue-100 border-2 border-blue-300 flex items-center justify-center text-blue-600">
                     <Info className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-white uppercase tracking-wider">Announcement</h3>
-                    <p className="text-sm text-slate-300 mt-1">Registrations are now open for DevHack 2026: National Hackathon! Secure your team spot today.</p>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Announcement</h3>
+                    <p className="text-sm text-slate-600 mt-1">Registrations are now open for DevHack 2026: National Hackathon! Secure your team spot today.</p>
                   </div>
                 </div>
                 <button
                   onClick={() => { setView("event-detail"); setSelectedId("devhack-2026"); }}
-                  className="px-5 py-2.5 rounded-none bg-blue-600 border-2 border-blue-700 text-white font-medium text-xs whitespace-nowrap shadow-[3px_3px_0px_#0F172A] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#0F172A] transition-all cursor-pointer"
+                  className="px-5 py-2.5 rounded-none bg-blue-600 border-2 border-blue-700 text-white font-medium text-xs whitespace-nowrap shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                 >
                   Register Now
                 </button>

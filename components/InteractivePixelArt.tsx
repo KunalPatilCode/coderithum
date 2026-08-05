@@ -212,56 +212,33 @@ export default function InteractivePixelArt() {
       });
       trailRef.current = trailRef.current.filter(pt => pt.alpha > 0);
 
-      // Set of coordinates occupied by the rocket
-      const getRocketPixelColor = (dc: number, dr: number) => {
-        // Nose Cone (dr = -3, -2)
-        if (dr === -3) {
-          if (dc === 0) return themes[themeIndex].primary;
-        }
-        if (dr === -2) {
-          if (dc === 0) return themes[themeIndex].primary;
-          if (dc === -1 || dc === 1) return themes[themeIndex].body;
-        }
-
-        // Main Body Tube (dr = -1, 0, 1)
-        if (dr >= -1 && dr <= 1) {
-          if (dc === 0) {
-            if (dr === 0) return themes[themeIndex].window;
-            return themes[themeIndex].body;
-          }
-          if (dc === -1 || dc === 1) {
-            return themes[themeIndex].body;
-          }
-        }
-
-        // Fins (dr = 2)
-        if (dr === 2) {
-          if (dc === -2 || dc === 2) return themes[themeIndex].primary;
-          if (dc === -1 || dc === 1) return themes[themeIndex].secondary;
-          if (dc === 0) return themes[themeIndex].body;
-        }
-
-        // Flame (dr = 3, 4)
-        if (dr === 3) {
-          if (dc === 0) return "#FB923C"; // Orange flame core
-          if (dc === -1 || dc === 1) return "#FDE047"; // Yellow flame sides
-        }
-        if (dr === 4) {
-          if (dc === 0) {
-            return Math.sin(time * 0.05) > 0 ? "#FDE047" : null;
-          }
-        }
-
-        return null;
-      };
+      // 7-Vertex Arrow Cursor Path2D for 100% exact shape and prominent hover visibility
+      const cursorScale = 1.8;
+      const cursorPath = new Path2D();
+      cursorPath.moveTo(0, 0);
+      cursorPath.lineTo(4.2 * cursorScale, 20.0 * cursorScale);
+      cursorPath.lineTo(9.2 * cursorScale, 14.0 * cursorScale);
+      cursorPath.lineTo(15.2 * cursorScale, 20.0 * cursorScale);
+      cursorPath.lineTo(18.7 * cursorScale, 16.5 * cursorScale);
+      cursorPath.lineTo(12.7 * cursorScale, 10.5 * cursorScale);
+      cursorPath.lineTo(19.2 * cursorScale, 9.5 * cursorScale);
+      cursorPath.closePath();
 
       const circleCells = new Set<string>();
-      for (let dc = -2; dc <= 2; dc++) {
-        for (let dr = -3; dr <= 4; dr++) {
-          if (getRocketPixelColor(dc, dr) !== null) {
-            const cc = Math.floor(circleC + dc);
-            const cr = Math.floor(circleR + dr);
-            circleCells.add(`${cc},${cr}`);
+      const cursorPx = circleC * cellSize;
+      const cursorPy = circleR * cellSize;
+
+      const minC = Math.floor((cursorPx - 5) / cellSize);
+      const maxC = Math.ceil((cursorPx + 25 * cursorScale) / cellSize);
+      const minR = Math.floor((cursorPy - 5) / cellSize);
+      const maxR = Math.ceil((cursorPy + 25 * cursorScale) / cellSize);
+
+      for (let c = minC; c <= maxC; c++) {
+        for (let r = minR; r <= maxR; r++) {
+          const cellCenterX = (c + 0.5) * cellSize - cursorPx;
+          const cellCenterY = (r + 0.5) * cellSize - cursorPy;
+          if (ctx.isPointInPath(cursorPath, cellCenterX, cellCenterY)) {
+            circleCells.add(`${c},${r}`);
           }
         }
       }
@@ -292,7 +269,15 @@ export default function InteractivePixelArt() {
 
         const startRow = Math.floor(rows - buildingH);
         for (let r = Math.max(0, startRow); r < rows; r++) {
-          if (circleCells.has(`${c},${r}`)) continue;
+          // If cell is inside hover cursor shape, render in vibrant cyan with sharp border
+          if (circleCells.has(`${c},${r}`)) {
+            ctx.fillStyle = CYAN;
+            ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+            ctx.strokeStyle = DEEP_NAVY;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(c * cellSize, r * cellSize, cellSize, cellSize);
+            continue;
+          }
 
           if (r === startRow) {
             // Draw flashing red warning light on antenna tips, or slate building tops
@@ -319,6 +304,24 @@ export default function InteractivePixelArt() {
           ctx.fillRect(c * cellSize + 0.5, r * cellSize + 0.5, cellSize - 1, cellSize - 1);
         }
       }
+
+      // Render hover cursor shape cells over sky/non-building areas for 100% visibility anywhere
+      circleCells.forEach(cellKey => {
+        const [cStr, rStr] = cellKey.split(",");
+        const cc = parseInt(cStr, 10);
+        const cr = parseInt(rStr, 10);
+        const buildingH = getBuildingHeight(cc);
+        const startRow = Math.floor(rows - buildingH);
+
+        // Only draw for sky areas (above buildings) to avoid duplicate draw
+        if (cr < startRow || buildingH <= 0) {
+          ctx.fillStyle = CYAN;
+          ctx.fillRect(cc * cellSize, cr * cellSize, cellSize, cellSize);
+          ctx.strokeStyle = DEEP_NAVY;
+          ctx.lineWidth = 1;
+          ctx.strokeRect(cc * cellSize, cr * cellSize, cellSize, cellSize);
+        }
+      });
 
       // Draw random popping circles (digital rain ripple effect)
       if (Math.random() < 0.015) {

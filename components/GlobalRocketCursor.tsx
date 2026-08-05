@@ -27,188 +27,286 @@ export default function GlobalRocketCursor() {
     resize();
     window.addEventListener("resize", resize);
 
-    // Mouse coordinates (global viewport client coords)
+    // Mouse tracking
     let mouseX = -1000;
     let mouseY = -1000;
+    let isHoveringInteractive = false;
+    let isMouseDown = false;
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
+
+      const target = e.target as HTMLElement | null;
+      if (target) {
+        const isClickable =
+          target.tagName === "BUTTON" ||
+          target.tagName === "A" ||
+          target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.onclick !== null ||
+          target.closest("button") !== null ||
+          target.closest("a") !== null ||
+          window.getComputedStyle(target).cursor === "pointer";
+        isHoveringInteractive = !!isClickable;
+      }
+    };
+
+    const handleMouseDown = () => {
+      isMouseDown = true;
+      spawnClickBurst();
+    };
+
+    const handleMouseUp = () => {
+      isMouseDown = false;
     };
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
 
-    // Theme index and color definitions
+    // Theme definitions (Coding & Neobrutalist Tech themes)
     let themeIndex = 0;
     const themes = [
       {
-        primary: "#EF4444",   // Red nose/fins
-        secondary: "#2563EB", // Blue details
-        window: "#06B6D4",    // Cyan window
-        body: "#FFFFFF"       // White body
+        name: "Developer Code </>",
+        primary: "#2563EB",     // Royal Blue
+        secondary: "#06B6D4",   // Cyan
+        accent: "#3B82F6",      // Electric Light Blue
+        border: "#0F172A",      // Dark Slate Border
+        particleType: "code",   // Binary / Code symbols
+        colors: ["#2563EB", "#06B6D4", "#60A5FA", "#38BDF8"]
       },
       {
-        primary: "#06B6D4",   // Cyan nose/fins
-        secondary: "#A855F7", // Purple details
-        window: "#FDE047",    // Yellow window
-        body: "#FFFFFF"
+        name: "Matrix Terminal >_",
+        primary: "#10B981",     // Emerald Green
+        secondary: "#22C55E",   // Lime
+        accent: "#34D399",      // Mint
+        border: "#022C22",      // Dark Green Border
+        particleType: "matrix", // 1s and 0s
+        colors: ["#10B981", "#22C55E", "#4ADE80", "#A7F3D0"]
       },
       {
-        primary: "#22C55E",   // Green nose/fins
-        secondary: "#FDE047", // Yellow details
-        window: "#06B6D4",    // Cyan window
-        body: "#FFFFFF"
+        name: "Neobrutalist Pixel",
+        primary: "#FDE047",     // Bold Yellow
+        secondary: "#A855F7",   // Cyber Purple
+        accent: "#EC4899",      // Vibrant Pink
+        border: "#0F172A",      // Sharp Black Border
+        particleType: "blocks", // Neo-brutalist square pixels
+        colors: ["#FDE047", "#A855F7", "#EC4899", "#3B82F6"]
       },
       {
-        primary: "#F97316",   // Orange nose/fins
-        secondary: "#EF4444", // Red details
-        window: "#22D3EE",    // Cyan window
-        body: "#FFFFFF"
+        name: "Cyber Circuit ⚡",
+        primary: "#F97316",     // Neon Orange
+        secondary: "#EF4444",   // Bright Red
+        accent: "#FACC15",      // Yellow Volt
+        border: "#1E1B4B",      // Deep Navy Border
+        particleType: "sparks", // Electric sparks
+        colors: ["#F97316", "#EF4444", "#FACC15", "#FB923C"]
       }
     ];
 
     const handleDblClick = () => {
       themeIndex = (themeIndex + 1) % themes.length;
+      spawnClickBurst();
     };
     window.addEventListener("dblclick", handleDblClick);
 
-    // Easing positions
-    let rocketX = width / 2;
-    let rocketY = height / 2;
+    // Easing cursor positions
+    let cursorX = width / 2;
+    let cursorY = height / 2;
 
-    // Trails and sparks
-    let sparks: { x: number; y: number; speedX: number; speedY: number; alpha: number }[] = [];
-    let smoke: { x: number; y: number; alpha: number }[] = [];
+    // Particles system
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      alpha: number;
+      size: number;
+      char?: string;
+      color: string;
+      rotation?: number;
+      vRot?: number;
+    }
 
-    const getRocketPixelColor = (dc: number, dr: number, time: number) => {
-      // Nose Cone (dr = -3, -2)
-      if (dr === -3) {
-        if (dc === 0) return themes[themeIndex].primary;
-      }
-      if (dr === -2) {
-        if (dc === 0) return themes[themeIndex].primary;
-        if (dc === -1 || dc === 1) return themes[themeIndex].body;
-      }
+    let particles: Particle[] = [];
 
-      // Main Body Tube (dr = -1, 0, 1)
-      if (dr >= -1 && dr <= 1) {
-        if (dc === 0) {
-          if (dr === 0) return themes[themeIndex].window;
-          return themes[themeIndex].body;
-        }
-        if (dc === -1 || dc === 1) {
-          return themes[themeIndex].body;
-        }
-      }
+    const codeChars = ["0", "1", "{", "}", "</>", ";", "=>", "const", "git", "npm"];
 
-      // Fins (dr = 2)
-      if (dr === 2) {
-        if (dc === -2 || dc === 2) return themes[themeIndex].primary;
-        if (dc === -1 || dc === 1) return themes[themeIndex].secondary;
-        if (dc === 0) return themes[themeIndex].body;
-      }
+    const spawnTrailParticle = (x: number, y: number) => {
+      const currentTheme = themes[themeIndex];
+      const color = currentTheme.colors[Math.floor(Math.random() * currentTheme.colors.length)];
+      const char = codeChars[Math.floor(Math.random() * codeChars.length)];
 
-      // Flame (dr = 3, 4)
-      if (dr === 3) {
-        if (dc === 0) return "#FB923C"; // Orange flame core
-        if (dc === -1 || dc === 1) return "#FDE047"; // Yellow flame sides
-      }
-      if (dr === 4) {
-        if (dc === 0) {
-          return Math.sin(time * 0.05) > 0 ? "#FDE047" : null;
-        }
-      }
-
-      return null;
+      particles.push({
+        x: x + (Math.random() * 8 - 4),
+        y: y + (Math.random() * 8 - 4),
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: currentTheme.particleType === "matrix" ? 0.8 + Math.random() * 1.5 : (Math.random() - 0.5) * 1.2 - 0.5,
+        alpha: 0.9,
+        size: Math.floor(Math.random() * 4) + 4,
+        char: currentTheme.particleType === "code" || currentTheme.particleType === "matrix" ? char : undefined,
+        color,
+        rotation: Math.random() * Math.PI * 2,
+        vRot: (Math.random() - 0.5) * 0.1
+      });
     };
+
+    const spawnClickBurst = () => {
+      if (mouseX === -1000) return;
+      const currentTheme = themes[themeIndex];
+      const count = 14;
+      for (let i = 0; i < count; i++) {
+        const angle = (Math.PI * 2 * i) / count + (Math.random() * 0.2 - 0.1);
+        const speed = 2.5 + Math.random() * 3.5;
+        const color = currentTheme.colors[i % currentTheme.colors.length];
+        const char = codeChars[i % codeChars.length];
+
+        particles.push({
+          x: cursorX,
+          y: cursorY,
+          vx: Math.cos(angle) * speed,
+          vy: Math.sin(angle) * speed,
+          alpha: 1.0,
+          size: Math.floor(Math.random() * 4) + 5,
+          char: currentTheme.particleType === "code" || currentTheme.particleType === "matrix" ? char : undefined,
+          color,
+          rotation: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.2
+        });
+      }
+    };
+
+    // Render Arrow + Code Emblem Cursor (Exact vector shape matching Image 2 reference cursor)
+    const drawPixelTechCursor = (x: number, y: number, time: number) => {
+      const theme = themes[themeIndex];
+      const scale = isHoveringInteractive ? 1.35 : 1.15;
+
+      ctx.save();
+      ctx.translate(x, y);
+
+      // Pulse effect on click
+      if (isMouseDown) {
+        ctx.scale(0.88, 0.88);
+      }
+
+      // Exact 7-vertex vector path matching Image 2 reference cursor
+      ctx.beginPath();
+      ctx.moveTo(0, 0);                               // Top-left tip
+      ctx.lineTo(4.2 * scale, 20.0 * scale);           // Left wing tip
+      ctx.lineTo(9.2 * scale, 14.0 * scale);           // Left inner corner
+      ctx.lineTo(15.2 * scale, 20.0 * scale);          // Stem bottom-left (45° angle)
+      ctx.lineTo(18.7 * scale, 16.5 * scale);          // Stem bottom-right (90° perp end)
+      ctx.lineTo(12.7 * scale, 10.5 * scale);          // Stem top-right (45° angle)
+      ctx.lineTo(19.2 * scale, 9.5 * scale);           // Right wing tip
+      ctx.closePath();
+
+      // Solid Primary Fill (Uniform color throughout entire arrow)
+      ctx.fillStyle = isHoveringInteractive ? theme.accent : theme.primary;
+      ctx.fill();
+
+      // Sharp Neobrutalist Border
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = theme.border;
+      ctx.lineJoin = "miter";
+      ctx.lineCap = "square";
+      ctx.miterLimit = 3;
+      ctx.stroke();
+
+      // Draw Mini Code Emblem next to pointer (</> or >_)
+      const emblemOffsetX = 22 * scale;
+      const emblemOffsetY = 9 * scale;
+
+      ctx.font = `bold ${isHoveringInteractive ? 11 : 9}px "Share Tech Mono", monospace`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "middle";
+
+      // Shadow / Neobrutalist backing for code emblem tag
+      const tagText = isHoveringInteractive ? "</>" : theme.name.includes(">_") ? ">_" : "</>";
+      const textMetrics = ctx.measureText(tagText);
+      const bgW = textMetrics.width + 8;
+      const bgH = 14;
+
+      // Dark border box for code badge
+      ctx.fillStyle = theme.border;
+      ctx.fillRect(emblemOffsetX - 2, emblemOffsetY - 8, bgW + 4, bgH + 4);
+
+      // Inner fill for code badge
+      ctx.fillStyle = isHoveringInteractive ? theme.secondary : "#FFFFFF";
+      ctx.fillRect(emblemOffsetX, emblemOffsetY - 6, bgW, bgH);
+
+      // Text inside code badge
+      ctx.fillStyle = isHoveringInteractive ? "#FFFFFF" : theme.primary;
+      ctx.fillText(tagText, emblemOffsetX + 4, emblemOffsetY + 1);
+
+      ctx.restore();
+    };
+
+    let lastTrailTime = 0;
 
     const animate = () => {
       const time = performance.now();
 
-      // Clear canvas with transparent clearRect
       ctx.clearRect(0, 0, width, height);
 
-      const angle = -Math.PI / 4; // Rotate 45 degrees counter-clockwise to point to top-left
-      const pixelSize = 4; // Render size of rocket pixels
-      const localExhaustY = 7 * pixelSize; // 28px
-      const exhaustX = rocketX - localExhaustY * Math.sin(angle);
-      const exhaustY = rocketY + localExhaustY * Math.cos(angle);
-
-      // 1. Easing rocket position towards mouse coordinates
+      // 1. Smooth Easing to mouse coords
       if (mouseX !== -1000 && mouseY !== -1000) {
-        const prevX = rocketX;
-        const prevY = rocketY;
+        const prevX = cursorX;
+        const prevY = cursorY;
 
-        rocketX += (mouseX - rocketX) * 0.15;
-        rocketY += (mouseY - rocketY) * 0.15;
+        cursorX += (mouseX - cursorX) * 0.25;
+        cursorY += (mouseY - cursorY) * 0.25;
 
-        const moveDist = Math.sqrt(Math.pow(rocketX - prevX, 2) + Math.pow(rocketY - prevY, 2));
-        if (moveDist > 1) {
-          if (smoke.length === 0 || Math.sqrt(Math.pow(exhaustX - smoke[smoke.length - 1].x, 2) + Math.pow(exhaustY - smoke[smoke.length - 1].y, 2)) > 15) {
-            smoke.push({ x: exhaustX, y: exhaustY, alpha: 1.0 });
-          }
+        const moveDist = Math.hypot(cursorX - prevX, cursorY - prevY);
+
+        if (moveDist > 1.5 && time - lastTrailTime > 25) {
+          spawnTrailParticle(cursorX + 12, cursorY + 12);
+          lastTrailTime = time;
         }
       }
 
-      // 2. Update and draw smoke trail
-      smoke.forEach(s => {
-        s.alpha -= 0.015;
-      });
-      smoke = smoke.filter(s => s.alpha > 0);
-
-      smoke.forEach(s => {
-        ctx.fillStyle = `rgba(148, 163, 184, ${s.alpha * 0.4})`;
-        ctx.fillRect(s.x - 4, s.y - 4, 8, 8);
-      });
-
-      // 3. Update and draw rocket engine sparks
-      if (Math.random() < 0.45 && mouseX !== -1000) {
-        const sparkSpeed = 1.8 + Math.random() * 2.2;
-        // Direction vector out of the rotated exhaust (dx=0.707, dy=0.707)
-        const exVectorX = 0.707;
-        const exVectorY = 0.707;
-        sparks.push({
-          x: exhaustX + (Math.random() * 6 - 3),
-          y: exhaustY + (Math.random() * 6 - 3),
-          speedX: sparkSpeed * exVectorX + (Math.random() * 1.0 - 0.5),
-          speedY: sparkSpeed * exVectorY + (Math.random() * 1.0 - 0.5),
-          alpha: 1.0
-        });
-      }
-
-      sparks.forEach(s => {
-        s.y += s.speedY;
-        s.x += s.speedX;
-        s.alpha -= 0.04;
-      });
-      sparks = sparks.filter(s => s.alpha > 0);
-
-      sparks.forEach(s => {
-        let color = `rgba(253, 224, 71, ${s.alpha})`; // yellow spark
-        if (s.alpha < 0.35) {
-          color = `rgba(239, 68, 68, ${s.alpha})`; // red embers
-        } else if (s.alpha < 0.7) {
-          color = `rgba(251, 146, 60, ${s.alpha})`; // orange flame
+      // 2. Update & Draw Particles
+      particles.forEach(pt => {
+        pt.x += pt.vx;
+        pt.y += pt.vy;
+        pt.alpha -= 0.022;
+        if (pt.rotation !== undefined && pt.vRot !== undefined) {
+          pt.rotation += pt.vRot;
         }
-        ctx.fillStyle = color;
-        ctx.fillRect(s.x - 2, s.y - 2, 4, 4);
       });
 
-      // 4. Draw pixel rocket cursor
-      ctx.save();
-      ctx.translate(rocketX, rocketY);
-      ctx.rotate(angle);
-      ctx.translate(0, 3 * pixelSize); // Align the nose cone tip with mouse click position
-      for (let dc = -2; dc <= 2; dc++) {
-        for (let dr = -3; dr <= 4; dr++) {
-          const color = getRocketPixelColor(dc, dr, time);
-          if (color !== null) {
-            ctx.fillStyle = color;
-            ctx.fillRect(dc * pixelSize, dr * pixelSize, pixelSize, pixelSize);
-          }
+      particles = particles.filter(pt => pt.alpha > 0);
+
+      particles.forEach(pt => {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, pt.alpha);
+
+        if (pt.char) {
+          // Code character particle
+          ctx.font = `bold ${pt.size + 6}px "Share Tech Mono", monospace`;
+          ctx.fillStyle = pt.color;
+          ctx.fillText(pt.char, pt.x, pt.y);
+        } else {
+          // Pixel block / spark particle
+          ctx.translate(pt.x, pt.y);
+          if (pt.rotation) ctx.rotate(pt.rotation);
+
+          ctx.fillStyle = pt.color;
+          ctx.fillRect(-pt.size / 2, -pt.size / 2, pt.size, pt.size);
+
+          // Dark pixel outline for neobrutalist style
+          ctx.strokeStyle = "#0F172A";
+          ctx.lineWidth = 1;
+          ctx.strokeRect(-pt.size / 2, -pt.size / 2, pt.size, pt.size);
         }
+        ctx.restore();
+      });
+
+      // 3. Draw Tech Pixel Cursor
+      if (mouseX !== -1000 && mouseY !== -1000) {
+        drawPixelTechCursor(cursorX, cursorY, time);
       }
-      ctx.restore();
 
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -219,6 +317,8 @@ export default function GlobalRocketCursor() {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", resize);
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("dblclick", handleDblClick);
     };
   }, []);

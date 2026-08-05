@@ -2,7 +2,6 @@ import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X } from "lucide-react";
 import logo from "../public/logo.png";
-import ThreeNavbarLogo from "./ThreeNavbarLogo";
 
 interface HeaderProps {
   view: string;
@@ -52,7 +51,11 @@ export default function Header({
             onClick={() => handleTabClick("home")}
             className="flex items-center gap-1.5 group cursor-pointer bg-transparent border-none p-0 flex-row"
           >
-            <ThreeNavbarLogo />
+            <img 
+              src={logo.src} 
+              alt="Coderithum Logo" 
+              className="w-5 h-5 object-contain group-hover:scale-110 transition-transform duration-200" 
+            />
             <span className="font-bold text-base tracking-tight text-slate-900 flex items-center gap-1.5">
               Coderithum
               <span className="px-2 py-0.5 text-[10px] font-mono font-normal rounded-full bg-blue-50 border border-blue-200 text-blue-600">

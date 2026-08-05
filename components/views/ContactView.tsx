@@ -53,16 +53,17 @@ export default function ContactView({ contactSuccess, setContactSuccess }: Conta
             </div>
           </div>
 
-          {/* Styled Mock map */}
-          <div className="w-full h-[220px] rounded-none border-2 border-slate-900 overflow-hidden relative group shadow-[6px_6px_0px_#000]">
-            <div className="absolute inset-0 bg-white bg-grid-pattern opacity-80 flex items-center justify-center">
-              <div className="text-center space-y-2 z-10">
-                <MapPin className="w-8 h-8 text-blue-600 animate-bounce mx-auto" />
-                <div className="text-xs font-mono text-slate-900">CS Block Tech Lab (Campus Map Grid)</div>
-                <div className="text-[10px] text-slate-500">12.9716° N, 77.5946° E</div>
-              </div>
-            </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-blue-600/5 to-transparent pointer-events-none" />
+          {/* Government Engineering College, Daman Map */}
+          <div className="w-full h-[220px] rounded-none border-2 border-slate-900 overflow-hidden shadow-[6px_6px_0px_#000]">
+            <iframe
+              src="https://www.google.com/maps?q=Government+Engineering+College,+Daman&output=embed"
+              className="w-full h-full"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Government Engineering College, Daman"
+            />
           </div>
         </div>
 

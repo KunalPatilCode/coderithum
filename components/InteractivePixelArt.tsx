@@ -1,5 +1,25 @@
 import React, { useEffect, useRef } from "react";
 
+function interpolateColor(color1: string, color2: string, factor: number): string {
+  const r1 = parseInt(color1.substring(1, 3), 16);
+  const g1 = parseInt(color1.substring(3, 5), 16);
+  const b1 = parseInt(color1.substring(5, 7), 16);
+
+  const r2 = parseInt(color2.substring(1, 3), 16);
+  const g2 = parseInt(color2.substring(3, 5), 16);
+  const b2 = parseInt(color2.substring(5, 7), 16);
+
+  const r = Math.round(r1 + (r2 - r1) * factor);
+  const g = Math.round(g1 + (g2 - g1) * factor);
+  const b = Math.round(b1 + (b2 - b1) * factor);
+
+  const rHex = r.toString(16).padStart(2, "0");
+  const gHex = g.toString(16).padStart(2, "0");
+  const bHex = b.toString(16).padStart(2, "0");
+
+  return `#${rHex}${gHex}${bHex}`;
+}
+
 export default function InteractivePixelArt() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -212,50 +232,137 @@ export default function InteractivePixelArt() {
       });
       trailRef.current = trailRef.current.filter(pt => pt.alpha > 0);
 
-      // 7-Vertex Arrow Cursor Path2D for 100% exact shape and prominent hover visibility
-      const cursorScale = 1.8;
-      const cursorPath = new Path2D();
-      cursorPath.moveTo(0, 0);
-      cursorPath.lineTo(4.2 * cursorScale, 20.0 * cursorScale);
-      cursorPath.lineTo(9.2 * cursorScale, 14.0 * cursorScale);
-      cursorPath.lineTo(15.2 * cursorScale, 20.0 * cursorScale);
-      cursorPath.lineTo(18.7 * cursorScale, 16.5 * cursorScale);
-      cursorPath.lineTo(12.7 * cursorScale, 10.5 * cursorScale);
-      cursorPath.lineTo(19.2 * cursorScale, 9.5 * cursorScale);
-      cursorPath.closePath();
-
+      // Mouse interactive cells (disabled per user request)
       const circleCells = new Set<string>();
-      const cursorPx = circleC * cellSize;
-      const cursorPy = circleR * cellSize;
 
-      const minC = Math.floor((cursorPx - 5) / cellSize);
-      const maxC = Math.ceil((cursorPx + 25 * cursorScale) / cellSize);
-      const minR = Math.floor((cursorPy - 5) / cellSize);
-      const maxR = Math.ceil((cursorPy + 25 * cursorScale) / cellSize);
+      const drawPixel = (cc: number, cr: number, color: string) => {
+        if (circleCells.has(`${cc},${cr}`)) return;
+        ctx.fillStyle = color;
+        ctx.fillRect(cc * cellSize + 0.5, cr * cellSize + 0.5, cellSize - 1, cellSize - 1);
+      };
 
-      for (let c = minC; c <= maxC; c++) {
-        for (let r = minR; r <= maxR; r++) {
-          const cellCenterX = (c + 0.5) * cellSize - cursorPx;
-          const cellCenterY = (r + 0.5) * cellSize - cursorPy;
-          if (ctx.isPointInPath(cursorPath, cellCenterX, cellCenterY)) {
-            circleCells.add(`${c},${r}`);
+      // Helper function to draw pixelated shapes aligned to the grid
+      const drawPixelShape = (sc: number, sr: number, shape: string[], color: string) => {
+        const startC = Math.round(sc);
+        const startR = Math.round(sr);
+        for (let r = 0; r < shape.length; r++) {
+          for (let c = 0; c < shape[r].length; c++) {
+            if (shape[r][c] === "1") {
+              const targetC = startC + c;
+              const targetR = startR + r;
+              if (targetC >= 0 && targetC < cols && targetR >= 0 && targetR < rows) {
+                if (!circleCells.has(`${targetC},${targetR}`)) {
+                  ctx.fillStyle = color;
+                  ctx.fillRect(targetC * cellSize + 0.5, targetR * cellSize + 0.5, cellSize - 1, cellSize - 1);
+                }
+              }
+            }
+          }
+        }
+      };
+
+      // Draw Clouds moving across the top of buildings
+      const cloudColor = "#FFFFFF";
+      
+      const cloud1Shape = [
+        "0001110000",
+        "0011111100",
+        "0111111110",
+        "1111111111"
+      ];
+      const cloud2Shape = [
+        "001100",
+        "011110",
+        "111111"
+      ];
+      const cloud3Shape = [
+        "00001111000",
+        "00111111100",
+        "11111111111"
+      ];
+
+      // Different heights and speeds for organic scrolling
+      const cloud1C = (time * 0.0015) % (cols + 20) - 10;
+      const cloud1R = Math.floor(rows * 0.12);
+      drawPixelShape(cloud1C, cloud1R, cloud1Shape, cloudColor);
+
+      const cloud2C = ((time * 0.0008) + cols * 0.45) % (cols + 15) - 8;
+      const cloud2R = Math.floor(rows * 0.06);
+      drawPixelShape(cloud2C, cloud2R, cloud2Shape, cloudColor);
+
+      const cloud3C = ((time * 0.0011) + cols * 0.75) % (cols + 22) - 11;
+      const cloud3R = Math.floor(rows * 0.18);
+      drawPixelShape(cloud3C, cloud3R, cloud3Shape, cloudColor);
+
+      // Draw Plane flying fast from left to right (comes every 40 seconds)
+      const planeCycle = time % 40000;
+      const planeDuration = 7000; // takes 7s to fly across
+      if (planeCycle < planeDuration) {
+        const p = planeCycle / planeDuration;
+        const planeC = p * (cols + 20) - 10;
+        const planeR = Math.floor(rows * 0.25);
+        
+        const planeShape = [
+          "0000100",
+          "0001100",
+          "1111111",
+          "0001100",
+          "0000100"
+        ];
+        const planeColor = "#475569";
+        drawPixelShape(planeC, planeR, planeShape, planeColor);
+        
+        // flashing red tail light
+        const isFlashing = Math.floor(time / 250) % 2 === 0;
+        if (isFlashing) {
+          const tailC = Math.round(planeC);
+          const tailR = Math.round(planeR) + 2;
+          if (tailC >= 0 && tailC < cols && tailR >= 0 && tailR < rows && !circleCells.has(`${tailC},${tailR}`)) {
+            ctx.fillStyle = "#EF4444";
+            ctx.fillRect(tailC * cellSize + 0.5, tailR * cellSize + 0.5, cellSize - 1, cellSize - 1);
           }
         }
       }
+
+      // Draw Birds (small flock flying in the middle of the sky with flapping wings)
+      const birdColor = "#334155";
+      const isWingUp = Math.floor(time / 150) % 2 === 0;
+      
+      const birdUpShape = [
+        "101",
+        "010"
+      ];
+      const birdDownShape = [
+        "010",
+        "101"
+      ];
+      const birdShape = isWingUp ? birdUpShape : birdDownShape;
+
+      const bird1C = (time * 0.0035) % (cols + 10) - 5;
+      const bird1R = Math.floor(rows * 0.44) + Math.sin(time * 0.003) * 1.5;
+      drawPixelShape(bird1C, bird1R, birdShape, birdColor);
+
+      const bird2C = ((time * 0.0035) - 5 + cols) % (cols + 10) - 5;
+      const bird2R = Math.floor(rows * 0.39) + Math.cos(time * 0.003) * 1.5;
+      drawPixelShape(bird2C, bird2R, birdShape, birdColor);
+
+      const bird3C = ((time * 0.0035) - 9 + cols) % (cols + 10) - 5;
+      const bird3R = Math.floor(rows * 0.47) + Math.sin(time * 0.002) * 1.5;
+      drawPixelShape(bird3C, bird3R, birdShape, birdColor);
 
       // Draw pixelated city skyline silhouette with twinkling windows & blinking warning lights
       const getBuildingHeight = (col: number) => {
         const blockId = Math.floor(col / 6);
         const phase = blockId % 5;
-        let h = 4;
-        if (phase === 0) h = 8;
-        else if (phase === 1) h = 5;
-        else if (phase === 2) h = 10;
-        else if (phase === 3) h = 6;
-        else if (phase === 4) h = 9;
+        let h = 6;
+        if (phase === 0) h = 11;
+        else if (phase === 1) h = 8;
+        else if (phase === 2) h = 14;
+        else if (phase === 3) h = 9;
+        else if (phase === 4) h = 12;
 
         const isCenter = (col % 6) === 2;
-        if (isCenter && (blockId % 2 === 0)) return h + 2;
+        if (isCenter && (blockId % 2 === 0)) return h + 3;
 
         const isGap = (col % 6) === 5;
         if (isGap) return 0;
@@ -269,24 +376,8 @@ export default function InteractivePixelArt() {
 
         const startRow = Math.floor(rows - buildingH);
         for (let r = Math.max(0, startRow); r < rows; r++) {
-          // If cell is inside hover cursor shape, render in vibrant cyan with sharp border
-          if (circleCells.has(`${c},${r}`)) {
-            ctx.fillStyle = CYAN;
-            ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
-            ctx.strokeStyle = DEEP_NAVY;
-            ctx.lineWidth = 1;
-            ctx.strokeRect(c * cellSize, r * cellSize, cellSize, cellSize);
-            continue;
-          }
-
           if (r === startRow) {
-            // Draw flashing red warning light on antenna tips, or slate building tops
-            const isAntenna = (c % 6) === 2 && (buildingH > 12);
-            if (isAntenna) {
-              ctx.fillStyle = (Math.sin(time * 0.005) > 0) ? "#EF4444" : "#475569";
-            } else {
-              ctx.fillStyle = "#334155"; // Slate building top
-            }
+            ctx.fillStyle = "#334155"; // Slate building top
           } else {
             // Draw twinkling window lights inside building body
             const isWindowCol = (c % 6) === 1 || (c % 6) === 3;
@@ -305,23 +396,7 @@ export default function InteractivePixelArt() {
         }
       }
 
-      // Render hover cursor shape cells over sky/non-building areas for 100% visibility anywhere
-      circleCells.forEach(cellKey => {
-        const [cStr, rStr] = cellKey.split(",");
-        const cc = parseInt(cStr, 10);
-        const cr = parseInt(rStr, 10);
-        const buildingH = getBuildingHeight(cc);
-        const startRow = Math.floor(rows - buildingH);
 
-        // Only draw for sky areas (above buildings) to avoid duplicate draw
-        if (cr < startRow || buildingH <= 0) {
-          ctx.fillStyle = CYAN;
-          ctx.fillRect(cc * cellSize, cr * cellSize, cellSize, cellSize);
-          ctx.strokeStyle = DEEP_NAVY;
-          ctx.lineWidth = 1;
-          ctx.strokeRect(cc * cellSize, cr * cellSize, cellSize, cellSize);
-        }
-      });
 
       // Draw random popping circles (digital rain ripple effect)
       if (Math.random() < 0.015) {
@@ -381,12 +456,6 @@ export default function InteractivePixelArt() {
         textStartC = Math.max(2, Math.floor((cols - textWidth) / 2));
         textStartR = logoStartR + logoWidth + 2;
       }
-
-      const drawPixel = (cc: number, cr: number, color: string) => {
-        if (circleCells.has(`${cc},${cr}`)) return;
-        ctx.fillStyle = color;
-        ctx.fillRect(cc * cellSize + 0.5, cr * cellSize + 0.5, cellSize - 1, cellSize - 1);
-      };
 
       // Draw Hashtag Logo
       for (let r = 0; r < 5; r++) {

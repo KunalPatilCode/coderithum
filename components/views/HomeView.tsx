@@ -38,7 +38,7 @@ export default function HomeView({
       className="space-y-24"
     >
       {/* Hero Section - Full Bleed Ice Theme Banner (Restored to top as previous) */}
-      <div className="w-screen h-[50vh] min-h-[380px] relative left-1/2 right-1/2 -translate-x-1/2 bg-white border-b-2 border-slate-900 -mt-[120px] mb-16 overflow-hidden flex justify-center items-center cursor-none">
+      <div className="w-screen h-[60vh] min-h-[60vh] relative left-1/2 right-1/2 -translate-x-1/2 bg-white border-b-2 border-slate-900 -mt-[120px] mb-16 overflow-hidden flex justify-center items-center cursor-none">
         {/* Background Canvas */}
         <div className="absolute inset-0 w-full h-full z-0 opacity-90 pointer-events-none">
           <InteractivePixelArt />

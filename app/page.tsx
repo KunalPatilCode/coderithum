@@ -7,6 +7,7 @@ import { AnimatePresence } from "framer-motion";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import GlobalRocketCursor from "../components/GlobalRocketCursor";
+import TextMarqueeAnimation from "../components/TextMarqueeAnimation";
 
 // Views
 import HomeView from "../components/views/HomeView";
@@ -164,6 +165,9 @@ export default function Home() {
 
         </AnimatePresence>
       </main>
+
+      {/* Text Marquee Animation */}
+      <TextMarqueeAnimation />
 
       {/* General Footer */}
       <Footer setView={setView} setSelectedId={setSelectedId} />

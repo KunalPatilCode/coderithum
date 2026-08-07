@@ -105,28 +105,24 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
 
             <div className="pt-4 border-t-2 border-slate-200 space-y-3">
               {currentEvent.type === "upcoming" ? (
-                <a
-                  href={currentEvent.regLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-2.5 bg-blue-600 hover:bg-black text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all"
+                <button
+                  onClick={() => alert("Coming Soon")}
+                  className="w-full py-2.5 bg-blue-600 hover:bg-black text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                 >
                   Register for Event <ArrowUpRight className="w-3.5 h-3.5" />
-                </a>
+                </button>
               ) : (
                 <span className="w-full py-2.5 bg-slate-50 text-slate-400 rounded-none text-xs font-bold flex items-center justify-center select-none border-2 border-slate-200">
                   Registration Closed
                 </span>
               )}
 
-              <a
-                href={currentEvent.feedbackLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-2.5 bg-white border-2 border-slate-900 hover:bg-slate-50 text-slate-700 rounded-none text-xs font-semibold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all"
+              <button
+                onClick={() => alert("Coming Soon")}
+                className="w-full py-2.5 bg-white border-2 border-slate-900 hover:bg-slate-50 text-slate-700 rounded-none text-xs font-semibold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
               >
                 Share Feedback
-              </a>
+              </button>
             </div>
           </div>
         </div>

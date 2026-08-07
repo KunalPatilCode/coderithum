@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Info, Calendar, MapPin, ChevronRight, Trophy } from "lucide-react";
 import InteractivePixelArt from "../InteractivePixelArt";
 import AnimatedCounter from "../AnimatedCounter";
+import ClubCalendar from "../ClubCalendar";
 import { ClubEvent, ClubProject, ClubAchievement } from "../../types";
 
 interface HomeViewProps {
@@ -45,23 +46,63 @@ export default function HomeView({
         </div>
       </div>
 
-      {/* Latest Announcement Banner */}
-      <div className="p-6 rounded-none bg-blue-50 border-2 border-blue-600/30 flex flex-col md:flex-row items-center justify-between gap-6 shadow-[4px_4px_0px_#000]">
-        <div className="flex items-center gap-4">
-          <div className="w-10 h-10 rounded-none bg-blue-100 border-2 border-blue-300 flex items-center justify-center text-blue-600">
-            <Info className="w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Announcement</h3>
-            <p className="text-sm text-slate-600 mt-1">Registrations are now open for GEC Daman SIH Selection Sprints 2026! Secure your team spot today.</p>
+      {/* Announcement & Activity Calendar side-by-side grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        {/* Announcement Column (left, taking 5 cols) */}
+        <div className="lg:col-span-5 flex flex-col h-full">
+          <div className="p-5 rounded-none bg-blue-50 border-2 border-blue-600/30 flex flex-col justify-between gap-5 shadow-[4px_4px_0px_#000] flex-1">
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-none bg-blue-100 border-2 border-blue-300 flex items-center justify-center text-blue-600 shrink-0">
+                  <Info className="w-4.5 h-4.5" />
+                </div>
+                <div>
+                  <h3 className="text-xs sm:text-sm font-bold text-slate-900 uppercase tracking-wider">Announcement</h3>
+                  <p className="text-[10px] text-slate-500 font-mono">GEC Daman Coderithum</p>
+                </div>
+              </div>
+              
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                Registrations are now open for SIH Sprints and Next.js Web Dev Bootcamp! Secure your spots.
+              </p>
+
+              {/* List of upcoming events inside the announcement box */}
+              <div className="space-y-2 pt-1.5">
+                <div className="text-[9px] font-mono text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-1">Upcoming Schedule</div>
+                {[
+                  { title: "Next.js Web Dev Bootcamp", date: "Aug 28-29, 2026", id: "web-dev-bootcamp" },
+                  { title: "SIH 2026 Internal Sprints", date: "Sept 18-19, 2026", id: "sih-hackathon-2026" }
+                ].map(evt => (
+                  <div
+                    key={evt.id}
+                    onClick={() => { setView("event-detail"); setSelectedId(evt.id); }}
+                    className="p-2 bg-white border border-slate-200 hover:border-blue-600 transition-colors flex items-center justify-between gap-3 cursor-pointer group rounded-none"
+                  >
+                    <div className="space-y-0.5">
+                      <div className="text-xs font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{evt.title}</div>
+                      <div className="text-[9px] text-slate-500 font-mono">{evt.date}</div>
+                    </div>
+                    <ChevronRight className="w-3 h-3 text-slate-400 group-hover:text-blue-600 transition-colors shrink-0" />
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="pt-2">
+              <button
+                onClick={() => { setView("event-detail"); setSelectedId("sih-hackathon-2026"); }}
+                className="w-full py-2 rounded-none bg-blue-600 border-2 border-blue-700 text-white font-bold text-xs shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer text-center"
+              >
+                Register Now
+              </button>
+            </div>
           </div>
         </div>
-        <button
-          onClick={() => { setView("event-detail"); setSelectedId("sih-hackathon-2026"); }}
-          className="px-5 py-2.5 rounded-none bg-blue-600 border-2 border-blue-700 text-white font-medium text-xs whitespace-nowrap shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
-        >
-          Register Now
-        </button>
+
+        {/* Calendar Column (right, taking 7 cols) */}
+        <div className="lg:col-span-7 flex flex-col h-full">
+          <ClubCalendar setView={setView} setSelectedId={setSelectedId} />
+        </div>
       </div>
 
       {/* Statistics Grid */}
@@ -234,6 +275,8 @@ export default function HomeView({
         </div>
       </div>
 
+
+
       {/* Sponsors Section */}
       <div className="border-t-2 border-slate-200 pt-16 text-center space-y-6">
         <div className="text-xs text-slate-500 font-mono uppercase tracking-widest">Proudly Supported By</div>
@@ -245,7 +288,7 @@ export default function HomeView({
       </div>
 
       {/* Call To Action */}
-      <div className="p-12 rounded-none bg-white border-2 border-slate-900 text-center space-y-6 max-w-4xl mx-auto shadow-[8px_8px_0px_#000] relative overflow-hidden">
+      <div className="p-6 sm:p-12 rounded-none bg-white border-2 border-slate-900 text-center space-y-6 max-w-4xl mx-auto shadow-[8px_8px_0px_#000] relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(37,99,235,0.04),transparent_50%)]" />
         <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900">Join the Community</h3>
         <p className="text-sm text-slate-600 max-w-lg mx-auto leading-relaxed">

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ClickSoundManager from "@/components/ClickSoundManager";
+
 const geistSans = { variable: "font-sans" };
 const geistMono = { variable: "font-mono" };
 
@@ -19,7 +21,11 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <ClickSoundManager />
+      </body>
     </html>
   );
 }
+

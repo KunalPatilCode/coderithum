@@ -6,6 +6,17 @@ import {
   ClubAchievement,
 } from "../types";
 
+const withBasePath = (path: string) => {
+  if (!path || path.startsWith("http") || path.startsWith("data:")) {
+    return path;
+  }
+
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
+
+  return `${basePath}${normalizedPath}`;
+};
+
 export const initialEvents: ClubEvent[] = [
   {
     id: "sih-hackathon-2026",
@@ -254,7 +265,7 @@ export const initialTeam: TeamMember[] = [
     name: "Kunal Patil",
     role: "Club President",
     category: "Leadership",
-    avatar: "/kunalp.png?v=13",
+    avatar: withBasePath("/kunalp.png?v=13"),
     avatarStyle: { transform: "translate(6px, -46px) scale(2.0)" },
     github: "https://github.com/KunalPatilCode",
     linkedin:
@@ -264,7 +275,7 @@ export const initialTeam: TeamMember[] = [
     name: "Maitri Patel",
     role: "Vice President & UI/UX Head",
     category: "Leadership",
-    avatar: "/maitri.png?v=11",
+    avatar: withBasePath("/maitri.png?v=11"),
     avatarStyle: {
       objectPosition: "center 18%",
       transform: "translateY(18px) scale(1.3)",
@@ -277,7 +288,7 @@ export const initialTeam: TeamMember[] = [
     name: "Md Ismile",
     role: "Chief Technical Lead",
     category: "Technical",
-    avatar: "/ismile.png?v=12",
+    avatar: withBasePath("/ismile.png?v=12"),
     avatarStyle: {
       objectPosition: "center 16%",
       transform: "translate(-6px, 16px) scale(1.25)",
@@ -352,7 +363,7 @@ export const initialTeam: TeamMember[] = [
     name: "Purnima Upadhyay",
     role: "Incubator & Ops Lead",
     category: "Leadership",
-    avatar: "/purnima.png?v=1",
+    avatar: withBasePath("/purnima.png?v=1"),
     avatarStyle: {
       objectPosition: "center 24%",
       transform: "translateY(4px) scale(1.0)",

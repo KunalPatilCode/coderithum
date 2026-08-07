@@ -1,5 +1,16 @@
 import { ClubEvent, ClubProject, GalleryAlbum, TeamMember, ClubAchievement } from "../types";
 
+const withBasePath = (path: string) => {
+  if (!path || path.startsWith("http") || path.startsWith("data:")) {
+    return path;
+  }
+
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
+
+  return `${basePath}${normalizedPath}`;
+};
+
 export const initialEvents: ClubEvent[] = [
   {
     id: "sih-hackathon-2026",
@@ -146,9 +157,9 @@ export const initialTeam: TeamMember[] = [
   { name: "Dr. Avinash R. Chaudhari", role: "Principal & Chief Patron", category: "Faculty", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80", linkedin: "https://linkedin.com" },
   { name: "Mrs. Hemali J. Damania", role: "Faculty Coordinator & Asst. Professor", category: "Faculty", avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&h=150&q=80", linkedin: "https://linkedin.com" },
   { name: "Ms. Dipika Ganpat Damania", role: "Faculty Advisor & Asst. Professor", category: "Faculty", avatar: "https://images.unsplash.com/photo-1534751516642-a131ffd103fd?auto=format&fit=crop&w=150&h=150&q=80", linkedin: "https://linkedin.com" },
-  { name: "Kunal Patil", role: "Club President", category: "Leadership", avatar: "/kunalp.png?v=13", avatarStyle: { transform: "translate(6px, 4px) scale(1.28)", backgroundColor: "#000" }, github: "https://github.com/KunalPatilCode", linkedin: "https://www.linkedin.com/in/kunal-patil29?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" },
-  { name: "Maitri Patel", role: "Vice President & UI/UX Head", category: "Leadership", avatar: "/maitri.png?v=11", avatarStyle: { transform: "scale(1.15)", backgroundColor: "#000" }, github: "https://github.com/Maitrify", linkedin: "https://www.linkedin.com/in/maitri-patel-573927287?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" },
-  { name: "Md Ismile", role: "Chief Technical Lead", category: "Technical", avatar: "/ismile.png?v=12", avatarStyle: { transform: "translate(-6px, 6px) scale(1.22)", backgroundColor: "#000" }, github: "https://github.com", linkedin: "https://linkedin.com" },
+  { name: "Kunal Patil", role: "Club President", category: "Leadership", avatar: withBasePath("/kunalp.png?v=13"), avatarStyle: { transform: "translate(6px, 4px) scale(1.28)", backgroundColor: "#000" }, github: "https://github.com/KunalPatilCode", linkedin: "https://www.linkedin.com/in/kunal-patil29?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" },
+  { name: "Maitri Patel", role: "Vice President & UI/UX Head", category: "Leadership", avatar: withBasePath("/maitri.png?v=11"), avatarStyle: { transform: "scale(1.15)", backgroundColor: "#000" }, github: "https://github.com/Maitrify", linkedin: "https://www.linkedin.com/in/maitri-patel-573927287?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" },
+  { name: "Md Ismile", role: "Chief Technical Lead", category: "Technical", avatar: withBasePath("/ismile.png?v=12"), avatarStyle: { transform: "translate(-6px, 6px) scale(1.22)", backgroundColor: "#000" }, github: "https://github.com", linkedin: "https://linkedin.com" },
   { name: "Aarav Sharma", role: "AI & GenAI Lead", category: "Technical", avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80", github: "https://github.com", linkedin: "https://linkedin.com" },
   { name: "Nisha Patel", role: "Fullstack Web Lead", category: "Technical", avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80", github: "https://github.com", linkedin: "https://linkedin.com" },
   { name: "Rohan Verma", role: "Mobile App Development Lead", category: "Technical", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=150&h=150&q=80", github: "https://github.com", linkedin: "https://linkedin.com" },
@@ -156,7 +167,7 @@ export const initialTeam: TeamMember[] = [
   { name: "Yash Trivedi", role: "Cybersecurity Lead", category: "Technical", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80", github: "https://github.com", linkedin: "https://linkedin.com" },
   { name: "Priya Joshi", role: "UI/UX & Product Design Lead", category: "Design", avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80", github: "https://github.com", linkedin: "https://linkedin.com" },
   { name: "Siddharth Mehta", role: "Data Science Lead", category: "Technical", avatar: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=150&h=150&q=80", github: "https://github.com", linkedin: "https://linkedin.com" },
-  { name: "Purnima Upadhyay", role: "Incubator & Ops Lead", category: "Leadership", avatar: "/purnima.png?v=1", avatarStyle: { objectPosition: "center 15%", transform: "scale(1.05)" }, github: "https://github.com", linkedin: "https://www.linkedin.com/in/purnima-upadhyay-0902b12b5?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" },
+  { name: "Purnima Upadhyay", role: "Incubator & Ops Lead", category: "Leadership", avatar: withBasePath("/purnima.png?v=1"), avatarStyle: { objectPosition: "center 15%", transform: "scale(1.05)" }, github: "https://github.com", linkedin: "https://www.linkedin.com/in/purnima-upadhyay-0902b12b5?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" },
   { name: "Riya Mehta", role: "Marketing & Outreach (Brand Lead)", category: "Marketing", avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80", linkedin: "https://linkedin.com" }
 ];
 

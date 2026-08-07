@@ -255,7 +255,7 @@ export const initialTeam: TeamMember[] = [
     role: "Club President",
     category: "Leadership",
     avatar: "/kunalp.png?v=13",
-    avatarStyle: { transform: "translate(12px, -46px) scale(2.0)" },
+    avatarStyle: { transform: "translate(6px, -46px) scale(2.0)" },
     github: "https://github.com/KunalPatilCode",
     linkedin:
       "https://www.linkedin.com/in/kunal-patil29?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",

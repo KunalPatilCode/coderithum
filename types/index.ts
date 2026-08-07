@@ -41,6 +41,8 @@ export interface TeamMember {
   role: string;
   category: "Faculty" | "Leadership" | "Technical" | "Design" | "Marketing";
   avatar: string;
+  avatarClassName?: string;
+  avatarStyle?: React.CSSProperties;
   github?: string;
   linkedin?: string;
 }

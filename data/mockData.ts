@@ -373,11 +373,14 @@ export const initialTeam: TeamMember[] = [
       "https://www.linkedin.com/in/purnima-upadhyay-0902b12b5?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
   },
   {
-    name: "Riya Mehta",
+    name: "Abhishek Kumar",
     role: "Marketing & Outreach (Brand Lead)",
     category: "Marketing",
-    avatar:
-      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80",
+    avatar: "/abhishek-kumar.png",
+    avatarStyle: {
+      objectPosition: "center 20%",
+      transform: "translateY(-2px) scale(1.24)",
+    },
     linkedin: "https://linkedin.com",
   },
 ];

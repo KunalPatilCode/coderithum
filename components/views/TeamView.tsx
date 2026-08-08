@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, Linkedin } from "../Icons";
 import { TeamMember } from "../../types";
-import InteractiveHeading from "../InteractiveHeading";
 
 interface TeamViewProps {
   team: TeamMember[];
@@ -112,13 +111,17 @@ export default function TeamView({ team }: TeamViewProps) {
     );
   };
 
-  const renderArrow = (delay = 0) => (
+  const renderArrow = (delay: number = 0) => (
     <motion.div
-      initial={{ scaleY: 0 }}
-      animate={{ scaleY: 1 }}
-      transition={{ delay, duration: 0.2 }}
-      className="origin-top w-[3px] h-6 bg-slate-900 my-1"
-    />
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay, duration: 0.3 }}
+      className="flex justify-center my-2"
+    >
+      <svg className="w-4 h-6 text-slate-900 animate-bounce" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+      </svg>
+    </motion.div>
   );
 
   return (
@@ -130,31 +133,79 @@ export default function TeamView({ team }: TeamViewProps) {
       className="space-y-16"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <InteractiveHeading text="Ecosystem Core" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
-        <div>
-          <InteractiveHeading text="Organizational Structure" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
-        </div>
+        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Ecosystem Core</h2>
+        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Organizational Structure</h1>
         <p className="text-xs sm:text-sm text-slate-600">Explore Coderithum's leadership hierarchy and technical domain subtrees.</p>
       </div>
 
       {/* Main Organizational Tree */}
       <div className="w-full max-w-6xl mx-auto p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] space-y-8 overflow-x-auto">
         <div className="min-w-[850px] flex flex-col items-center py-4">
-          {renderNode("Faculty Mentor", "faculty_mentor", 0.1)}
+
+          {/* Level 1: Faculty Mentor */}
+          {renderNode("Faculty Mentor", "faculty", 0.1)}
           {renderArrow(0.25)}
+
+          {/* Level 2: President */}
           {renderNode("President", "president", 0.4)}
           {renderArrow(0.55)}
+
+          {/* Level 3: Vice President */}
           {renderNode("Vice President", "vp", 0.7)}
+
+          {/* VP to Division Connection Lines */}
+          <div className="flex flex-col items-center w-full mt-2">
+            <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 0.85, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
+            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.05, duration: 0.3 }} className="origin-center w-[66%] h-[3px] bg-slate-900" />
+            <div className="flex justify-between w-[66%] h-6">
+              <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+              <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+              <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+            </div>
+          </div>
+
+          {/* Columns Grid */}
+          <div className="grid grid-cols-3 gap-6 w-full mt-2">
+
+            {/* Column 1: Technical Division */}
+            <div className="flex flex-col">
+              {renderNode("Technical Lead", "tech_lead", 1.4)}
+              {renderArrow(1.55)}
+
+              <div className="bg-slate-50 border-2 border-slate-900 p-3 shadow-[4px_4px_0px_#000] text-center mb-3">
+                <div className="text-xs font-mono font-bold text-blue-600 uppercase tracking-wider">8 Domain Specializations</div>
+                <div className="text-[10px] text-slate-500 font-mono mt-1">AI, Fullstack, Mobile, Cloud, Cyber, UI/UX, Data, Robotics</div>
+              </div>
+            </div>
+
+            {/* Column 2: Incubator & Ops Division */}
+            <div className="flex flex-col">
+              {renderNode("Incubator & Ops Lead", "incubator_lead", 1.4)}
+              {renderArrow(1.55)}
+              {renderNode("Functional Leads (Research, Startup)", undefined, 1.7)}
+              {renderArrow(1.85)}
+              {renderNode("Incubator Teams / Research Fellows", undefined, 2.0)}
+            </div>
+
+            {/* Column 3: Community & Brand Division */}
+            <div className="flex flex-col">
+              {renderNode("Community & Brand Lead", "brand_lead", 1.4)}
+              {renderArrow(1.55)}
+              {renderNode("Outreach Leads (Design, Event...)", "outreach_lead", 1.7)}
+              {renderArrow(1.85)}
+              {renderNode("Operations Core (Media, HR, Fin)", undefined, 2.0)}
+            </div>
+
+          </div>
+
         </div>
       </div>
 
       {/* 8 Technical Domain Subtrees Section */}
       <div className="space-y-8 max-w-6xl mx-auto">
         <div className="text-center space-y-2">
-          <InteractiveHeading text="Technical Division Breakdown" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
-          <div>
-            <InteractiveHeading text="8 Technical Domain Trees" as="h3" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" />
-          </div>
+          <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Technical Division Breakdown</h2>
+          <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">8 Technical Domain Trees</h3>
           <p className="text-xs sm:text-sm text-slate-600">Select any domain to view its dedicated leadership and developer hierarchy tree.</p>
         </div>
 

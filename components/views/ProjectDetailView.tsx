@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { ChevronLeft, User, ExternalLink } from "lucide-react";
 import { Github } from "../Icons";
 import { ClubProject } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface ProjectDetailViewProps {
   currentProject: ClubProject | undefined;
@@ -40,7 +41,9 @@ export default function ProjectDetailView({ currentProject, setView }: ProjectDe
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-8 space-y-8">
           <div className="space-y-4">
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">{currentProject.title}</h1>
+            <div>
+              <InteractiveHeading text={currentProject.title} as="h1" className="text-3xl font-extrabold text-slate-900 tracking-tight" />
+            </div>
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed">{currentProject.description}</p>
           </div>
 

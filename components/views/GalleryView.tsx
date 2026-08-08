@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { GalleryAlbum } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface GalleryViewProps {
   albums: GalleryAlbum[];
@@ -19,8 +20,10 @@ export default function GalleryView({ albums, activeAlbumId, setActiveAlbumId, c
       className="space-y-12"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Visual History</h2>
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Club Gallery</h1>
+        <InteractiveHeading text="Visual History" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <div>
+          <InteractiveHeading text="Club Gallery" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
+        </div>
         <p className="text-xs sm:text-sm text-slate-600">Sneak peek into our hack sprints, annual bootcamps, and workshop grids.</p>
       </div>
 

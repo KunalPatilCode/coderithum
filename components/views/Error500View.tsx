@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface Error500ViewProps {
   setView: (view: string) => void;
@@ -12,10 +13,12 @@ export default function Error500View({ setView }: Error500ViewProps) {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0 }}
-      className="text-center py-20 max-w-md mx-auto space-y-6"
+      className="text-center py-20 max-w-md mx-auto space-y-6 flex flex-col items-center"
     >
-      <div className="text-8xl font-black text-rose-950/40 tracking-tighter">500</div>
-      <h2 className="text-xl font-bold text-slate-900">Segment Fault / Stack Leak</h2>
+      <InteractiveHeading text="500" as="h1" className="text-8xl font-black text-rose-950/40 tracking-tighter" />
+      <div>
+        <InteractiveHeading text="Segment Fault / Stack Leak" as="h2" className="text-xl font-bold text-slate-900" />
+      </div>
       <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
         A mock runtime stack overflow anomaly has occurred. Serverless deployment grids remain unaffected.
       </p>

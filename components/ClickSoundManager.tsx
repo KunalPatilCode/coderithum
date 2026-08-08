@@ -519,10 +519,10 @@ export function playTypingKeySound(key: string, mode: TechSoundMode = "terminal"
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const isSpace = key === " ";
+    const isSpace = key === " " || key === "Spacebar" || key === "Space" || key?.toLowerCase() === "space";
     const isEnter = key === "Enter";
 
-    const pitchJitter = isSpace ? 0.75 : isEnter ? 1.25 : 0.9 + Math.random() * 0.2;
+    const pitchJitter = isSpace ? 0.9 : isEnter ? 1.25 : 0.9 + Math.random() * 0.2;
 
     if (isEnter) {
       // Enter key: punchy completion chime
@@ -541,18 +541,37 @@ export function playTypingKeySound(key: string, mode: TechSoundMode = "terminal"
     }
 
     if (isSpace) {
-      // Spacebar: deeper tactile thud
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = "sine";
-      osc.frequency.setValueAtTime(320 * pitchJitter, now);
-      osc.frequency.exponentialRampToValueAtTime(90, now + 0.03);
-      gain.gain.setValueAtTime(volume * 0.65, now);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + 0.03);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(now);
-      osc.stop(now + 0.03);
+      // Spacebar: punchy tactile mechanical spacebar thud & snap
+      const bodyOsc = ctx.createOscillator();
+      const snapOsc = ctx.createOscillator();
+      const bodyGain = ctx.createGain();
+      const snapGain = ctx.createGain();
+
+      // Main resonant body thud (triangle wave sweeping 640Hz -> 180Hz)
+      bodyOsc.type = "triangle";
+      bodyOsc.frequency.setValueAtTime(640 * pitchJitter, now);
+      bodyOsc.frequency.exponentialRampToValueAtTime(180 * pitchJitter, now + 0.055);
+
+      bodyGain.gain.setValueAtTime(volume * 1.1, now);
+      bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.055);
+
+      // Top tactile snap click (square wave sweeping 1600Hz -> 400Hz)
+      snapOsc.type = "square";
+      snapOsc.frequency.setValueAtTime(1600 * pitchJitter, now);
+      snapOsc.frequency.exponentialRampToValueAtTime(400 * pitchJitter, now + 0.025);
+
+      snapGain.gain.setValueAtTime(volume * 0.45, now);
+      snapGain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+
+      bodyOsc.connect(bodyGain);
+      snapOsc.connect(snapGain);
+      bodyGain.connect(ctx.destination);
+      snapGain.connect(ctx.destination);
+
+      bodyOsc.start(now);
+      snapOsc.start(now);
+      bodyOsc.stop(now + 0.055);
+      snapOsc.stop(now + 0.025);
       return;
     }
 
@@ -574,6 +593,60 @@ export function playTypingKeySound(key: string, mode: TechSoundMode = "terminal"
     }
   } catch (err) {
     console.debug("Typing sound error:", err);
+  }
+}
+
+/**
+ * Synthesizes a warm, resonant electric piano / chime note for heading letter hovers.
+ * Pitch maps to a harmonic musical scale based on letter index.
+ */
+export function playMusicalKeyNote(index: number, volume = 0.03) {
+  try {
+    const isMuted = typeof window !== "undefined" && localStorage.getItem("coderithum_sound_muted") === "true";
+    if (isMuted) return;
+
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const now = ctx.currentTime;
+    // Harmonious Pentatonic & Major Scale frequencies (C4 to A6)
+    const freqs = [
+      261.63, 293.66, 329.63, 392.00, 440.00,
+      523.25, 587.33, 659.25, 783.99, 880.00,
+      1046.50, 1174.66, 1318.51, 1567.98, 1760.00
+    ];
+    const freq = freqs[Math.abs(index) % freqs.length];
+
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    const gain2 = ctx.createGain();
+
+    // Primary fundamental sine wave chime (soft subtle volume)
+    osc1.type = "sine";
+    osc1.frequency.setValueAtTime(freq, now);
+    gain1.gain.setValueAtTime(0.0005, now);
+    gain1.gain.linearRampToValueAtTime(volume, now + 0.005);
+    gain1.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+    // Soft 2nd harmonic (octave higher at 20% volume for subtle warmth)
+    osc2.type = "triangle";
+    osc2.frequency.setValueAtTime(freq * 2, now);
+    gain2.gain.setValueAtTime(0.0001, now);
+    gain2.gain.linearRampToValueAtTime(volume * 0.2, now + 0.005);
+    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+
+    osc1.connect(gain1);
+    osc2.connect(gain2);
+    gain1.connect(ctx.destination);
+    gain2.connect(ctx.destination);
+
+    osc1.start(now);
+    osc2.start(now);
+    osc1.stop(now + 0.18);
+    osc2.stop(now + 0.18);
+  } catch (err) {
+    console.debug("Musical key sound error:", err);
   }
 }
 
@@ -627,12 +700,37 @@ export default function ClickSoundManager() {
       if (isMuted) return;
       if (e.button !== 0) return;
 
+      // On mobile/touch devices, pointerdown fires when touching to scroll.
+      // Ignore touch on pointerdown and handle actual taps via click event instead.
+      if (e.pointerType === "touch") return;
+
       playTechClickSound(soundMode, 0.22);
     };
 
+    const handleClick = (e: MouseEvent) => {
+      if (menuRef.current && menuRef.current.contains(e.target as Node)) {
+        return;
+      }
+
+      if (isMuted) return;
+      if (e.button !== 0) return;
+
+      // Trigger click sound on touch clicks (since mouse is handled on pointerdown)
+      const isTouchClick =
+        (e as PointerEvent).pointerType === "touch" ||
+        e.detail === 0 ||
+        !("pointerType" in e);
+
+      if (isTouchClick) {
+        playTechClickSound(soundMode, 0.22);
+      }
+    };
+
     window.addEventListener("pointerdown", handlePointerDown, { passive: true });
+    window.addEventListener("click", handleClick, { passive: true });
     return () => {
       window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("click", handleClick);
     };
   }, [isMuted, soundMode]);
 
@@ -646,10 +744,13 @@ export default function ClickSoundManager() {
         return;
       }
 
-      // Ignore held-down key repeating except backspace
-      if (e.repeat && e.key !== "Backspace") return;
+      const isSpaceKey = e.key === " " || e.code === "Space" || e.key === "Spacebar";
 
-      playTypingKeySound(e.key, soundMode, 0.16);
+      // Ignore held-down key repeating except backspace & spacebar
+      if (e.repeat && e.key !== "Backspace" && !isSpaceKey) return;
+
+      const keyToPlay = isSpaceKey ? " " : e.key;
+      playTypingKeySound(keyToPlay, soundMode, 0.20);
     };
 
     window.addEventListener("keydown", handleKeyDown, { passive: true });

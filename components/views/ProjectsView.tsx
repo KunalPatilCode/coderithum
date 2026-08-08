@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ClubProject } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface ProjectsViewProps {
   projects: ClubProject[];
@@ -23,8 +24,10 @@ export default function ProjectsView({ projects, setView, setSelectedId }: Proje
       className="space-y-16"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Innovation Hub</h2>
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Technical Projects</h1>
+        <InteractiveHeading text="Innovation Hub" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <div>
+          <InteractiveHeading text="Technical Projects" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
+        </div>
         <p className="text-xs sm:text-sm text-slate-600">Discover open-source packages, network grids, and AI agents fully built by club members.</p>
       </div>
 

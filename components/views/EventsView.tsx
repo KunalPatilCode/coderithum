@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Calendar, MapPin } from "lucide-react";
 import { ClubEvent } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface EventsViewProps {
   events: ClubEvent[];
@@ -24,8 +25,10 @@ export default function EventsView({ events, setView, setSelectedId }: EventsVie
       className="space-y-16"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Interactive Timeline</h2>
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Workshops & Hackathons</h1>
+        <InteractiveHeading text="Interactive Timeline" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <div>
+          <InteractiveHeading text="Workshops & Hackathons" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
+        </div>
         <p className="text-xs sm:text-sm text-slate-600">Join our upcoming masterclasses or inspect past workshop agendas and resources.</p>
       </div>
 

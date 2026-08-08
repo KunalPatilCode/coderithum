@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { ChevronLeft, Calendar, Clock, MapPin, ArrowUpRight } from "lucide-react";
 import { ClubEvent } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface EventDetailViewProps {
   currentEvent: ClubEvent | undefined;
@@ -39,7 +40,7 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-8 space-y-8">
           <div className="space-y-4">
-            <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">{currentEvent.title}</h1>
+            <InteractiveHeading text={currentEvent.title} as="h1" className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight" />
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed">{currentEvent.description}</p>
           </div>
 

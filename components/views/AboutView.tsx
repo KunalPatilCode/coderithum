@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Linkedin } from "../Icons";
 import { TeamMember } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface AboutViewProps {
   team: TeamMember[];
@@ -17,8 +18,10 @@ export default function AboutView({ team }: AboutViewProps) {
       className="space-y-16 max-w-4xl mx-auto"
     >
       <div className="space-y-4">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Who We Are</h2>
-        <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">About Coderithum</h1>
+        <InteractiveHeading text="Who We Are" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <div>
+          <InteractiveHeading text="About Coderithum" as="h1" className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight" />
+        </div>
         <p className="text-base text-slate-600 leading-relaxed pt-2">
           Coderithum is the premier, innovation-focused student tech club. Founded with the mission to bridge academia with actual industry development pipelines, we train, guide, and empower students to build real software grids, coordinate national events, and design high-impact projects.
         </p>
@@ -41,7 +44,7 @@ export default function AboutView({ team }: AboutViewProps) {
 
       {/* Faculty Section */}
       <div className="space-y-6">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Faculty Advisors</h2>
+        <InteractiveHeading text="Faculty Advisors" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
           {team.filter(t => t.category === "Faculty").map((fac, idx) => (
             <div key={idx} className="p-6 rounded-none bg-white border-2 border-slate-900 flex items-center gap-4 shadow-[4px_4px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[5px_5px_0px_#000] transition-all">
@@ -60,7 +63,7 @@ export default function AboutView({ team }: AboutViewProps) {
 
       {/* Journey Timeline */}
       <div className="space-y-8">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Our Journey Timeline</h2>
+        <InteractiveHeading text="Our Journey Timeline" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
         <div className="relative border-l-2 border-slate-200 pl-6 ml-4 space-y-8">
           {[
             { year: "2024", title: "Club Conception", desc: "Club founded by a small group of open-source enthusiasts, hosting local compiler building sessions." },

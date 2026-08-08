@@ -5,6 +5,7 @@ import InteractivePixelArt from "../InteractivePixelArt";
 import AnimatedCounter from "../AnimatedCounter";
 import ClubCalendar from "../ClubCalendar";
 import { ClubEvent, ClubProject, ClubAchievement } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface HomeViewProps {
   events: ClubEvent[];
@@ -126,8 +127,10 @@ export default function HomeView({
       <div className="space-y-8">
         <div className="flex justify-between items-end border-b-2 border-slate-900 pb-4">
           <div>
-            <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Spotlight Event</h2>
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">Next Major Tech Workshop</h3>
+            <InteractiveHeading text="Spotlight Event" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+            <div>
+              <InteractiveHeading text="Next Major Tech Workshop" as="h3" className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1" />
+            </div>
           </div>
           <button onClick={() => setView("events")} className="text-xs text-blue-600 hover:text-black font-semibold flex items-center gap-1 cursor-pointer">
             <span>View All Events</span>
@@ -189,8 +192,10 @@ export default function HomeView({
       <div className="space-y-8">
         <div className="flex justify-between items-end border-b-2 border-slate-900 pb-4">
           <div>
-            <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Innovation Hub</h2>
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">Featured Club Projects</h3>
+            <InteractiveHeading text="Innovation Hub" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+            <div>
+              <InteractiveHeading text="Featured Club Projects" as="h3" className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1" />
+            </div>
           </div>
           <button onClick={() => setView("projects")} className="text-xs text-blue-600 hover:text-black font-semibold flex items-center gap-1 cursor-pointer">
             <span>View All Projects</span>
@@ -250,8 +255,10 @@ export default function HomeView({
       <div className="space-y-8">
         <div className="flex justify-between items-end border-b-2 border-slate-900 pb-4">
           <div>
-            <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Hall of Fame</h2>
-            <h3 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1">Latest Achievements</h3>
+            <InteractiveHeading text="Hall of Fame" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+            <div>
+              <InteractiveHeading text="Latest Achievements" as="h3" className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-1" />
+            </div>
           </div>
           <button onClick={() => setView("achievements")} className="text-xs text-blue-600 hover:text-black font-semibold flex items-center gap-1 cursor-pointer">
             <span>View All Achievements</span>

@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { Trophy, User, Award } from "lucide-react";
 import { ClubAchievement } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface AchievementsViewProps {
   achievements: ClubAchievement[];
@@ -17,8 +18,10 @@ export default function AchievementsView({ achievements }: AchievementsViewProps
       className="space-y-12"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Achievements</h2>
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Hall of Achievements</h1>
+        <InteractiveHeading text="Achievements" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <div>
+          <InteractiveHeading text="Hall of Achievements" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
+        </div>
         <p className="text-xs sm:text-sm text-slate-600">Discover awards, SIH trophies, robotics shields, and publications bagged by the club.</p>
       </div>
 

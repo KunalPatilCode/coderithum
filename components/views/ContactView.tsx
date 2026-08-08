@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Mail, MapPin, Phone, Sparkles } from "lucide-react";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface ContactViewProps {
   contactSuccess: boolean;
@@ -17,8 +18,10 @@ export default function ContactView({ contactSuccess, setContactSuccess }: Conta
       className="space-y-16"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Get In Touch</h2>
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Contact Coderithum</h1>
+        <InteractiveHeading text="Get In Touch" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <div>
+          <InteractiveHeading text="Contact Coderithum" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
+        </div>
         <p className="text-xs sm:text-sm text-slate-600">Have questions about upcoming sprints? Drop us a query or visit the campus block.</p>
       </div>
 

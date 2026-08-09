@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, Linkedin } from "../Icons";
 import { TeamMember } from "../../types";
+import InteractiveHeading from "../InteractiveHeading";
 
 interface TeamViewProps {
   team: TeamMember[];
@@ -133,8 +134,10 @@ export default function TeamView({ team }: TeamViewProps) {
       className="space-y-16"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Ecosystem Core</h2>
-        <h1 className="text-4xl font-extrabold text-slate-900 tracking-tight">Organizational Structure</h1>
+        <InteractiveHeading text="Ecosystem Core" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <div>
+          <InteractiveHeading text="Organizational Structure" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
+        </div>
         <p className="text-xs sm:text-sm text-slate-600">Explore Coderithum's leadership hierarchy and technical domain subtrees.</p>
       </div>
 
@@ -204,8 +207,10 @@ export default function TeamView({ team }: TeamViewProps) {
       {/* 8 Technical Domain Subtrees Section */}
       <div className="space-y-8 max-w-6xl mx-auto">
         <div className="text-center space-y-2">
-          <h2 className="text-xs font-mono tracking-widest text-blue-600 uppercase">Technical Division Breakdown</h2>
-          <h3 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">8 Technical Domain Trees</h3>
+          <InteractiveHeading text="Technical Division Breakdown" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+          <div>
+            <InteractiveHeading text="8 Technical Domain Trees" as="h3" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" />
+          </div>
           <p className="text-xs sm:text-sm text-slate-600">Select any domain to view its dedicated leadership and developer hierarchy tree.</p>
         </div>
 

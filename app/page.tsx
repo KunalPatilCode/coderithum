@@ -31,9 +31,11 @@ import {
   initialTeam,
   initialAchievements
 } from "../data/mockData";
+import LogoLoader from "../components/LogoLoader";
 
 export default function Home() {
-  // Navigation State
+  // Navigation & Loading State
+  const [showLoader, setShowLoader] = useState<boolean>(true);
   const [view, setView] = useState<string>("home");
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
@@ -64,8 +66,10 @@ export default function Home() {
   const totalAwardsCount = achievements.length;
 
   return (
-    <div className="min-h-screen bg-transparent text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-blue-900">
-      
+    <>
+      {showLoader && <LogoLoader onComplete={() => setShowLoader(false)} />}
+      <div className="min-h-screen bg-transparent text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-blue-900">
+
       {/* Decorative Glow Elements */}
       <div className="absolute top-[800px] left-[10%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-[400px] right-[10%] w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
@@ -82,7 +86,7 @@ export default function Home() {
       {/* Main Body Content Views */}
       <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 min-h-[75vh]">
         <AnimatePresence mode="wait">
-          
+
           {view === "home" && (
             <HomeView
               events={events}
@@ -171,10 +175,11 @@ export default function Home() {
 
       {/* General Footer */}
       <Footer setView={setView} setSelectedId={setSelectedId} />
-      
+
       {/* Custom Rocket Cursor */}
       <GlobalRocketCursor />
 
     </div>
+    </>
   );
 }

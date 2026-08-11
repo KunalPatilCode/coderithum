@@ -38,6 +38,16 @@ export default function TeamView({ team }: TeamViewProps) {
       if (memberKey === "operations_core") return t.role.includes("Marketing & Outreach") || t.role.includes("Incubator & Ops") || t.role.includes("Faculty Coordinator");
       if (memberKey === "community_growth") return t.role.includes("Marketing & Outreach") || t.role.includes("President") || t.role.includes("Vice President");
 
+      // New Incubator & Ops boxes
+      if (memberKey === "product_mgmt") return t.role.includes("Product Management");
+      if (memberKey === "ipr_support") return t.role.includes("IPR");
+      if (memberKey === "treasury_resource") return t.role.includes("Treasury");
+
+      // New Community & Brand boxes
+      if (memberKey === "creative_design") return t.role.includes("Creative & Design");
+      if (memberKey === "pr_relations") return t.role.includes("Public Relations");
+      if (memberKey === "sponsorship_relations") return t.role.includes("Sponsorship");
+
       // 8 Domain Keys
       if (memberKey === "ai_lead") return t.role.includes("AI & GenAI") || t.role.includes("AI Lead");
       if (memberKey === "fullstack_lead") return t.role.includes("Fullstack") || t.role.includes("Full Stack");
@@ -201,12 +211,15 @@ export default function TeamView({ team }: TeamViewProps) {
               <div className="flex flex-col items-center w-full">
                 <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.8, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
                 <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.0, duration: 0.25 }} className="origin-center w-full h-[3px] bg-slate-900" />
-                <div className="w-full grid grid-cols-1 gap-4 mt-2">
-                  {renderNode("Research Leads", "research_lead", 2.15, true)}
-                  {renderArrow(2.3)}
-                  {renderNode("Startup Leads", "startup_lead", 2.45, true)}
-                  {renderArrow(2.6)}
-                  {renderNode("Incubator Teams / Research Fellows", "incubator_team", 2.75, true)}
+                <div className="w-full mt-3 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    {renderNode("Research Leads", "research_lead", 2.1, true)}
+                    {renderNode("Startup Leads", "startup_lead", 2.18, true)}
+                    {renderNode("Incubator Teams / Research Fellows", "incubator_team", 2.26, true)}
+                    {renderNode("Product Management Leads", "product_mgmt", 2.34, true)}
+                    {renderNode("IPR & Patent Support", "ipr_support", 2.42, true)}
+                    {renderNode("Treasury & Resource Leads", "treasury_resource", 2.5, true)}
+                  </div>
                 </div>
               </div>
             </div>
@@ -218,12 +231,15 @@ export default function TeamView({ team }: TeamViewProps) {
               <div className="flex flex-col items-center w-full">
                 <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.8, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
                 <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.0, duration: 0.25 }} className="origin-center w-full h-[3px] bg-slate-900" />
-                <div className="w-full grid grid-cols-1 gap-4 mt-2">
-                  {renderNode("Outreach Leads (Design, Event...)", "outreach_lead", 2.15, true)}
-                  {renderArrow(2.3)}
-                  {renderNode("Operations Core (Media, HR, Fin)", "operations_core", 2.45, true)}
-                  {renderArrow(2.6)}
-                  {renderNode("Community & Growth Teams", "community_growth", 2.75, true)}
+                <div className="w-full mt-3 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    {renderNode("Outreach Leads (Design, Event...)", "outreach_lead", 2.1, true)}
+                    {renderNode("Operations Core (Media, HR, Fin)", "operations_core", 2.18, true)}
+                    {renderNode("Community & Growth Teams", "community_growth", 2.26, true)}
+                    {renderNode("Creative & Design Leads", "creative_design", 2.34, true)}
+                    {renderNode("Public Relations Leads", "pr_relations", 2.42, true)}
+                    {renderNode("Sponsorship & Corporate Relations", "sponsorship_relations", 2.5, true)}
+                  </div>
                 </div>
               </div>
             </div>

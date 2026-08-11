@@ -1606,6 +1606,54 @@ export const initialTeam: TeamMember[] = [
     },
     linkedin: "https://linkedin.com",
   },
+  {
+    name: "Karan Shah",
+    role: "Product Management Lead",
+    category: "Leadership",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80",
+    github: "https://github.com",
+    linkedin: "https://linkedin.com"
+  },
+  {
+    name: "Neha Sharma",
+    role: "IPR & Patent Support Lead",
+    category: "Technical",
+    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80",
+    github: "https://github.com",
+    linkedin: "https://linkedin.com"
+  },
+  {
+    name: "Rohan Das",
+    role: "Treasury & Resource Lead",
+    category: "Leadership",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=150&h=150&q=80",
+    github: "https://github.com",
+    linkedin: "https://linkedin.com"
+  },
+  {
+    name: "Sneha Iyer",
+    role: "Creative & Design Lead",
+    category: "Design",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=150&h=150&q=80",
+    github: "https://github.com",
+    linkedin: "https://linkedin.com"
+  },
+  {
+    name: "Kabir Mehta",
+    role: "Public Relations Lead",
+    category: "Marketing",
+    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80",
+    github: "https://github.com",
+    linkedin: "https://linkedin.com"
+  },
+  {
+    name: "Riya Patel",
+    role: "Sponsorship & Corporate Relations Lead",
+    category: "Marketing",
+    avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=150&h=150&q=80",
+    github: "https://github.com",
+    linkedin: "https://linkedin.com"
+  }
 ];
 
 export const initialAchievements: ClubAchievement[] = [

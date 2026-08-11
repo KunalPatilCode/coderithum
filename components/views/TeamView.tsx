@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 import { Github, Linkedin } from "../Icons";
 import { TeamMember } from "../../types";
 import InteractiveHeading from "../InteractiveHeading";
@@ -9,8 +9,6 @@ interface TeamViewProps {
 }
 
 export default function TeamView({ team }: TeamViewProps) {
-  const [activeDomainId, setActiveDomainId] = useState<string>("ai");
-
   const domains = [
     { id: "ai", title: "AI & GenAI", icon: "🤖", key: "ai_lead", desc: "LLMs, Neural Networks, Vision AI & Prompt Engineering" },
     { id: "fullstack", title: "Full Stack Development", icon: "💻", key: "fullstack_lead", desc: "React, Next.js, Node.js & Distributed Web Backends" },
@@ -20,8 +18,6 @@ export default function TeamView({ team }: TeamViewProps) {
     { id: "uiux", title: "UI/UX & Product Design", icon: "🎨", key: "uiux_lead", desc: "Figma Prototyping, Design Systems & User Research" },
     { id: "datascience", title: "Data Science", icon: "📊", key: "datascience_lead", desc: "Predictive Analytics, Data Pipelines & Machine Learning" }
   ];
-
-  const activeDomain = domains.find(d => d.id === activeDomainId) || domains[0];
 
   const renderNode = (title: string, memberKey?: string, delay: number = 0, compact: boolean = false) => {
     const member = memberKey ? team.find(t => {
@@ -248,77 +244,7 @@ export default function TeamView({ team }: TeamViewProps) {
 
         </div>
       </div>
-      {/* 8 Technical Domain Subtrees Section */}
-      <div className="space-y-8 max-w-6xl mx-auto">
-        <div className="text-center space-y-2">
-          <InteractiveHeading text="Technical Division Breakdown" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
-          <div>
-            <InteractiveHeading text="8 Technical Domain Trees" as="h3" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" />
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600">Select any domain to view its dedicated leadership and developer hierarchy tree.</p>
-        </div>
 
-        {/* Domain Navigation Tabs */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {domains.map((dom) => {
-            const isActive = dom.id === activeDomainId;
-            return (
-              <button
-                key={dom.id}
-                onClick={() => setActiveDomainId(dom.id)}
-                className={`p-3 border-2 border-slate-900 text-left transition-all flex items-center gap-3 ${isActive
-                    ? "bg-blue-600 text-white shadow-[4px_4px_0px_#000] translate-x-[-2px] translate-y-[-2px]"
-                    : "bg-white text-slate-900 hover:bg-slate-50 shadow-[2px_2px_0px_#000]"
-                  }`}
-              >
-                <span className="text-xl">{dom.icon}</span>
-                <div className="overflow-hidden">
-                  <div className="text-xs font-bold truncate">{dom.title}</div>
-                  <div className={`text-[10px] truncate ${isActive ? 'text-blue-100' : 'text-slate-500'}`}>Domain Subtree</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Selected Domain Tree Display */}
-        <div className="bg-white border-2 border-slate-900 p-6 shadow-[6px_6px_0px_#000]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeDomain.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="flex flex-col items-center py-4 space-y-4"
-            >
-              <div className="text-center max-w-lg mb-2">
-                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-mono font-bold rounded-full border border-blue-300 mb-2">
-                  {activeDomain.icon} {activeDomain.title} Division
-                </span>
-                <p className="text-xs text-slate-600">{activeDomain.desc}</p>
-              </div>
-
-              {/* Subtree Level 1: Domain Lead */}
-              {renderNode(`${activeDomain.title} Lead`, activeDomain.key, 0.1)}
-              {renderArrow(0.25)}
-
-              {/* Subtree Level 2: Project Managers */}
-              {renderNode(`${activeDomain.title} Project Manager`, undefined, 0.4, true)}
-              {renderArrow(0.55)}
-
-              {/* Subtree Level 3 & 4 Grid: Senior & Junior Developers */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-xl">
-                <div>
-                  {renderNode("Senior Developers", undefined, 0.7, true)}
-                </div>
-                <div>
-                  {renderNode("Junior Cohort & Contributors", undefined, 0.85, true)}
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
     </motion.div>
   );
 }

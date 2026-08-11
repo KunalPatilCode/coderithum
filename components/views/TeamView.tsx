@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Github, Linkedin } from "../Icons";
 import { TeamMember } from "../../types";
@@ -9,8 +9,6 @@ interface TeamViewProps {
 }
 
 export default function TeamView({ team }: TeamViewProps) {
-  const [activeDomainId, setActiveDomainId] = useState<string>("ai");
-
   const domains = [
     { id: "ai", title: "AI & GenAI", icon: "🤖", key: "ai_lead", desc: "LLMs, Neural Networks, Vision AI & Prompt Engineering" },
     { id: "fullstack", title: "Full Stack Development", icon: "💻", key: "fullstack_lead", desc: "React, Next.js, Node.js & Distributed Web Backends" },
@@ -20,8 +18,6 @@ export default function TeamView({ team }: TeamViewProps) {
     { id: "uiux", title: "UI/UX & Product Design", icon: "🎨", key: "uiux_lead", desc: "Figma Prototyping, Design Systems & User Research" },
     { id: "datascience", title: "Data Science", icon: "📊", key: "datascience_lead", desc: "Predictive Analytics, Data Pipelines & Machine Learning" }
   ];
-
-  const activeDomain = domains.find(d => d.id === activeDomainId) || domains[0];
 
   const renderNode = (title: string, memberKey?: string, delay: number = 0, compact: boolean = false) => {
     const member = memberKey ? team.find(t => {
@@ -81,7 +77,7 @@ export default function TeamView({ team }: TeamViewProps) {
             scale: 1.02,
             transition: { duration: 0.15 }
           }}
-          className={`w-full ${compact ? 'max-w-[240px] p-3.5' : 'max-w-[300px] p-5'} mx-auto bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] hover:shadow-[6px_6px_0px_#000] flex flex-col items-center text-center space-y-2.5 transition-all select-none z-10`}
+          className={`w-full ${compact ? 'max-w-[240px] h-[240px] p-3.5' : 'max-w-[300px] h-[300px] p-5'} mx-auto bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] hover:shadow-[6px_6px_0px_#000] flex flex-col items-center text-center space-y-2.5 transition-all select-none z-10`}
         >
           <div className={`${compact ? 'w-16 h-16' : 'w-24 h-24'} rounded-full overflow-hidden border-2 border-slate-900 bg-slate-100 shrink-0 shadow flex items-center justify-center`}>
             <img
@@ -91,12 +87,12 @@ export default function TeamView({ team }: TeamViewProps) {
               style={member.avatarStyle}
             />
           </div>
-          <div>
+          <div className="flex-1 flex flex-col justify-center w-full">
             <div className="text-[10px] sm:text-xs font-mono font-bold text-blue-600 uppercase tracking-wider line-clamp-1">{title}</div>
             <h4 className={`${compact ? 'text-xs' : 'text-sm'} font-black text-slate-900 mt-0.5`}>{member.name}</h4>
             <p className="text-[10px] text-slate-500 mt-0.5">{member.role}</p>
           </div>
-          <div className="flex items-center gap-2 pt-1">
+          <div className="flex items-center gap-2 pt-1 shrink-0">
             {member.github && (
               <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-black transition-colors p-0.5">
                 <Github className="w-3.5 h-3.5" />
@@ -118,7 +114,7 @@ export default function TeamView({ team }: TeamViewProps) {
         initial="hidden"
         animate="visible"
         whileHover={{ scale: 1.01 }}
-        className={`w-full ${compact ? 'max-w-[220px] p-3 h-20' : 'max-w-[280px] p-4 h-24'} mx-auto bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center text-center justify-center`}
+        className={`w-full ${compact ? 'max-w-[240px] h-[240px] p-3.5' : 'max-w-[300px] h-[300px] p-5'} mx-auto bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center text-center justify-center`}
       >
         <div className="text-xs font-mono text-slate-500 uppercase tracking-wider font-bold">{title}</div>
         <div className="text-[10px] text-slate-400 font-mono mt-1">Vacant / Cohort Core</div>
@@ -195,7 +191,7 @@ export default function TeamView({ team }: TeamViewProps) {
                 <div className="w-full mt-3 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     {domains.map((domain, index) => (
-                      <div key={domain.id} className="flex flex-col items-center">
+                      <div key={domain.id} className="w-full">
                         {renderNode(domain.title, domain.key, 2.1 + index * 0.08, true)}
                       </div>
                     ))}
@@ -246,77 +242,6 @@ export default function TeamView({ team }: TeamViewProps) {
 
           </div>
 
-        </div>
-      </div>
-      {/* 8 Technical Domain Subtrees Section */}
-      <div className="space-y-8 max-w-6xl mx-auto">
-        <div className="text-center space-y-2">
-          <InteractiveHeading text="Technical Division Breakdown" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
-          <div>
-            <InteractiveHeading text="8 Technical Domain Trees" as="h3" className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" />
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600">Select any domain to view its dedicated leadership and developer hierarchy tree.</p>
-        </div>
-
-        {/* Domain Navigation Tabs */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {domains.map((dom) => {
-            const isActive = dom.id === activeDomainId;
-            return (
-              <button
-                key={dom.id}
-                onClick={() => setActiveDomainId(dom.id)}
-                className={`p-3 border-2 border-slate-900 text-left transition-all flex items-center gap-3 ${isActive
-                    ? "bg-blue-600 text-white shadow-[4px_4px_0px_#000] translate-x-[-2px] translate-y-[-2px]"
-                    : "bg-white text-slate-900 hover:bg-slate-50 shadow-[2px_2px_0px_#000]"
-                  }`}
-              >
-                <span className="text-xl">{dom.icon}</span>
-                <div className="overflow-hidden">
-                  <div className="text-xs font-bold truncate">{dom.title}</div>
-                  <div className={`text-[10px] truncate ${isActive ? 'text-blue-100' : 'text-slate-500'}`}>Domain Subtree</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Selected Domain Tree Display */}
-        <div className="bg-white border-2 border-slate-900 p-6 shadow-[6px_6px_0px_#000]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeDomain.id}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              className="flex flex-col items-center py-4 space-y-4"
-            >
-              <div className="text-center max-w-lg mb-2">
-                <span className="inline-block px-3 py-1 bg-blue-100 text-blue-800 text-xs font-mono font-bold rounded-full border border-blue-300 mb-2">
-                  {activeDomain.icon} {activeDomain.title} Division
-                </span>
-                <p className="text-xs text-slate-600">{activeDomain.desc}</p>
-              </div>
-
-              {/* Subtree Level 1: Domain Lead */}
-              {renderNode(`${activeDomain.title} Lead`, activeDomain.key, 0.1)}
-              {renderArrow(0.25)}
-
-              {/* Subtree Level 2: Project Managers */}
-              {renderNode(`${activeDomain.title} Project Manager`, undefined, 0.4, true)}
-              {renderArrow(0.55)}
-
-              {/* Subtree Level 3 & 4 Grid: Senior & Junior Developers */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-xl">
-                <div>
-                  {renderNode("Senior Developers", undefined, 0.7, true)}
-                </div>
-                <div>
-                  {renderNode("Junior Cohort & Contributors", undefined, 0.85, true)}
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
         </div>
       </div>
     </motion.div>

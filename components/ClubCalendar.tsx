@@ -13,30 +13,465 @@ interface CalendarEventItem {
   time: string;
   venue: string;
   type: "upcoming" | "past";
+  category: "workshop" | "competition" | "special" | "orientation";
 }
 
 const calendarEvents: CalendarEventItem[] = [
   {
-    id: "web-dev-bootcamp",
-    title: "Next.js Web Dev Bootcamp",
-    dateStr: "August 28-29, 2026",
-    days: [28, 29],
+    id: "registration-orientation-2026",
+    title: "Club Member Registration & Orientation",
+    dateStr: "August 15, 2026",
+    days: [15],
     month: 7, // August
     year: 2026,
-    time: "10:00 AM - 04:30 PM",
-    venue: "Computational Lab, GEC Daman",
-    type: "upcoming"
+    time: "10:00 AM - 01:00 PM",
+    venue: "Main Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "orientation"
   },
   {
-    id: "sih-hackathon-2026",
-    title: "SIH Internal Hackathon Sprints",
-    dateStr: "September 18-19, 2026",
-    days: [18, 19],
+    id: "git-github-basics-2026",
+    title: "Git & GitHub Basics + Team Formation",
+    dateStr: "August 29, 2026",
+    days: [29],
+    month: 7, // August
+    year: 2026,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computational Lab, Computer Dept",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "problem-solving-workshop-2026",
+    title: "Problem Solving & Brainstorming Workshop",
+    dateStr: "September 5, 2026",
+    days: [5],
+    month: 8, // September
+    year: 2026,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "internal-sih-pitching-2026",
+    title: "Internal SIH Hackathon & Idea Pitching",
+    dateStr: "September 19, 2026",
+    days: [19],
     month: 8, // September
     year: 2026,
     time: "10:00 AM onwards",
+    venue: "Main Tech Lab & Seminar Hall",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "engineering-day-tech-2026",
+    title: "Engineering Day Tech Session / PPT & Pitch Guidance",
+    dateStr: "September 30, 2026",
+    days: [30],
+    month: 8, // September
+    year: 2026,
+    time: "02:00 PM - 05:00 PM",
     venue: "Seminar Hall, GEC Daman",
-    type: "upcoming"
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "web-dev-bootcamp-2026",
+    title: "Web Development Bootcamp (HTML, CSS, JS)",
+    dateStr: "October 3, 2026",
+    days: [3],
+    month: 9, // October
+    year: 2026,
+    time: "10:00 AM - 04:30 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "mini-project-sprint-2026",
+    title: "Mini Project Build Sprint",
+    dateStr: "October 17, 2026",
+    days: [17],
+    month: 9, // October
+    year: 2026,
+    time: "10:00 AM - 05:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "group-discussion-review-2026",
+    title: "Group Discussion & Code Review",
+    dateStr: "October 31, 2026",
+    days: [31],
+    month: 9, // October
+    year: 2026,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computer Seminar Room, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "ai-prompt-eng-workshop-2026",
+    title: "AI & Prompt Engineering Workshop",
+    dateStr: "November 7, 2026",
+    days: [7],
+    month: 10, // November
+    year: 2026,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "cybersec-hacking-challenge-2026",
+    title: "Cybersecurity Basics & Hacking Challenge",
+    dateStr: "November 21, 2026",
+    days: [21],
+    month: 10, // November
+    year: 2026,
+    time: "10:00 AM - 02:00 PM",
+    venue: "Server Lab, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "resume-portfolio-session-2026",
+    title: "Resume, LinkedIn & Portfolio Building",
+    dateStr: "November 29, 2026",
+    days: [29],
+    month: 10, // November
+    year: 2026,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "gsoc-open-source-guide-2026",
+    title: "GSoC & Open Source Contribution Guidance",
+    dateStr: "December 5, 2026",
+    days: [5],
+    month: 11, // December
+    year: 2026,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "open-source-sprint-2026",
+    title: "Open Source Sprint: GitHub PRs",
+    dateStr: "December 19, 2026",
+    days: [19],
+    month: 11, // December
+    year: 2026,
+    time: "10:00 AM - 04:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "semester-showcase-review-2026",
+    title: "Semester Project Showcase & Club Review",
+    dateStr: "December 31, 2026",
+    days: [31],
+    month: 11, // December
+    year: 2026,
+    time: "10:00 AM - 02:00 PM",
+    venue: "Main Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "ideathon-announcement-2027",
+    title: "Ideathon 2027: Theme & Rules Release",
+    dateStr: "January 2, 2027",
+    days: [2],
+    month: 0, // January
+    year: 2027,
+    time: "10:00 AM - 12:30 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "ideathon-conduct-2027",
+    title: "Ideathon Conduct: Pitching Round",
+    dateStr: "January 16, 2027",
+    days: [16],
+    month: 0, // January
+    year: 2027,
+    time: "09:30 AM onwards",
+    venue: "Main Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "jury-feedback-presentation-2027",
+    title: "Jury Feedback & Ideathon Winners",
+    dateStr: "January 30, 2027",
+    days: [30],
+    month: 0, // January
+    year: 2027,
+    time: "10:00 AM - 01:30 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "dsa-cp-workshop-2027",
+    title: "DSA & Competitive Programming Workshop",
+    dateStr: "February 6, 2027",
+    days: [6],
+    month: 1, // February
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "coding-contest-2027",
+    title: "CodeRhythm Coding Contest 2027",
+    dateStr: "February 20, 2027",
+    days: [20],
+    month: 1, // February
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computer Labs, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "solution-discussion-optimization-2027",
+    title: "Solution Discussion & CP Optimization",
+    dateStr: "February 27, 2027",
+    days: [27],
+    month: 1, // February
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "app-dev-workshop-2027",
+    title: "App Development Workshop: Flutter",
+    dateStr: "March 6, 2027",
+    days: [6],
+    month: 2, // March
+    year: 2027,
+    time: "10:00 AM - 04:30 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "build-mini-app-challenge-2027",
+    title: "Build-a-Mini-App Hackathon Challenge",
+    dateStr: "March 20, 2027",
+    days: [20],
+    month: 2, // March
+    year: 2027,
+    time: "10:00 AM - 05:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "uiux-review-deployment-2027",
+    title: "UI/UX Review & App Deployment Guidance",
+    dateStr: "March 27, 2027",
+    days: [27],
+    month: 2, // March
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "backend-database-integration-2027",
+    title: "Backend & Database Integration",
+    dateStr: "April 3, 2027",
+    days: [3],
+    month: 3, // April
+    year: 2027,
+    time: "10:00 AM - 04:30 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "fullstack-mini-hackathon-2027",
+    title: "Full-Stack Mini Hackathon",
+    dateStr: "April 17, 2027",
+    days: [17],
+    month: 3, // April
+    year: 2027,
+    time: "09:30 AM onwards",
+    venue: "Main Tech Lab, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "industry-expert-alumni-interaction-2027",
+    title: "Industry Expert & Alumni Interaction",
+    dateStr: "April 29, 2027",
+    days: [29],
+    month: 3, // April
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Main Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "placement-web-react-session-2027",
+    title: "Placement Prep: Web & React Session",
+    dateStr: "May 1, 2027",
+    days: [1],
+    month: 4, // May
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "mock-interviews-quiz-challenge-2027",
+    title: "Mock Interviews & Tech Quiz Sprint",
+    dateStr: "May 15, 2027",
+    days: [15],
+    month: 4, // May
+    year: 2027,
+    time: "10:00 AM - 04:00 PM",
+    venue: "Seminar Rooms, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "career-guidance-internship-prep-2027",
+    title: "Career Guidance & Internship Prep",
+    dateStr: "May 29, 2027",
+    days: [29],
+    month: 4, // May
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "advanced-github-apis-deployment-2027",
+    title: "Advanced GitHub, APIs & Cloud Deployment",
+    dateStr: "June 5, 2027",
+    days: [5],
+    month: 5, // June
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "community-contribution-sprint-2027",
+    title: "Community Contribution Sprint",
+    dateStr: "June 19, 2027",
+    days: [19],
+    month: 5, // June
+    year: 2027,
+    time: "10:00 AM - 05:00 PM",
+    venue: "Computational Lab, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "annual-documentation-report-prep-2027",
+    title: "Annual Tech Documentation & Reporting",
+    dateStr: "June 30, 2027",
+    days: [30],
+    month: 5, // June
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Computer Seminar Room, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "sih-2027-awareness-team-formation",
+    title: "SIH 2027 Awareness & Team Formation",
+    dateStr: "July 3, 2027",
+    days: [3],
+    month: 6, // July
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "internal-sih-hackathon-prototype-2027",
+    title: "Internal SIH Hackathon & Prototypes",
+    dateStr: "July 17, 2027",
+    days: [17],
+    month: 6, // July
+    year: 2027,
+    time: "09:30 AM onwards",
+    venue: "Main Tech Lab & Seminar Hall",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "mentor-review-presentation-improvement-2027",
+    title: "Mentor Review & Pitch Presentation",
+    dateStr: "July 31, 2027",
+    days: [31],
+    month: 6, // July
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "special"
+  },
+  {
+    id: "annual-project-expo-techfest-2027",
+    title: "Annual Project Expo & TechFest 2027",
+    dateStr: "August 7, 2027",
+    days: [7],
+    month: 7, // August
+    year: 2027,
+    time: "09:00 AM - 05:00 PM",
+    venue: "GEC Daman Campus Exhibition Hall",
+    type: "upcoming",
+    category: "workshop"
+  },
+  {
+    id: "core-team-evaluation-leadership-handover-2027",
+    title: "Core Team Evaluation & Leadership Handover",
+    dateStr: "August 21, 2027",
+    days: [21],
+    month: 7, // August
+    year: 2027,
+    time: "10:00 AM - 01:00 PM",
+    venue: "Seminar Hall, GEC Daman",
+    type: "upcoming",
+    category: "competition"
+  },
+  {
+    id: "certificate-distribution-celebration-2027",
+    title: "Certificate Distribution & Celebration Meet",
+    dateStr: "August 28, 2027",
+    days: [28],
+    month: 7, // August
+    year: 2027,
+    time: "11:00 AM - 03:00 PM",
+    venue: "GEC Daman Campus Seminar Hall",
+    type: "upcoming",
+    category: "special"
   },
   {
     id: "docker-kubernetes-basics",
@@ -47,7 +482,8 @@ const calendarEvents: CalendarEventItem[] = [
     year: 2026,
     time: "02:00 PM - 05:00 PM",
     venue: "Server Lab, GEC Daman",
-    type: "past"
+    type: "past",
+    category: "workshop"
   }
 ];
 
@@ -67,9 +503,9 @@ export default function ClubCalendar({
   setView: (view: string) => void;
   setSelectedId: (id: string | null) => void;
 }) {
-  // Start on August 2026 (contains the Next.js bootcamp)
+  // Start on August 2026 (contains the orientation)
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2026, 7, 1));
-  const [selectedDay, setSelectedDay] = useState<number>(28); // Select 28th by default
+  const [selectedDay, setSelectedDay] = useState<number>(15); // Select 15th by default
 
   const currentMonth = currentDate.getMonth();
   const currentYear = currentDate.getFullYear();
@@ -174,14 +610,34 @@ export default function ClubCalendar({
               
               let cellClass = "bg-white text-slate-800 border-slate-200 hover:bg-slate-50";
               if (dayEvent) {
-                cellClass = dayEvent.type === "upcoming"
-                  ? "bg-blue-50 text-blue-600 border-blue-500 font-bold hover:bg-blue-100"
-                  : "bg-slate-50 text-slate-600 border-slate-400 font-bold hover:bg-slate-100";
+                if (dayEvent.category === "orientation") {
+                  cellClass = "bg-rose-50 text-rose-600 border-rose-400 font-bold hover:bg-rose-100";
+                } else if (dayEvent.category === "workshop") {
+                  cellClass = "bg-violet-50 text-violet-600 border-violet-400 font-bold hover:bg-violet-100";
+                } else if (dayEvent.category === "competition") {
+                  cellClass = "bg-amber-50 text-amber-600 border-amber-400 font-bold hover:bg-amber-100";
+                } else if (dayEvent.category === "special") {
+                  cellClass = "bg-emerald-50 text-emerald-600 border-emerald-400 font-bold hover:bg-emerald-100";
+                } else {
+                  cellClass = "bg-blue-50 text-blue-600 border-blue-400 font-bold hover:bg-blue-100";
+                }
               }
               if (isSelected) {
-                cellClass = dayEvent
-                  ? "bg-blue-600 text-white border-slate-900 font-extrabold shadow-[1.5px_1.5px_0px_#000]"
-                  : "bg-slate-900 text-white border-slate-900 font-bold shadow-[1.5px_1.5px_0px_#000]";
+                if (dayEvent) {
+                  if (dayEvent.category === "orientation") {
+                    cellClass = "bg-rose-600 text-white border-slate-900 font-extrabold shadow-[1.5px_1.5px_0px_#000]";
+                  } else if (dayEvent.category === "workshop") {
+                    cellClass = "bg-violet-600 text-white border-slate-900 font-extrabold shadow-[1.5px_1.5px_0px_#000]";
+                  } else if (dayEvent.category === "competition") {
+                    cellClass = "bg-amber-600 text-white border-slate-900 font-extrabold shadow-[1.5px_1.5px_0px_#000]";
+                  } else if (dayEvent.category === "special") {
+                    cellClass = "bg-emerald-600 text-white border-slate-900 font-extrabold shadow-[1.5px_1.5px_0px_#000]";
+                  } else {
+                    cellClass = "bg-blue-600 text-white border-slate-900 font-extrabold shadow-[1.5px_1.5px_0px_#000]";
+                  }
+                } else {
+                  cellClass = "bg-slate-900 text-white border-slate-900 font-bold shadow-[1.5px_1.5px_0px_#000]";
+                }
               }
 
               return (
@@ -192,15 +648,37 @@ export default function ClubCalendar({
                 >
                   <span>{day}</span>
                   {dayEvent && !isSelected && (
-                    <span className={`absolute bottom-0.5 w-1 h-1 rounded-full ${dayEvent.type === "upcoming" ? "bg-blue-600" : "bg-slate-500"}`} />
+                    <span className={`absolute bottom-0.5 w-1 h-1 rounded-full ${
+                      dayEvent.category === "orientation" ? "bg-rose-600" :
+                      dayEvent.category === "workshop" ? "bg-violet-600" :
+                      dayEvent.category === "competition" ? "bg-amber-600" :
+                      dayEvent.category === "special" ? "bg-emerald-600" :
+                      "bg-blue-600"
+                    }`} />
                   )}
                 </button>
               );
             })}
           </div>
 
+          {/* Calendar Color Legend */}
+          <div className="pt-3 border-t-2 border-slate-200 flex flex-wrap justify-start gap-x-2.5 gap-y-1">
+            <div className="flex items-center gap-1 text-[8px] font-mono text-slate-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" /> Orientation
+            </div>
+            <div className="flex items-center gap-1 text-[8px] font-mono text-slate-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-violet-600" /> Workshop
+            </div>
+            <div className="flex items-center gap-1 text-[8px] font-mono text-slate-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-600" /> Activity
+            </div>
+            <div className="flex items-center gap-1 text-[8px] font-mono text-slate-500">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" /> Special
+            </div>
+          </div>
+
           {/* Dynamic Contribution Graph Footer */}
-          <div className="pt-3 border-t-2 border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-2">
+          <div className="pt-2 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-2">
             <div className="text-[9px] font-mono text-slate-500 uppercase tracking-wider">
               Club pulse:
             </div>
@@ -223,11 +701,13 @@ export default function ClubCalendar({
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <span className={`px-1.5 py-0.5 text-[8px] font-bold font-mono border uppercase tracking-wider ${
-                    selectedDayEvent.type === "upcoming" 
-                      ? "bg-blue-50 border-blue-200 text-blue-700" 
-                      : "bg-slate-100 border-slate-300 text-slate-600"
+                    selectedDayEvent.category === "orientation" ? "bg-rose-50 border-rose-200 text-rose-700" :
+                    selectedDayEvent.category === "workshop" ? "bg-violet-50 border-violet-200 text-violet-700" :
+                    selectedDayEvent.category === "competition" ? "bg-amber-50 border-amber-200 text-amber-700" :
+                    selectedDayEvent.category === "special" ? "bg-emerald-50 border-emerald-200 text-emerald-700" :
+                    "bg-blue-50 border-blue-200 text-blue-700"
                   }`}>
-                    {selectedDayEvent.type === "upcoming" ? "Upcoming" : "Past"}
+                    {selectedDayEvent.category || selectedDayEvent.type}
                   </span>
                   <span className="text-[9px] font-mono text-slate-500">{selectedDayEvent.dateStr}</span>
                 </div>

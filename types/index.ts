@@ -13,6 +13,7 @@ export interface ClubEvent {
   feedbackLink: string;
   gallery: string[];
   type: "upcoming" | "past";
+  category?: "workshop" | "competition" | "special" | "orientation";
 }
 
 export interface ClubProject {

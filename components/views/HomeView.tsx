@@ -64,15 +64,15 @@ export default function HomeView({
               </div>
               
               <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
-                Registrations are now open for SIH Sprints and Next.js Web Dev Bootcamp! Secure your spots.
+                Registrations are now open for the CodeRhythm Academic Year 2026-2027! Secure your spots for Orientation and Git & GitHub basics.
               </p>
 
               {/* List of upcoming events inside the announcement box */}
               <div className="space-y-2 pt-1.5">
                 <div className="text-[9px] font-mono text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-1">Upcoming Schedule</div>
                 {[
-                  { title: "Next.js Web Dev Bootcamp", date: "Aug 28-29, 2026", id: "web-dev-bootcamp" },
-                  { title: "SIH 2026 Internal Sprints", date: "Sept 18-19, 2026", id: "sih-hackathon-2026" }
+                  { title: "Club Member Registration & Orientation", date: "Aug 15, 2026", id: "registration-orientation-2026" },
+                  { title: "Git & GitHub Basics + Team Formation", date: "Aug 29, 2026", id: "git-github-basics-2026" }
                 ].map(evt => (
                   <div
                     key={evt.id}
@@ -91,7 +91,7 @@ export default function HomeView({
             
             <div className="pt-2">
               <button
-                onClick={() => { setView("event-detail"); setSelectedId("sih-hackathon-2026"); }}
+                onClick={() => { setView("event-detail"); setSelectedId("registration-orientation-2026"); }}
                 className="w-full py-2 rounded-none bg-blue-600 border-2 border-blue-700 text-white font-bold text-xs shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer text-center"
               >
                 Register Now
@@ -284,15 +284,7 @@ export default function HomeView({
 
 
 
-      {/* Sponsors Section */}
-      <div className="border-t-2 border-slate-200 pt-16 text-center space-y-6">
-        <div className="text-xs text-slate-500 font-mono uppercase tracking-widest">Proudly Supported By</div>
-        <div className="flex flex-wrap items-center justify-center gap-12 opacity-50 hover:opacity-80 transition-opacity">
-          {["GitHub", "Vercel", "AWS", "Google Cloud", "Meta", "Slack"].map((brand, idx) => (
-            <div key={idx} className="text-lg sm:text-xl font-bold text-slate-900 font-mono tracking-tighter">{brand}</div>
-          ))}
-        </div>
-      </div>
+
 
       {/* Call To Action */}
       <div className="p-6 sm:p-12 rounded-none bg-white border-2 border-slate-900 text-center space-y-6 max-w-4xl mx-auto shadow-[8px_8px_0px_#000] relative overflow-hidden">

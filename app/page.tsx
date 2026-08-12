@@ -42,12 +42,57 @@ export default function Home() {
   const [contactSuccess, setContactSuccess] = useState<boolean>(false);
   const [activeAlbumId, setActiveAlbumId] = useState<string | null>("hackathons-album");
 
-  // State Data
-  const events = initialEvents;
-  const projects = initialProjects;
-  const albums = initialAlbums;
-  const team = initialTeam;
-  const achievements = initialAchievements;
+  // State Data using React state for dynamic reactivity
+  const [events, setEvents] = useState<any[]>([]);
+  const [projects, setProjects] = useState<any[]>([]);
+  const [albums, setAlbums] = useState<any[]>([]);
+  const [team, setTeam] = useState<any[]>([]);
+  const [achievements, setAchievements] = useState<any[]>([]);
+
+  // Load from localStorage on client mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const storedEvents = localStorage.getItem("coderithum_events");
+      if (storedEvents) {
+        setEvents(JSON.parse(storedEvents));
+      } else {
+        localStorage.setItem("coderithum_events", JSON.stringify(initialEvents));
+        setEvents(initialEvents);
+      }
+
+      const storedProjects = localStorage.getItem("coderithum_projects");
+      if (storedProjects) {
+        setProjects(JSON.parse(storedProjects));
+      } else {
+        localStorage.setItem("coderithum_projects", JSON.stringify(initialProjects));
+        setProjects(initialProjects);
+      }
+
+      const storedAlbums = localStorage.getItem("coderithum_albums");
+      if (storedAlbums) {
+        setAlbums(JSON.parse(storedAlbums));
+      } else {
+        localStorage.setItem("coderithum_albums", JSON.stringify(initialAlbums));
+        setAlbums(initialAlbums);
+      }
+
+      const storedTeam = localStorage.getItem("coderithum_team");
+      if (storedTeam) {
+        setTeam(JSON.parse(storedTeam));
+      } else {
+        localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));
+        setTeam(initialTeam);
+      }
+
+      const storedAchievements = localStorage.getItem("coderithum_achievements");
+      if (storedAchievements) {
+        setAchievements(JSON.parse(storedAchievements));
+      } else {
+        localStorage.setItem("coderithum_achievements", JSON.stringify(initialAchievements));
+        setAchievements(initialAchievements);
+      }
+    }
+  }, []);
 
   // Scroll to top on view changes
   useEffect(() => {

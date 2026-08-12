@@ -18,6 +18,28 @@
   cursor: none !important;
 }
 
+/* Restore default cursors inside superadmin layout */
+.superadmin-layout,
+.superadmin-layout * {
+  cursor: auto !important;
+}
+
+.superadmin-layout a,
+.superadmin-layout button,
+.superadmin-layout [role="button"],
+.superadmin-layout input[type="submit"],
+.superadmin-layout input[type="button"],
+.superadmin-layout select,
+.superadmin-layout label,
+.superadmin-layout .cursor-pointer {
+  cursor: pointer !important;
+}
+
+.superadmin-layout input:not([type="submit"]):not([type="button"]),
+.superadmin-layout textarea {
+  cursor: text !important;
+}
+
 html {
   scroll-behavior: smooth;
   color-scheme: light;

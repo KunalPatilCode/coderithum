@@ -102,7 +102,7 @@ export default function Home() {
           )}
 
           {view === "about" && (
-            <AboutView team={team} />
+            <AboutView team={team} setView={setView} />
           )}
 
           {view === "events" && (

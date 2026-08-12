@@ -1,9 +1,5 @@
 import React from "react";
-<<<<<<< HEAD
-import { motion, AnimatePresence } from "framer-motion";
-=======
 import { motion } from "framer-motion";
->>>>>>> 269c50e81320e8831df569bd20928424020f1d5e
 import { Github, Linkedin } from "../Icons";
 import { TeamMember } from "../../types";
 import InteractiveHeading from "../InteractiveHeading";
@@ -248,10 +244,6 @@ export default function TeamView({ team }: TeamViewProps) {
 
         </div>
       </div>
-<<<<<<< HEAD
-=======
-
->>>>>>> 269c50e81320e8831df569bd20928424020f1d5e
     </motion.div>
   );
 }

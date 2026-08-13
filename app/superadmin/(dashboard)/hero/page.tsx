@@ -20,6 +20,7 @@ import {
 import { HeroThemeConfig } from "@/types"
 import { initialHeroConfig } from "@/data/mockData"
 import InteractivePixelArt from "@/components/InteractivePixelArt"
+import CoderithumLogoSvg from "@/components/CoderithumLogoSvg"
 
 const THEME_PRESETS: { id: string; name: string; description: string; config: HeroThemeConfig }[] = [
   {
@@ -676,17 +677,39 @@ export default function HeroThemeManagerPage() {
           </div>
 
           {/* Top Header Overlay mimicking real header */}
-          <div className="absolute top-0 left-0 w-full p-6 flex items-center justify-between z-20 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-mono font-bold text-white uppercase tracking-wider">Interactive Full Screen Preview</span>
+          <div className="absolute top-4 left-4 right-4 z-20 px-4 md:px-6 w-full max-w-7xl mx-auto pointer-events-none">
+            <div className="w-full backdrop-blur-md bg-white/90 border border-slate-400/80 px-5 md:px-7 h-14 rounded-full flex items-center justify-between shadow-md pointer-events-auto">
+              <div className="flex items-center gap-2.5">
+                <CoderithumLogoSvg className="w-6 h-6 object-contain" />
+                <span className="font-bold text-sm md:text-base tracking-tight text-slate-900 flex items-center gap-1.5 font-mono">
+                  Coderithum
+                  <span className="px-2 py-0.5 text-[10px] font-mono font-normal rounded-full bg-blue-50 border border-blue-200 text-blue-600">
+                    Tech Club
+                  </span>
+                </span>
+              </div>
+
+              {/* Replica Nav Links */}
+              <nav className="hidden md:flex items-center gap-5 lg:gap-7 text-xs font-mono font-bold text-slate-700">
+                <span className="text-slate-900 border-b-2 border-blue-600 pb-0.5 cursor-pointer">Home</span>
+                <span className="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer">About</span>
+                <span className="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer">Events</span>
+                <span className="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer">Projects</span>
+                <span className="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer">Gallery</span>
+                <span className="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer">Team</span>
+                <span className="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer">Achievements</span>
+                <span className="text-slate-500 hover:text-slate-900 transition-colors cursor-pointer">Contact</span>
+              </nav>
+
+              {/* Close Button placed inside the header capsule */}
+              <button
+                type="button"
+                onClick={() => setIsFullScreen(false)}
+                className="flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-mono font-bold bg-slate-900 hover:bg-black text-white rounded-full transition-all cursor-pointer border-none"
+              >
+                <X className="size-3.5" /> Close Preview
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={() => setIsFullScreen(false)}
-              className="pointer-events-auto flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold bg-white text-slate-900 border-2 border-slate-900 shadow-[2px_2px_0px_#000] hover:bg-slate-100 transition-all cursor-pointer rounded-none"
-            >
-              <X className="size-4" /> Close Preview
-            </button>
           </div>
 
           {/* Hero Content aligned exactly like home view */}

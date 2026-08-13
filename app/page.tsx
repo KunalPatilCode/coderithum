@@ -29,7 +29,8 @@ import {
   initialProjects,
   initialAlbums,
   initialTeam,
-  initialAchievements
+  initialAchievements,
+  initialHeroConfig
 } from "../data/mockData";
 import LogoLoader from "../components/LogoLoader";
 
@@ -48,10 +49,19 @@ export default function Home() {
   const [albums, setAlbums] = useState<any[]>([]);
   const [team, setTeam] = useState<any[]>([]);
   const [achievements, setAchievements] = useState<any[]>([]);
+  const [heroConfig, setHeroConfig] = useState<any>(initialHeroConfig);
 
   // Load from localStorage on client mount
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const storedHero = localStorage.getItem("coderithum_hero_config");
+      if (storedHero) {
+        setHeroConfig(JSON.parse(storedHero));
+      } else {
+        localStorage.setItem("coderithum_hero_config", JSON.stringify(initialHeroConfig));
+        setHeroConfig(initialHeroConfig);
+      }
+
       const storedEvents = localStorage.getItem("coderithum_events");
       if (storedEvents) {
         setEvents(JSON.parse(storedEvents));
@@ -209,6 +219,7 @@ export default function Home() {
               totalAwardsCount={totalAwardsCount}
               setView={setView}
               setSelectedId={setSelectedId}
+              heroConfig={heroConfig}
             />
           )}
 

@@ -18,8 +18,12 @@ import {
 
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
+import { initialHeroConfig } from "@/data/mockData"
+import { Palette, Save } from "lucide-react"
 
 export default function SuperAdminDashboardPage() {
+  const { toast } = useToast()
   const [stats, setStats] = useState({
     eventsCount: 0,
     projectsCount: 0,
@@ -27,6 +31,82 @@ export default function SuperAdminDashboardPage() {
     achievementsCount: 0,
   })
   const [loading, setLoading] = useState(true)
+  const [heroConfig, setHeroConfig] = useState<any>(initialHeroConfig)
+
+  const presets: Record<string, any> = {
+    "ice-canvas": {
+      presetId: "ice-canvas",
+      badgeText: "GEC Daman CodeRhythm",
+      title: "Empowering Developers & Tech Innovators",
+      highlightTitle: "CodeRhythm 2026-2027",
+      subtitle: "Registrations are now open for the CodeRhythm Academic Year 2026-2027! Join workshops, hackathons, and open-source project sprints.",
+      backgroundStyle: "pixel-art",
+      accentColor: "#2563eb",
+      layoutStyle: "full-bleed",
+      bannerImage: "",
+      showUpcomingList: true
+    },
+    "makarsankranti": {
+      presetId: "makarsankranti",
+      badgeText: "Festival Theme",
+      title: "Happy Makar Sankranti",
+      highlightTitle: "Makar Sankranti",
+      subtitle: "Wishing you a sky full of kites and a heart full of happiness!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#d97706",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_makarsankranti.jpg",
+      showUpcomingList: true
+    },
+    "dussehra": {
+      presetId: "dussehra",
+      badgeText: "Festival Theme",
+      title: "Happy Dussehra",
+      highlightTitle: "Dussehra",
+      subtitle: "May this festive season bring you good health, prosperity, and success!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#e11d48",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_dussehra.jpg",
+      showUpcomingList: true
+    },
+    "christmas": {
+      presetId: "christmas",
+      badgeText: "Festival Theme",
+      title: "Merry Christmas",
+      highlightTitle: "Christmas",
+      subtitle: "Wishing you peace, joy, and a very Merry Christmas!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#2563eb",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_christmas.jpg",
+      showUpcomingList: true
+    },
+    "holi": {
+      presetId: "holi",
+      badgeText: "Festival Theme",
+      title: "Happy Holi",
+      highlightTitle: "Holi",
+      subtitle: "Celebrate the festival of colors with joy, love, and vibrant energy!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#7c3aed",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_holi.jpg",
+      showUpcomingList: true
+    },
+    "diwali": {
+      presetId: "diwali",
+      badgeText: "Festival Theme",
+      title: "Happy Diwali",
+      highlightTitle: "Diwali",
+      subtitle: "May the festival of lights bring brightness, warmth, and joy to your life!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#d97706",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_diwali.jpg",
+      showUpcomingList: true
+    }
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -46,9 +126,42 @@ export default function SuperAdminDashboardPage() {
         teamCount: getCount("coderithum_team"),
         achievementsCount: getCount("coderithum_achievements"),
       })
+
+      const storedHero = localStorage.getItem("coderithum_hero_config")
+      if (storedHero) {
+        try {
+          setHeroConfig(JSON.parse(storedHero))
+        } catch {
+          setHeroConfig(initialHeroConfig)
+        }
+      }
+
       setLoading(false)
     }
   }, [])
+
+  const handleApplyPreset = (presetId: string) => {
+    const selectedPreset = presets[presetId]
+    if (selectedPreset) {
+      setHeroConfig(selectedPreset)
+      toast({
+        title: "Preset Selected",
+        description: `Theme preset applied. Click 'Save Config' to publish changes.`,
+        variant: "success",
+      })
+    }
+  }
+
+  const handleSaveHero = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("coderithum_hero_config", JSON.stringify(heroConfig))
+      toast({
+        title: "Hero Config Saved!",
+        description: "Homepage theme and hero configuration updated successfully.",
+        variant: "success",
+      })
+    }
+  }
 
   if (loading) {
     return (
@@ -199,41 +312,89 @@ export default function SuperAdminDashboardPage() {
           </div>
         </Card>
 
-        {/* System Logs / Overview Tips (1 col) */}
+        {/* Theme & Hero Manager Panel (1 col) */}
         <Card className="p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-3 border-b-2 border-slate-900 pb-3 mb-4">
-              <div className="p-1.5 rounded bg-amber-50 text-amber-600 border-2 border-amber-600 shadow-[1.5px_1.5px_0px_#000]">
-                <AlertCircle className="size-4" />
+              <div className="p-1.5 rounded bg-blue-50 text-blue-600 border-2 border-blue-600 shadow-[1.5px_1.5px_0px_#000]">
+                <Palette className="size-4" />
               </div>
               <div>
-                <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">Console Guidance</h2>
-                <p className="text-[9px] text-slate-500 font-mono">Quick operator instructions.</p>
+                <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">Theme & Hero</h2>
+                <p className="text-[9px] text-slate-500 font-mono">Select theme preset directly.</p>
               </div>
             </div>
 
             <div className="space-y-4">
-              <div className="p-3 bg-slate-50 border-2 border-slate-900 rounded-none shadow-[2px_2px_0px_#000]">
-                <p className="text-[9px] font-bold text-slate-700 font-mono uppercase">Local Storage Persistence</p>
-                <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                  Data is saved inside your browser cache. Clear browser cookies/site data to reset to standard mock files.
-                </p>
+              {/* Preset Selector */}
+              <div>
+                <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1.5 block font-mono">Theme Presets</label>
+                <select
+                  value={heroConfig.presetId}
+                  onChange={(e) => handleApplyPreset(e.target.value)}
+                  className="w-full h-10 px-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono cursor-pointer"
+                >
+                  <option value="ice-canvas">🧊 Default Ice Canvas</option>
+                  <option value="makarsankranti">🪁 Makar Sankranti</option>
+                  <option value="dussehra">🏹 Dussehra</option>
+                  <option value="christmas">🎄 Christmas</option>
+                  <option value="holi">🎨 Holi</option>
+                  <option value="diwali">🪔 Diwali</option>
+                </select>
               </div>
 
-              <div className="p-3 bg-slate-50 border-2 border-slate-900 rounded-none shadow-[2px_2px_0px_#000]">
-                <p className="text-[9px] font-bold text-slate-700 font-mono uppercase">Image Assets</p>
-                <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                  Provide Unsplash URLs or base64 paths for event and project banner images to render properly.
-                </p>
-              </div>
+              {/* Text Fields to customize Hero Details */}
+              <div className="space-y-3 pt-2 border-t border-dashed border-slate-200">
+                <div>
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 block font-mono">Hero Badge</label>
+                  <input
+                    type="text"
+                    value={heroConfig.badgeText}
+                    onChange={(e) => setHeroConfig({ ...heroConfig, badgeText: e.target.value, presetId: "custom" })}
+                    className="w-full h-9 px-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono"
+                  />
+                </div>
 
-              <div className="p-3 bg-slate-50 border-2 border-slate-900 rounded-none shadow-[2px_2px_0px_#000]">
-                <p className="text-[9px] font-bold text-slate-700 font-mono uppercase">GitHub Pages Deploy</p>
-                <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                  To publish updates permanently to GitHub Pages, commit the modified `data/mockData.ts` or add a JSON loader if necessary.
-                </p>
+                <div>
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 block font-mono">Main Title</label>
+                  <input
+                    type="text"
+                    value={heroConfig.title}
+                    onChange={(e) => setHeroConfig({ ...heroConfig, title: e.target.value, presetId: "custom" })}
+                    className="w-full h-9 px-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 block font-mono">Highlight Title</label>
+                  <input
+                    type="text"
+                    value={heroConfig.highlightTitle}
+                    onChange={(e) => setHeroConfig({ ...heroConfig, highlightTitle: e.target.value, presetId: "custom" })}
+                    className="w-full h-9 px-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 block font-mono">Hero Subtitle</label>
+                  <textarea
+                    rows={2}
+                    value={heroConfig.subtitle}
+                    onChange={(e) => setHeroConfig({ ...heroConfig, subtitle: e.target.value, presetId: "custom" })}
+                    className="w-full p-2 rounded-none bg-white border-2 border-slate-900 text-[11px] font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono resize-none"
+                  />
+                </div>
               </div>
             </div>
+          </div>
+
+          <div className="mt-4">
+            <Button
+              onClick={handleSaveHero}
+              className="w-full flex items-center justify-center gap-2 rounded-none bg-blue-600 border-2 border-slate-900 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#000] cursor-pointer"
+            >
+              <Save className="size-3.5" /> Save Theme & Hero
+            </Button>
           </div>
         </Card>
       </div>

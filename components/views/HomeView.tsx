@@ -17,6 +17,7 @@ interface HomeViewProps {
   totalAwardsCount: number;
   setView: (view: string) => void;
   setSelectedId: (id: string | null) => void;
+  heroConfig?: any;
 }
 
 export default function HomeView({
@@ -28,7 +29,8 @@ export default function HomeView({
   totalMembersCount,
   totalAwardsCount,
   setView,
-  setSelectedId
+  setSelectedId,
+  heroConfig
 }: HomeViewProps) {
   return (
     <motion.div
@@ -41,10 +43,16 @@ export default function HomeView({
     >
       {/* Hero Section - Full Bleed Ice Theme Banner (Restored to top as previous) */}
       <div className="w-screen h-[60vh] min-h-[60vh] relative left-1/2 right-1/2 -translate-x-1/2 bg-white border-b-2 border-slate-900 -mt-[120px] mb-16 overflow-hidden flex justify-center items-center cursor-none">
-        {/* Background Canvas */}
-        <div className="absolute inset-0 w-full h-full z-0 opacity-90 pointer-events-none">
-          <InteractivePixelArt />
-        </div>
+        {/* Background Canvas or Banner Image */}
+        {heroConfig?.bannerImage ? (
+          <div className="absolute inset-0 w-full h-full z-0 opacity-100 pointer-events-none">
+            <img src={heroConfig.bannerImage} alt={heroConfig.title || "Holiday Banner"} className="w-full h-full object-cover" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 w-full h-full z-0 opacity-90 pointer-events-none">
+            <InteractivePixelArt />
+          </div>
+        )}
       </div>
 
       {/* Announcement & Activity Calendar side-by-side grid */}

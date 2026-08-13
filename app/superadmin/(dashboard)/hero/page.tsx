@@ -581,11 +581,11 @@ export default function HeroThemeManagerPage() {
               </div>
 
               {/* Dynamic Hero Banner Body */}
-              <div className="relative min-h-[320px] bg-slate-900 text-white p-6 flex flex-col justify-between overflow-hidden">
+              <div className="relative min-h-[320px] bg-white text-slate-900 p-4 flex flex-col justify-between overflow-hidden">
                 
                 {/* Background Render Mode */}
                 {config.backgroundStyle === "pixel-art" && (
-                  <div className="absolute inset-0 z-0 opacity-80 pointer-events-none">
+                  <div className="absolute inset-0 z-0 opacity-100 pointer-events-none">
                     <InteractivePixelArt presetId={config.presetId} bannerImage={config.bannerImage} />
                   </div>
                 )}
@@ -617,44 +617,31 @@ export default function HeroThemeManagerPage() {
                   />
                 )}
 
-                {/* Banner Content Layer */}
-                <div className="relative z-10 space-y-4">
-                  <div className="inline-block px-2.5 py-1 text-[9px] font-mono font-bold uppercase tracking-widest text-white border border-white/30 shadow-[2px_2px_0px_#000]" style={{ backgroundColor: config.accentColor }}>
-                    {config.badgeText || "CODERITHUM"}
-                  </div>
+                {/* Mini Replica Header Capsule */}
+                <div className="relative z-10 w-full pointer-events-none">
+                  <div className="w-full backdrop-blur-md bg-white/95 border border-slate-400/80 px-3 h-10 rounded-full flex items-center justify-between shadow-sm">
+                    <div className="flex items-center gap-1.5">
+                      <CoderithumLogoSvg className="w-4 h-4 object-contain" />
+                      <span className="font-bold text-[9px] tracking-tight text-slate-900 flex items-center gap-1 font-mono">
+                        Coderithum
+                        <span className="px-1 py-0.2 text-[6.5px] font-mono font-normal rounded-full bg-blue-50 border border-blue-200 text-blue-600">
+                          Club
+                        </span>
+                      </span>
+                    </div>
 
-                  <div>
-                    <h3 className="text-sm font-bold tracking-tight text-white/80 font-mono">
-                      {config.title}
-                    </h3>
-                    <h2 className="text-lg font-black text-white uppercase tracking-wide font-mono mt-0.5">
-                      {config.highlightTitle}
-                    </h2>
+                    {/* Mini Nav Links */}
+                    <nav className="hidden sm:flex items-center gap-2.5 text-[8px] font-mono font-bold text-slate-600">
+                      <span className="text-slate-900 border-b border-blue-600 pb-0.2">Home</span>
+                      <span>About</span>
+                      <span>Events</span>
+                      <span>Projects</span>
+                    </nav>
                   </div>
-
-                  <p className="text-[11px] text-slate-300 font-mono leading-relaxed max-w-sm line-clamp-3">
-                    {config.subtitle}
-                  </p>
                 </div>
 
-                {/* Banner CTA Footer */}
-                <div className="relative z-10 pt-6 flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className="px-3 py-1.5 text-xs font-mono font-bold text-white uppercase border border-slate-900 shadow-[2px_2px_0px_#000]"
-                    style={{ backgroundColor: config.accentColor }}
-                  >
-                    {config.primaryCtaText || "Primary CTA"}
-                  </button>
-                  {config.secondaryCtaText && (
-                    <button
-                      type="button"
-                      className="px-3 py-1.5 text-xs font-mono font-bold bg-white text-slate-900 uppercase border border-slate-900 shadow-[2px_2px_0px_#000]"
-                    >
-                      {config.secondaryCtaText}
-                    </button>
-                  )}
-                </div>
+                {/* Empty bottom space to mimic home layout preview */}
+                <div className="relative z-10 h-10 pointer-events-none" />
 
               </div>
 

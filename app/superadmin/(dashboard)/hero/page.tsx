@@ -581,67 +581,91 @@ export default function HeroThemeManagerPage() {
               </div>
 
               {/* Dynamic Hero Banner Body */}
-              <div className="relative min-h-[320px] bg-white text-slate-900 p-4 flex flex-col justify-between overflow-hidden">
+              <div className="relative min-h-[320px] max-h-[320px] bg-white border-b-2 border-slate-900 overflow-hidden flex flex-col justify-start rounded-none">
                 
-                {/* Background Render Mode */}
-                {config.backgroundStyle === "pixel-art" && (
-                  <div className="absolute inset-0 z-0 opacity-100 pointer-events-none">
-                    <InteractivePixelArt presetId={config.presetId} bannerImage={config.bannerImage} />
-                  </div>
-                )}
-
-                {config.backgroundStyle === "cyber-grid" && (
-                  <div 
-                    className="absolute inset-0 z-0 opacity-25 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"
-                    style={{ backgroundColor: "#090d16" }}
-                  />
-                )}
-
-                {config.backgroundStyle === "cosmic-particles" && (
-                  <div 
-                    className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/40"
-                  />
-                )}
-
-                {config.backgroundStyle === "gradient-wave" && (
-                  <div 
-                    className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-violet-950 via-slate-900 to-blue-950"
-                  />
-                )}
-
-                {/* Optional Banner Image Overlay */}
-                {config.bannerImage && (
-                  <div 
-                    className="absolute inset-0 z-0 opacity-20 bg-cover bg-center pointer-events-none mix-blend-overlay"
-                    style={{ backgroundImage: `url(${config.bannerImage})` }}
-                  />
-                )}
-
-                {/* Mini Replica Header Capsule */}
-                <div className="relative z-10 w-full pointer-events-none">
-                  <div className="w-full backdrop-blur-md bg-white/95 border border-slate-400/80 px-3 h-10 rounded-full flex items-center justify-between shadow-sm">
-                    <div className="flex items-center gap-1.5">
-                      <CoderithumLogoSvg className="w-4 h-4 object-contain" />
-                      <span className="font-bold text-[9px] tracking-tight text-slate-900 flex items-center gap-1 font-mono">
-                        Coderithum
-                        <span className="px-1 py-0.2 text-[6.5px] font-mono font-normal rounded-full bg-blue-50 border border-blue-200 text-blue-600">
-                          Club
-                        </span>
-                      </span>
+                {/* 1. Hero Section covering top 50% (160px height) */}
+                <div className="relative h-[160px] min-h-[160px] w-full border-b border-slate-300 overflow-hidden flex flex-col justify-between p-2 bg-white">
+                  {/* Background Live Canvas */}
+                  {config.backgroundStyle === "pixel-art" && (
+                    <div className="absolute inset-0 z-0 opacity-100 pointer-events-none">
+                      <InteractivePixelArt presetId={config.presetId} bannerImage={config.bannerImage} />
                     </div>
+                  )}
 
-                    {/* Mini Nav Links */}
-                    <nav className="hidden sm:flex items-center gap-2.5 text-[8px] font-mono font-bold text-slate-600">
-                      <span className="text-slate-900 border-b border-blue-600 pb-0.2">Home</span>
-                      <span>About</span>
-                      <span>Events</span>
-                      <span>Projects</span>
-                    </nav>
+                  {config.backgroundStyle === "cyber-grid" && (
+                    <div 
+                      className="absolute inset-0 z-0 opacity-25 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"
+                      style={{ backgroundColor: "#090d16" }}
+                    />
+                  )}
+
+                  {config.backgroundStyle === "cosmic-particles" && (
+                    <div 
+                      className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/40"
+                    />
+                  )}
+
+                  {config.backgroundStyle === "gradient-wave" && (
+                    <div 
+                      className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-violet-950 via-slate-900 to-blue-950"
+                    />
+                  )}
+
+                  {/* Optional Banner Image Overlay */}
+                  {config.bannerImage && (
+                    <div 
+                      className="absolute inset-0 z-0 opacity-20 bg-cover bg-center pointer-events-none mix-blend-overlay"
+                      style={{ backgroundImage: `url(${config.bannerImage})` }}
+                    />
+                  )}
+
+                  {/* Mini Replica Header Capsule */}
+                  <div className="relative z-10 w-full pointer-events-none">
+                    <div className="w-full backdrop-blur-md bg-white/95 border border-slate-400/80 px-2 h-7 rounded-full flex items-center justify-between shadow-xs">
+                      <div className="flex items-center gap-1">
+                        <CoderithumLogoSvg className="w-3 h-3 object-contain" />
+                        <span className="font-bold text-[8px] tracking-tight text-slate-900 font-mono">
+                          Coderithum
+                        </span>
+                      </div>
+                      <span className="text-[6.5px] font-mono font-bold text-slate-900 border-b border-blue-600">Home</span>
+                    </div>
                   </div>
                 </div>
 
-                {/* Empty bottom space to mimic home layout preview */}
-                <div className="relative z-10 h-10 pointer-events-none" />
+                {/* 2. Bottom Fold (160px height) showing announcement & calendar mockup */}
+                <div className="p-2 grid grid-cols-2 gap-2 bg-slate-50 flex-1 min-h-0 text-[7px] font-mono">
+                  {/* Announcement Mock */}
+                  <div className="p-2 border border-blue-200 bg-blue-50/50 flex flex-col justify-between rounded-none">
+                    <div>
+                      <div className="font-bold text-slate-800 uppercase text-[6px]">Announcement</div>
+                      <p className="text-slate-600 line-clamp-3 mt-1 leading-relaxed">
+                        Registrations are now open for the CodeRhythm Academic Year 2026-2027!
+                      </p>
+                    </div>
+                    <div className="bg-blue-600 text-white font-bold py-0.5 text-center text-[6px] border border-blue-700 shadow-[1px_1px_0px_#000]">
+                      Register
+                    </div>
+                  </div>
+
+                  {/* Calendar Mock */}
+                  <div className="p-2 border border-slate-300 bg-white flex flex-col justify-between rounded-none">
+                    <div>
+                      <div className="font-bold text-slate-800 text-[6px]">📅 AUG 2026</div>
+                      <div className="grid grid-cols-7 gap-0.5 text-center text-[5.5px] text-slate-400 mt-1 font-bold">
+                        <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+                      </div>
+                      <div className="grid grid-cols-7 gap-0.5 text-center text-[6px] mt-0.5">
+                        <span className="text-slate-200">31</span>
+                        <span className="border border-slate-100 bg-slate-50">1</span>
+                        <span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+                      </div>
+                    </div>
+                    <div className="text-[5.5px] text-slate-400 truncate mt-1">
+                      Aug 15: Club Orientation
+                    </div>
+                  </div>
+                </div>
 
               </div>
 
@@ -657,15 +681,11 @@ export default function HeroThemeManagerPage() {
       </div>
 
       {isFullScreen && (
-        <div className="fixed inset-0 z-50 bg-slate-900 flex flex-col justify-center items-center overflow-hidden">
-          {/* Background Live Canvas */}
-          <div className="absolute inset-0 w-full h-full z-0 opacity-100 pointer-events-none bg-white">
-            <InteractivePixelArt presetId={config.presetId} bannerImage={config.bannerImage} />
-          </div>
-
+        <div className="fixed inset-0 z-50 bg-white flex flex-col overflow-y-auto">
+          
           {/* Top Header Overlay mimicking real header */}
-          <div className="absolute top-4 left-4 right-4 z-20 px-4 md:px-6 w-full max-w-7xl mx-auto pointer-events-none">
-            <div className="w-full backdrop-blur-md bg-white/90 border border-slate-400/80 px-5 md:px-7 h-14 rounded-full flex items-center justify-between shadow-md pointer-events-auto">
+          <div className="sticky top-4 z-20 px-4 md:px-6 w-full max-w-7xl mx-auto pointer-events-none shrink-0">
+            <div className="w-full backdrop-blur-md bg-white/95 border border-slate-400/80 px-5 md:px-7 h-14 rounded-full flex items-center justify-between shadow-md pointer-events-auto">
               <div className="flex items-center gap-2.5">
                 <CoderithumLogoSvg className="w-6 h-6 object-contain" />
                 <span className="font-bold text-sm md:text-base tracking-tight text-slate-900 flex items-center gap-1.5 font-mono">
@@ -699,7 +719,94 @@ export default function HeroThemeManagerPage() {
             </div>
           </div>
 
-          {/* Removed text overlay layer to match actual landing page hero view */}
+          {/* Hero Section - Covers exactly 60vh (approx 50% height) like landing page */}
+          <div className="w-full h-[60vh] min-h-[60vh] relative overflow-hidden flex justify-center items-center cursor-none bg-white border-b-2 border-slate-900 -mt-[72px] shrink-0">
+            {/* Background Live Canvas */}
+            <div className="absolute inset-0 w-full h-full z-0 opacity-100 pointer-events-none">
+              <InteractivePixelArt presetId={config.presetId} bannerImage={config.bannerImage} />
+            </div>
+          </div>
+
+          {/* Main Grid View below hero section replicating landing page top fold */}
+          <div className="max-w-7xl mx-auto px-4 md:px-6 w-full flex-1 flex flex-col justify-start pb-20 mt-16">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+              
+              {/* Mock Announcement Column (5 cols) */}
+              <div className="lg:col-span-5 flex flex-col">
+                <div className="p-5 rounded-none bg-blue-50 border-2 border-blue-600/30 flex flex-col justify-between gap-5 shadow-[4px_4px_0px_#000] flex-1">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3">
+                      <div className="w-9 h-9 rounded-none bg-blue-100 border-2 border-blue-300 flex items-center justify-center text-blue-600 shrink-0">
+                        <span className="font-bold text-sm">ℹ️</span>
+                      </div>
+                      <div>
+                        <h3 className="text-xs font-bold text-slate-900 uppercase tracking-wider">Announcement</h3>
+                        <p className="text-[10px] text-slate-500 font-mono">GEC Daman Coderithum</p>
+                      </div>
+                    </div>
+
+                    <p className="text-xs text-slate-700 leading-relaxed font-medium">
+                      Registrations are now open for the CodeRhythm Academic Year 2026-2027! Secure your spots for Orientation and Git & GitHub basics.
+                    </p>
+
+                    <div className="space-y-2 pt-1.5 font-mono text-[10px]">
+                      <div className="text-[9px] text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-1">Upcoming Schedule</div>
+                      <div className="p-2 bg-white border border-slate-200 flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-slate-900">Club Member Registration & Orientation</div>
+                          <div className="text-[9px] text-slate-500">Aug 15, 2026</div>
+                        </div>
+                      </div>
+                      <div className="p-2 bg-white border border-slate-200 flex items-center justify-between">
+                        <div>
+                          <div className="font-bold text-slate-900">Git & GitHub Basics + Team Formation</div>
+                          <div className="text-[9px] text-slate-500">Aug 29, 2026</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-2">
+                    <button type="button" className="w-full py-2 bg-blue-600 border-2 border-blue-700 text-white font-bold text-xs shadow-[3px_3px_0px_#000] pointer-events-none">
+                      Register Now
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mock Calendar Column (7 cols) */}
+              <div className="lg:col-span-7 flex flex-col">
+                <div className="border-2 border-slate-900 bg-white p-5 shadow-[4px_4px_0px_#000] flex-1 flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between border-b-2 border-slate-900 pb-3 mb-4">
+                      <span className="font-bold text-xs font-mono">📅 AUGUST 2026</span>
+                      <div className="flex gap-1.5">
+                        <span className="px-2 py-0.5 border border-slate-400 text-[10px] font-mono">&lt;</span>
+                        <span className="px-2 py-0.5 border border-slate-400 text-[10px] font-mono">&gt;</span>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-7 gap-1 text-center text-[9px] font-mono font-bold text-slate-500 mb-2">
+                      <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
+                    </div>
+                    <div className="grid grid-cols-7 gap-1 text-[10px] font-mono">
+                      <span className="p-2 text-slate-300">26</span><span className="p-2 text-slate-300">27</span><span className="p-2 text-slate-300">28</span><span className="p-2 text-slate-300">29</span><span className="p-2 text-slate-300">30</span><span className="p-2 text-slate-300">31</span>
+                      <span className="p-2 border border-slate-200 bg-slate-50 font-bold">1</span>
+                      <span className="p-2 border border-slate-200">2</span><span className="p-2 border border-slate-200">3</span><span className="p-2 border border-slate-200">4</span><span className="p-2 border border-slate-200">5</span><span className="p-2 border border-slate-200">6</span><span className="p-2 border border-slate-200">7</span><span className="p-2 border border-slate-200">8</span>
+                      <span className="p-2 border border-slate-200">9</span><span className="p-2 border border-slate-200">10</span><span className="p-2 border border-slate-200">11</span><span className="p-2 border border-slate-200">12</span>
+                      <span className="p-2 border-2 border-rose-500 bg-rose-50 font-bold text-rose-700">13</span>
+                      <span className="p-2 border border-slate-200">14</span><span className="p-2 border border-slate-200 font-bold text-blue-600 bg-blue-50">15</span>
+                    </div>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-dashed border-slate-200 text-[9px] font-mono text-slate-500">
+                    August 15: Club Orientation (10:00 AM - 01:00 PM) at Main Seminar Hall
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
         </div>
       )}
 

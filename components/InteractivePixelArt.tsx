@@ -20,7 +20,13 @@ function interpolateColor(color1: string, color2: string, factor: number): strin
   return `#${rHex}${gHex}${bHex}`;
 }
 
-export default function InteractivePixelArt({ presetId }: { presetId?: string }) {
+export default function InteractivePixelArt({ 
+  presetId, 
+  bannerImage 
+}: { 
+  presetId?: string;
+  bannerImage?: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const trailRef = useRef<{ c: number; r: number; alpha: number }[]>([]);
@@ -168,23 +174,33 @@ export default function InteractivePixelArt({ presetId }: { presetId?: string })
     const animate = () => {
       const time = performance.now();
 
+      // Resolve active canvas theme based on presetId or fallback to bannerImage keywords
+      let activeTheme = presetId || "ice-canvas";
+      if (activeTheme === "custom" && bannerImage) {
+        if (bannerImage.includes("makarsankranti")) activeTheme = "makarsankranti";
+        else if (bannerImage.includes("dussehra")) activeTheme = "dussehra";
+        else if (bannerImage.includes("christmas")) activeTheme = "christmas";
+        else if (bannerImage.includes("holi")) activeTheme = "holi";
+        else if (bannerImage.includes("diwali")) activeTheme = "diwali";
+      }
+
       // Clear canvas with white or holiday background
       let bgColor = "#FFFFFF";
       let gridColor = "#CBD5E1";
 
-      if (presetId === "diwali") {
+      if (activeTheme === "diwali") {
         bgColor = "#0B0F19";
         gridColor = "#1E293B";
-      } else if (presetId === "makarsankranti") {
+      } else if (activeTheme === "makarsankranti") {
         bgColor = "#FFF7ED";
         gridColor = "#FED7AA";
-      } else if (presetId === "dussehra") {
+      } else if (activeTheme === "dussehra") {
         bgColor = "#FFF5F5";
         gridColor = "#FEE2E2";
-      } else if (presetId === "christmas") {
+      } else if (activeTheme === "christmas") {
         bgColor = "#F8FAFC";
         gridColor = "#E2E8F0";
-      } else if (presetId === "holi") {
+      } else if (activeTheme === "holi") {
         bgColor = "#FFF7ED";
         gridColor = "#FED7AA";
       }
@@ -303,8 +319,8 @@ export default function InteractivePixelArt({ presetId }: { presetId?: string })
           return h;
         };
 
-        const topColor = presetId === "diwali" ? "#1E293B" : "#334155";
-        const bodyColor = presetId === "diwali" ? "#0F172A" : "#0F172A";
+        const topColor = activeTheme === "diwali" ? "#1E293B" : "#334155";
+        const bodyColor = activeTheme === "diwali" ? "#0F172A" : "#0F172A";
 
         for (let c = 0; c < cols; c++) {
           const buildingH = getBuildingHeight(c);
@@ -334,7 +350,7 @@ export default function InteractivePixelArt({ presetId }: { presetId?: string })
       };
 
       const drawFlappingBirds = () => {
-        const birdColor = presetId === "diwali" ? "#64748B" : "#334155";
+        const birdColor = activeTheme === "diwali" ? "#64748B" : "#334155";
         const isWingUp = Math.floor(time / 150) % 2 === 0;
         
         const birdUpShape = ["101", "010"];
@@ -354,7 +370,7 @@ export default function InteractivePixelArt({ presetId }: { presetId?: string })
         drawPixelShape(bird3C, bird3R, birdShape, birdColor);
       };
 
-      if (presetId === "christmas") {
+      if (activeTheme === "christmas") {
         // 1. Snowflakes
         for (let i = 0; i < 50; i++) {
           const speed = 0.03 + (i % 4) * 0.01;
@@ -394,29 +410,122 @@ export default function InteractivePixelArt({ presetId }: { presetId?: string })
           drawPixelShape(santaC, santaR, sleighShape, "#DC2626");
         }
       } 
-      else if (presetId === "diwali") {
-        // 1. Twinkling Stars
+      else if (activeTheme === "diwali") {
+        // 1. Clear with gradient from dark purple to deep navy (Diwali night)
+        const grad = ctx.createLinearGradient(0, 0, 0, height);
+        grad.addColorStop(0, "#080612"); // Dark purple top
+        grad.addColorStop(1, "#121124"); // Deep navy bottom
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, width, height);
+
+        // Draw light grey/yellow grid lines (dark theme variant)
+        ctx.strokeStyle = "#1E1E38";
+        ctx.lineWidth = 1;
+        for (let c = 0; c <= cols; c++) {
+          ctx.beginPath();
+          ctx.moveTo(c * cellSize, 0);
+          ctx.lineTo(c * cellSize, height);
+          ctx.stroke();
+        }
+        for (let r = 0; r <= rows; r++) {
+          ctx.beginPath();
+          ctx.moveTo(0, r * cellSize);
+          ctx.lineTo(width, r * cellSize);
+          ctx.stroke();
+        }
+
+        // 2. Twinkling Stars
         for (let i = 0; i < 40; i++) {
           const starC = (i * 13) % cols;
-          const starR = (i * 7) % Math.floor(rows * 0.5);
+          const starR = (i * 7) % Math.floor(rows * 0.4);
           const twinkle = Math.sin(time * 0.003 + i) > 0.2;
           if (twinkle) {
             drawPixel(starC, starR, "#FFFFFF");
           }
         }
 
-        // 2. Flickering Diyas
-        for (let c = 5; c < cols - 5; c += 12) {
+        // 3. Hanging Toran (flower garlands) at the top
+        for (let c = 0; c < cols; c++) {
+          const isGold = c % 4 === 0 || c % 4 === 1;
+          const color = isGold ? "#F59E0B" : "#DC2626"; // Gold and Red
+          const isHang = c % 2 === 0;
+          drawPixel(c, isHang ? 0 : 1, color);
+          if (c % 8 === 4) {
+            drawPixel(c, 2, color);
+          }
+        }
+
+        // 4. Hanging Kandils (lanterns) on left and right sides
+        const drawKandil = (sc: number, sr: number) => {
+          const kandilShape = [
+            "00100",
+            "01110",
+            "11111",
+            "01110",
+            "00100",
+            "01010" // tassel
+          ];
+          drawPixelShape(sc, sr, kandilShape, "#F59E0B"); // Orange
+          drawPixel(sc + 2, sr + 2, "#EF4444"); // Red center light
+        };
+        drawKandil(2, 3);
+        drawKandil(8, 5);
+        drawKandil(cols - 7, 3);
+        drawKandil(cols - 13, 5);
+
+        // 5. Pointed Temples in the background
+        const templeColor = "#1B172E";
+        for (let c = 12; c < cols - 12; c += 16) {
+          const domeHeight = 8;
+          const domeShape = [
+            "000010000",
+            "000111000",
+            "001111100",
+            "011111110",
+            "111111111"
+          ];
+          // Dome base
+          drawPixelShape(c - 4, rows - 11, domeShape, templeColor);
+          // Pillars / temple body
+          for (let r = rows - 6; r < rows - 2; r++) {
+            for (let tc = c - 4; tc <= c + 4; tc++) {
+              drawPixel(tc, r, templeColor);
+            }
+          }
+          // Glowing yellow/orange windows inside temples
+          drawPixel(c, rows - 8, "#F59E0B");
+          drawPixel(c - 2, rows - 5, "#F59E0B");
+          drawPixel(c + 2, rows - 5, "#F59E0B");
+        }
+
+        // 6. Water background layer at the bottom
+        ctx.fillStyle = "#090715";
+        ctx.fillRect(0, (rows - 3) * cellSize, width, 3 * cellSize);
+
+        // Water ripples reflections
+        for (let i = 0; i < 15; i++) {
+          const ripC = (i * 17 + time * 0.008) % cols;
+          const ripR = rows - 3 + (i % 3);
+          drawPixel(Math.floor(ripC), ripR, "#26203D");
+        }
+
+        // 7. Floating Diyas on the water foreground
+        for (let c = 6; c < cols - 6; c += 14) {
           const diyaBase = [
             "11111",
             "01110"
           ];
-          drawPixelShape(c - 2, rows - 2, diyaBase, "#D97706"); // Amber
-          const flameColor = Math.sin(time * 0.025 + c) > 0 ? "#F59E0B" : "#EF4444";
+          drawPixelShape(c - 2, rows - 2, diyaBase, "#D97706"); // Amber bowl
+          // Flickering flame
+          const flameColor = Math.sin(time * 0.035 + c) > 0 ? "#F59E0B" : "#EF4444";
           drawPixel(c, rows - 3, flameColor);
+          // Water reflections directly below diya
+          drawPixel(c, rows - 1, "#D97706");
+          drawPixel(c - 1, rows - 1, "#B45309");
+          drawPixel(c + 1, rows - 1, "#B45309");
         }
       } 
-      else if (presetId === "makarsankranti") {
+      else if (activeTheme === "makarsankranti") {
         // 1. Giant Sunset Sun
         const sunCenterC = Math.floor(cols * 0.75);
         const sunCenterR = Math.floor(rows * 0.65);
@@ -445,7 +554,7 @@ export default function InteractivePixelArt({ presetId }: { presetId?: string })
           drawPixel(kiteC - 1, kiteR + 2, "#64748B");
         }
       } 
-      else if (presetId === "dussehra") {
+      else if (activeTheme === "dussehra") {
         drawSkylineSilhouette();
 
         // Rama (Left)
@@ -469,7 +578,7 @@ export default function InteractivePixelArt({ presetId }: { presetId?: string })
           drawPixel(Math.round(arrowC), Math.round(ramaR + 1), "#F59E0B");
         }
       } 
-      else if (presetId === "holi") {
+      else if (activeTheme === "holi") {
         // Splashes of paint
         const holiColors = ["#EC4899", "#10B981", "#3B82F6", "#F59E0B", "#EF4444", "#8B5CF6"];
         for (let i = 0; i < 8; i++) {

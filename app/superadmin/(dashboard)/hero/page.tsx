@@ -573,7 +573,7 @@ export default function HeroThemeManagerPage() {
                 {/* Background Render Mode */}
                 {config.backgroundStyle === "pixel-art" && (
                   <div className="absolute inset-0 z-0 opacity-80 pointer-events-none">
-                    <InteractivePixelArt presetId={config.presetId} />
+                    <InteractivePixelArt presetId={config.presetId} bannerImage={config.bannerImage} />
                   </div>
                 )}
 

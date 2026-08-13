@@ -34,6 +34,7 @@ export interface GalleryAlbum {
   id: string;
   name: string;
   cover: string;
+  coverStyle?: React.CSSProperties;
   media: { url: string; caption: string; isVideo?: boolean }[];
 }
 

@@ -146,6 +146,7 @@ export default function GalleryView({ albums, activeAlbumId, setActiveAlbumId, c
                     src={album.cover}
                     alt={album.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    style={album.coverStyle}
                   />
                   <div className="absolute inset-0 bg-slate-900/10 group-hover:bg-slate-900/0 transition-colors" />
                 </div>

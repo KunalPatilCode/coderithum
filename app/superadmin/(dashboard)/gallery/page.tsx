@@ -45,6 +45,9 @@ export default function GalleryManagerPage() {
               ...album,
               name: "sih Grand finalist team 2025 Multimedia",
               cover: "/sih_2025_cover.jpg",
+              coverStyle: {
+                objectPosition: "center 10%",
+              },
               media: [
                 {
                   url: "/sih_2025_1.jpg",

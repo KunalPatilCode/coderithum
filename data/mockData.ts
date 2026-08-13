@@ -1425,6 +1425,9 @@ export const initialAlbums: GalleryAlbum[] = [
     id: "hackathons-album",
     name: "sih Grand finalist team 2025 Multimedia",
     cover: withBasePath("/sih_2025_cover.jpg"),
+    coverStyle: {
+      objectPosition: "center 10%",
+    },
     media: [
       {
         url: withBasePath("/sih_2025_1.jpg"),

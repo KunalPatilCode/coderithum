@@ -712,8 +712,8 @@ export default function InteractivePixelArt({
       }
 
       // Draw Hashtag Logo
-      const brandColorPrimary = presetId === "diwali" ? "#06B6D4" : CRYSTAL_BLUE;
-      const brandColorSecondary = presetId === "diwali" ? "#FFFFFF" : DEEP_NAVY;
+      const brandColorPrimary = activeTheme === "diwali" ? "#06B6D4" : CRYSTAL_BLUE;
+      const brandColorSecondary = activeTheme === "diwali" ? "#FFFFFF" : DEEP_NAVY;
 
       for (let r = 0; r < 5; r++) {
         for (let c = 0; c < 5; c++) {
@@ -822,7 +822,7 @@ export default function InteractivePixelArt({
       eventTarget.removeEventListener("mouseleave", handleMouseLeave as EventListener);
       eventTarget.removeEventListener("dblclick", handleDblClick as EventListener);
     };
-  }, []);
+  }, [presetId, bannerImage]);
 
   return (
     <div

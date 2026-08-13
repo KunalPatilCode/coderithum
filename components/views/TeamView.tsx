@@ -1,14 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Github, Linkedin } from "../Icons";
 import { TeamMember } from "../../types";
 import InteractiveHeading from "../InteractiveHeading";
+import TeamHierarchyGraph from "../TeamHierarchyGraph";
+import { Layers, LayoutGrid } from "lucide-react";
 
 interface TeamViewProps {
   team: TeamMember[];
 }
 
 export default function TeamView({ team }: TeamViewProps) {
+  const [viewMode, setViewMode] = useState<"org" | "graph">("org");
+
   const domains = [
     { id: "ai", title: "AI & GenAI", icon: "🤖", key: "ai_lead", desc: "LLMs, Neural Networks, Vision AI & Prompt Engineering" },
     { id: "fullstack", title: "Full Stack Development", icon: "💻", key: "fullstack_lead", desc: "React, Next.js, Node.js & Distributed Web Backends" },
@@ -18,6 +22,7 @@ export default function TeamView({ team }: TeamViewProps) {
     { id: "uiux", title: "UI/UX & Product Design", icon: "🎨", key: "uiux_lead", desc: "Figma Prototyping, Design Systems & User Research" },
     { id: "datascience", title: "Data Science", icon: "📊", key: "datascience_lead", desc: "Predictive Analytics, Data Pipelines & Machine Learning" }
   ];
+
 
   const renderNode = (title: string, memberKey?: string, delay: number = 0, compact: boolean = false) => {
     const member = memberKey ? team.find(t => {
@@ -149,10 +154,36 @@ export default function TeamView({ team }: TeamViewProps) {
           <InteractiveHeading text="Organizational Structure" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
         </div>
         <p className="text-xs sm:text-sm text-slate-600">Explore Coderithum's leadership hierarchy and technical domain subtrees.</p>
+
+        {/* View Mode Toggle Buttons */}
+        <div className="pt-2 flex justify-center">
+          <div className="inline-flex border-2 border-slate-900 bg-white shadow-[3px_3px_0px_#000]">
+            <button
+              onClick={() => setViewMode("org")}
+              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${
+                viewMode === "org" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
+            >
+              <LayoutGrid className="size-3.5" /> Org Chart View
+            </button>
+            <button
+              onClick={() => setViewMode("graph")}
+              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${
+                viewMode === "graph" ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
+            >
+              <Layers className="size-3.5" /> Visual Hierarchy Graph
+            </button>
+          </div>
+        </div>
       </div>
 
-      {/* Main Organizational Tree */}
-      <div className="w-full max-w-6xl mx-auto p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] space-y-8 overflow-x-auto">
+      {viewMode === "graph" ? (
+        <TeamHierarchyGraph team={team} />
+      ) : (
+        /* Main Organizational Tree */
+        <div className="w-full max-w-6xl mx-auto p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] space-y-8 overflow-x-auto">
+
         <div className="min-w-[850px] flex flex-col items-center py-4">
 
           {/* Level 1: Faculty Mentor */}
@@ -244,6 +275,8 @@ export default function TeamView({ team }: TeamViewProps) {
 
         </div>
       </div>
+      )}
     </motion.div>
   );
 }
+

@@ -4,7 +4,10 @@ import {
   GalleryAlbum,
   TeamMember,
   ClubAchievement,
+  HeroThemeConfig,
+  AnnouncementItem,
 } from "../types";
+
 
 const withBasePath = (path: string) => {
   if (!path || path.startsWith("http") || path.startsWith("data:")) {
@@ -1706,3 +1709,57 @@ export const initialAchievements: ClubAchievement[] = [
     iconType: "star",
   },
 ];
+
+export const initialHeroConfig: HeroThemeConfig = {
+  presetId: "ice-canvas",
+  badgeText: "GEC Daman CodeRhythm",
+  title: "Empowering Developers & Tech Innovators",
+  highlightTitle: "CodeRhythm 2026-2027",
+  subtitle: "Registrations are now open for the CodeRhythm Academic Year 2026-2027! Join workshops, hackathons, and open-source project sprints.",
+  primaryCtaText: "Register Now",
+  primaryCtaLink: "registration-orientation-2026",
+  secondaryCtaText: "Explore Events",
+  secondaryCtaLink: "events",
+  backgroundStyle: "pixel-art",
+  accentColor: "#2563eb",
+  layoutStyle: "full-bleed",
+  bannerImage: "",
+  showUpcomingList: true,
+};
+
+export const initialAnnouncements: AnnouncementItem[] = [
+  {
+    id: "ann-1",
+    title: "CodeRhythm Academic Year 2026-2027 Onboarding Open!",
+    message: "Registrations are now open for the CodeRhythm Academic Year 2026-2027! Secure your spots for Orientation and Git & GitHub basics.",
+    badge: "Orientation Special",
+    date: "August 15, 2026",
+    linkedEventId: "registration-orientation-2026",
+    status: "active",
+    isPinned: true,
+    priority: "high"
+  },
+  {
+    id: "ann-2",
+    title: "Git & GitHub Basics + Team Formation Sprint",
+    message: "Master version control, hands-on repository creation, and team formation for semester projects.",
+    badge: "Technical Workshop",
+    date: "August 29, 2026",
+    linkedEventId: "git-github-basics-2026",
+    status: "active",
+    isPinned: false,
+    priority: "normal"
+  },
+  {
+    id: "ann-3",
+    title: "Internal SIH Hackathon & Idea Pitching",
+    message: "Prepare your problem statement solutions and prototype pitches for the SIH selection round.",
+    badge: "Hackathon Alert",
+    date: "September 19, 2026",
+    linkedEventId: "internal-sih-pitching-2026",
+    status: "active",
+    isPinned: false,
+    priority: "high"
+  }
+];
+

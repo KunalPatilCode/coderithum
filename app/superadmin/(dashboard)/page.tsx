@@ -11,8 +11,11 @@ import {
   Plus, 
   Activity, 
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  Bell
 } from "lucide-react"
+
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 
@@ -141,28 +144,51 @@ export default function SuperAdminDashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link href="/superadmin/events?add=true" className="group p-4 bg-white border-2 border-slate-900 hover:border-blue-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
+              <Link href="/superadmin/hero" className="group p-4 bg-white border-2 border-slate-900 hover:border-blue-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
                 <div>
-                  <Calendar className="size-5 text-blue-600 mb-2" />
-                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-blue-600 transition-colors">Publish Event</h3>
-                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Schedule workshops, hackathons, or orientations for the tech club calendar.</p>
+                  <Sparkles className="size-5 text-blue-600 mb-2" />
+                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-blue-600 transition-colors">Hero Theme Manager</h3>
+                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Customize hero banner presets, canvas background styles, text titles, and CTAs.</p>
                 </div>
                 <div className="flex items-center gap-1.5 text-[9px] font-bold text-blue-600 font-mono uppercase tracking-wider pt-2">
-                  Launch Form <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                  Launch Manager <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                 </div>
               </Link>
 
-              <Link href="/superadmin/projects?add=true" className="group p-4 bg-white border-2 border-slate-900 hover:border-purple-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
+              <Link href="/superadmin/announcements" className="group p-4 bg-white border-2 border-slate-900 hover:border-emerald-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
                 <div>
-                  <Code2 className="size-5 text-purple-600 mb-2" />
-                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-purple-600 transition-colors">Showcase Project</h3>
-                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Add student hackathon prototypes or collaborative team project repositories.</p>
+                  <Bell className="size-5 text-emerald-600 mb-2" />
+                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-emerald-600 transition-colors">Calendar & Announcements</h3>
+                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Link active announcements directly with calendar events and priority flags.</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 font-mono uppercase tracking-wider pt-2">
+                  Manage Announcements <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                </div>
+              </Link>
+
+              <Link href="/superadmin/events?add=true" className="group p-4 bg-white border-2 border-slate-900 hover:border-purple-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
+                <div>
+                  <Calendar className="size-5 text-purple-600 mb-2" />
+                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-purple-600 transition-colors">Publish Event</h3>
+                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Schedule workshops, hackathons, or orientations for the tech club calendar.</p>
                 </div>
                 <div className="flex items-center gap-1.5 text-[9px] font-bold text-purple-600 font-mono uppercase tracking-wider pt-2">
                   Launch Form <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                 </div>
               </Link>
+
+              <Link href="/superadmin/team" className="group p-4 bg-white border-2 border-slate-900 hover:border-amber-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
+                <div>
+                  <Users2 className="size-5 text-amber-600 mb-2" />
+                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-amber-600 transition-colors">Team Hierarchy & Photos</h3>
+                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Manage yearly team tree graphs, hierarchy tiers, and member photo cropping.</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-[9px] font-bold text-amber-600 font-mono uppercase tracking-wider pt-2">
+                  Open Team Deck <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                </div>
+              </Link>
             </div>
+
           </div>
 
           <div className="mt-6 p-4 bg-blue-50 border-2 border-blue-600 rounded-none flex items-center gap-3 text-slate-800 shadow-[2px_2px_0px_#000]">

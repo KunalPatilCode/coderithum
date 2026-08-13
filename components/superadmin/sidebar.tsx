@@ -3,7 +3,9 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { 
   LayoutDashboard, 
+  Sparkles,
   Calendar, 
+  Bell,
   Code2, 
   Users2, 
   Trophy, 
@@ -18,13 +20,16 @@ export function SuperAdminSidebar({ className }: { className?: string }) {
 
   const navItems = [
     { name: "Overview", href: "/superadmin", icon: LayoutDashboard },
+    { name: "Hero Theme Manager", href: "/superadmin/hero", icon: Sparkles },
     { name: "Events Manager", href: "/superadmin/events", icon: Calendar },
+    { name: "Announcements & Sync", href: "/superadmin/announcements", icon: Bell },
     { name: "Projects Manager", href: "/superadmin/projects", icon: Code2 },
-    { name: "Team Manager", href: "/superadmin/team", icon: Users2 },
+    { name: "Team & Hierarchy", href: "/superadmin/team", icon: Users2 },
     { name: "Achievements Manager", href: "/superadmin/achievements", icon: Trophy },
     { name: "Gallery Manager", href: "/superadmin/gallery", icon: Image },
     { name: "System Settings", href: "/superadmin/settings", icon: Settings },
   ]
+
 
   return (
     <aside className={`w-64 flex flex-col h-full border-r-2 border-slate-900 bg-white ${className || ""}`}>

@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import { ChevronLeft, ChevronRight, Calendar as CalendarIcon, MapPin, Clock, ExternalLink } from "lucide-react";
 
 interface CalendarEventItem {
@@ -503,6 +504,44 @@ export default function ClubCalendar({
   setView: (view: string) => void;
   setSelectedId: (id: string | null) => void;
 }) {
+  const [eventsList, setEventsList] = useState<CalendarEventItem[]>(calendarEvents);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("coderithum_events");
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          // Convert string dates to CalendarEventItem structure
+          const formatted: CalendarEventItem[] = parsed.map((e: any) => {
+            const d = new Date(e.date);
+            const validDate = !isNaN(d.getTime());
+            return {
+              id: e.id,
+              title: e.title,
+              dateStr: e.date,
+              days: validDate ? [d.getDate()] : [15],
+              month: validDate ? d.getMonth() : 7,
+              year: validDate ? d.getFullYear() : 2026,
+              time: e.time || "10:00 AM - 01:00 PM",
+              venue: e.venue || "GEC Daman",
+              type: e.type || "upcoming",
+              category: e.category || "workshop",
+            };
+          });
+
+          // Merge without duplicates
+          const existingIds = new Set(formatted.map(f => f.id));
+          const merged = [
+            ...formatted,
+            ...calendarEvents.filter(ce => !existingIds.has(ce.id))
+          ];
+          setEventsList(merged);
+        } catch {}
+      }
+    }
+  }, []);
+
   // Start on August 2026 (contains the orientation)
   const [currentDate, setCurrentDate] = useState<Date>(new Date(2026, 7, 1));
   const [selectedDay, setSelectedDay] = useState<number>(15); // Select 15th by default
@@ -539,8 +578,9 @@ export default function ClubCalendar({
   }
 
   // Find events for the current month and day
-  const eventsInMonth = calendarEvents.filter(e => e.month === currentMonth && e.year === currentYear);
+  const eventsInMonth = eventsList.filter(e => e.month === currentMonth && e.year === currentYear);
   const selectedDayEvent = eventsInMonth.find(e => e.days.includes(selectedDay));
+
 
   // Git contribution graph mock values for aesthetic
   const getContributionColor = (day: number) => {

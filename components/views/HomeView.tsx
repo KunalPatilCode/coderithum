@@ -62,7 +62,7 @@ export default function HomeView({
                   <p className="text-[10px] text-slate-500 font-mono">GEC Daman Coderithum</p>
                 </div>
               </div>
-              
+
               <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
                 Registrations are now open for the CodeRhythm Academic Year 2026-2027! Secure your spots for Orientation and Git & GitHub basics.
               </p>
@@ -88,7 +88,7 @@ export default function HomeView({
                 ))}
               </div>
             </div>
-            
+
             <div className="pt-2">
               <button
                 onClick={() => { setView("event-detail"); setSelectedId("registration-orientation-2026"); }}

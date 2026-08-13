@@ -20,7 +20,7 @@ function interpolateColor(color1: string, color2: string, factor: number): strin
   return `#${rHex}${gHex}${bHex}`;
 }
 
-export default function InteractivePixelArt() {
+export default function InteractivePixelArt({ presetId }: { presetId?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const trailRef = useRef<{ c: number; r: number; alpha: number }[]>([]);
@@ -168,12 +168,32 @@ export default function InteractivePixelArt() {
     const animate = () => {
       const time = performance.now();
 
-      // Clear canvas with white background
-      ctx.fillStyle = "#FFFFFF";
+      // Clear canvas with white or holiday background
+      let bgColor = "#FFFFFF";
+      let gridColor = "#CBD5E1";
+
+      if (presetId === "diwali") {
+        bgColor = "#0B0F19";
+        gridColor = "#1E293B";
+      } else if (presetId === "makarsankranti") {
+        bgColor = "#FFF7ED";
+        gridColor = "#FED7AA";
+      } else if (presetId === "dussehra") {
+        bgColor = "#FFF5F5";
+        gridColor = "#FEE2E2";
+      } else if (presetId === "christmas") {
+        bgColor = "#F8FAFC";
+        gridColor = "#E2E8F0";
+      } else if (presetId === "holi") {
+        bgColor = "#FFF7ED";
+        gridColor = "#FED7AA";
+      }
+
+      ctx.fillStyle = bgColor;
       ctx.fillRect(0, 0, width, height);
 
       // Draw light grey grid lines
-      ctx.strokeStyle = "#CBD5E1";
+      ctx.strokeStyle = gridColor;
       ctx.lineWidth = 1;
 
       // Vertical lines
@@ -261,144 +281,252 @@ export default function InteractivePixelArt() {
         }
       };
 
-      // Draw Clouds moving across the top of buildings
-      const cloudColor = "#FFFFFF";
+      // --- CONDITIONAL DRAWING ENGINE BY PRESET ---
       
-      const cloud1Shape = [
-        "0001110000",
-        "0011111100",
-        "0111111110",
-        "1111111111"
-      ];
-      const cloud2Shape = [
-        "001100",
-        "011110",
-        "111111"
-      ];
-      const cloud3Shape = [
-        "00001111000",
-        "00111111100",
-        "11111111111"
-      ];
+      const drawSkylineSilhouette = () => {
+        const getBuildingHeight = (col: number) => {
+          const blockId = Math.floor(col / 6);
+          const phase = blockId % 5;
+          let h = 6;
+          if (phase === 0) h = 11;
+          else if (phase === 1) h = 8;
+          else if (phase === 2) h = 14;
+          else if (phase === 3) h = 9;
+          else if (phase === 4) h = 12;
 
-      // Different heights and speeds for organic scrolling
-      const cloud1C = (time * 0.0015) % (cols + 20) - 10;
-      const cloud1R = Math.floor(rows * 0.12);
-      drawPixelShape(cloud1C, cloud1R, cloud1Shape, cloudColor);
+          const isCenter = (col % 6) === 2;
+          if (isCenter && (blockId % 2 === 0)) return h + 3;
 
-      const cloud2C = ((time * 0.0008) + cols * 0.45) % (cols + 15) - 8;
-      const cloud2R = Math.floor(rows * 0.06);
-      drawPixelShape(cloud2C, cloud2R, cloud2Shape, cloudColor);
+          const isGap = (col % 6) === 5;
+          if (isGap) return 0;
 
-      const cloud3C = ((time * 0.0011) + cols * 0.75) % (cols + 22) - 11;
-      const cloud3R = Math.floor(rows * 0.18);
-      drawPixelShape(cloud3C, cloud3R, cloud3Shape, cloudColor);
+          return h;
+        };
 
-      // Draw Plane flying fast from left to right (comes every 40 seconds)
-      const planeCycle = time % 40000;
-      const planeDuration = 7000; // takes 7s to fly across
-      if (planeCycle < planeDuration) {
-        const p = planeCycle / planeDuration;
-        const planeC = p * (cols + 20) - 10;
-        const planeR = Math.floor(rows * 0.25);
-        
-        const planeShape = [
-          "0000100",
-          "0001100",
-          "1111111",
-          "0001100",
-          "0000100"
-        ];
-        const planeColor = "#475569";
-        drawPixelShape(planeC, planeR, planeShape, planeColor);
-        
-        // flashing red tail light
-        const isFlashing = Math.floor(time / 250) % 2 === 0;
-        if (isFlashing) {
-          const tailC = Math.round(planeC);
-          const tailR = Math.round(planeR) + 2;
-          if (tailC >= 0 && tailC < cols && tailR >= 0 && tailR < rows && !circleCells.has(`${tailC},${tailR}`)) {
-            ctx.fillStyle = "#EF4444";
-            ctx.fillRect(tailC * cellSize + 0.5, tailR * cellSize + 0.5, cellSize - 1, cellSize - 1);
+        const topColor = presetId === "diwali" ? "#1E293B" : "#334155";
+        const bodyColor = presetId === "diwali" ? "#0F172A" : "#0F172A";
+
+        for (let c = 0; c < cols; c++) {
+          const buildingH = getBuildingHeight(c);
+          if (buildingH <= 0) continue;
+
+          const startRow = Math.floor(rows - buildingH);
+          for (let r = Math.max(0, startRow); r < rows; r++) {
+            if (r === startRow) {
+              ctx.fillStyle = topColor; // building top
+            } else {
+              // Draw twinkling window lights inside building body
+              const isWindowCol = (c % 6) === 1 || (c % 6) === 3;
+              const isWindowRow = (rows - r) % 3 === 0;
+              const isBelowAntenna = (rows - r) < buildingH - 2;
+
+              if (isWindowCol && isWindowRow && isBelowAntenna) {
+                const blockId = Math.floor(c / 6);
+                const windowOn = Math.sin(blockId * 7 + r * 13 + time * 0.001) > -0.2;
+                ctx.fillStyle = windowOn ? ((blockId % 2 === 0) ? "#FDE047" : "#22D3EE") : "#0F172A";
+              } else {
+                ctx.fillStyle = bodyColor; // Solid building body
+              }
+            }
+            ctx.fillRect(c * cellSize + 0.5, r * cellSize + 0.5, cellSize - 1, cellSize - 1);
           }
         }
-      }
-
-      // Draw Birds (small flock flying in the middle of the sky with flapping wings)
-      const birdColor = "#334155";
-      const isWingUp = Math.floor(time / 150) % 2 === 0;
-      
-      const birdUpShape = [
-        "101",
-        "010"
-      ];
-      const birdDownShape = [
-        "010",
-        "101"
-      ];
-      const birdShape = isWingUp ? birdUpShape : birdDownShape;
-
-      const bird1C = (time * 0.0035) % (cols + 10) - 5;
-      const bird1R = Math.floor(rows * 0.44) + Math.sin(time * 0.003) * 1.5;
-      drawPixelShape(bird1C, bird1R, birdShape, birdColor);
-
-      const bird2C = ((time * 0.0035) - 5 + cols) % (cols + 10) - 5;
-      const bird2R = Math.floor(rows * 0.39) + Math.cos(time * 0.003) * 1.5;
-      drawPixelShape(bird2C, bird2R, birdShape, birdColor);
-
-      const bird3C = ((time * 0.0035) - 9 + cols) % (cols + 10) - 5;
-      const bird3R = Math.floor(rows * 0.47) + Math.sin(time * 0.002) * 1.5;
-      drawPixelShape(bird3C, bird3R, birdShape, birdColor);
-
-      // Draw pixelated city skyline silhouette with twinkling windows & blinking warning lights
-      const getBuildingHeight = (col: number) => {
-        const blockId = Math.floor(col / 6);
-        const phase = blockId % 5;
-        let h = 6;
-        if (phase === 0) h = 11;
-        else if (phase === 1) h = 8;
-        else if (phase === 2) h = 14;
-        else if (phase === 3) h = 9;
-        else if (phase === 4) h = 12;
-
-        const isCenter = (col % 6) === 2;
-        if (isCenter && (blockId % 2 === 0)) return h + 3;
-
-        const isGap = (col % 6) === 5;
-        if (isGap) return 0;
-
-        return h;
       };
 
-      for (let c = 0; c < cols; c++) {
-        const buildingH = getBuildingHeight(c);
-        if (buildingH <= 0) continue;
+      const drawFlappingBirds = () => {
+        const birdColor = presetId === "diwali" ? "#64748B" : "#334155";
+        const isWingUp = Math.floor(time / 150) % 2 === 0;
+        
+        const birdUpShape = ["101", "010"];
+        const birdDownShape = ["010", "101"];
+        const birdShape = isWingUp ? birdUpShape : birdDownShape;
 
-        const startRow = Math.floor(rows - buildingH);
-        for (let r = Math.max(0, startRow); r < rows; r++) {
-          if (r === startRow) {
-            ctx.fillStyle = "#334155"; // Slate building top
-          } else {
-            // Draw twinkling window lights inside building body
-            const isWindowCol = (c % 6) === 1 || (c % 6) === 3;
-            const isWindowRow = (rows - r) % 3 === 0;
-            const isBelowAntenna = (rows - r) < buildingH - 2;
+        const bird1C = (time * 0.0035) % (cols + 10) - 5;
+        const bird1R = Math.floor(rows * 0.44) + Math.sin(time * 0.003) * 1.5;
+        drawPixelShape(bird1C, bird1R, birdShape, birdColor);
 
-            if (isWindowCol && isWindowRow && isBelowAntenna) {
-              const blockId = Math.floor(c / 6);
-              const windowOn = Math.sin(blockId * 7 + r * 13 + time * 0.001) > -0.2;
-              ctx.fillStyle = windowOn ? ((blockId % 2 === 0) ? "#FDE047" : "#22D3EE") : "#0F172A";
-            } else {
-              ctx.fillStyle = "#0F172A"; // Solid deep navy building silhouette
+        const bird2C = ((time * 0.0035) - 5 + cols) % (cols + 10) - 5;
+        const bird2R = Math.floor(rows * 0.39) + Math.cos(time * 0.003) * 1.5;
+        drawPixelShape(bird2C, bird2R, birdShape, birdColor);
+
+        const bird3C = ((time * 0.0035) - 9 + cols) % (cols + 10) - 5;
+        const bird3R = Math.floor(rows * 0.47) + Math.sin(time * 0.002) * 1.5;
+        drawPixelShape(bird3C, bird3R, birdShape, birdColor);
+      };
+
+      if (presetId === "christmas") {
+        // 1. Snowflakes
+        for (let i = 0; i < 50; i++) {
+          const speed = 0.03 + (i % 4) * 0.01;
+          const xOffset = Math.sin(time * 0.001 + i) * 2;
+          const snowC = (i * 23 + xOffset) % cols;
+          const snowR = (time * speed + i * 37) % rows;
+          drawPixel(Math.floor(snowC), Math.floor(snowR), "#FFFFFF");
+        }
+
+        // 2. Christmas Trees
+        for (let c = 4; c < cols; c += 10) {
+          const treeHeight = 7 + (c % 3) * 2;
+          const treeShape = [
+            "0001000",
+            "0011100",
+            "0111110",
+            "1111111",
+            "0001000"
+          ];
+          drawPixelShape(c - 3, rows - 5, treeShape, "#16A34A"); // Green
+          drawPixel(c, rows - 6, "#FDE047"); // Gold Star
+        }
+
+        // 3. Santa's Sleigh
+        const santaCycle = time % 25000;
+        const santaDuration = 8000;
+        if (santaCycle < santaDuration) {
+          const p = santaCycle / santaDuration;
+          const santaC = p * (cols + 20) - 10;
+          const santaR = Math.floor(rows * 0.15);
+          const sleighShape = [
+            "00010100",
+            "00111100",
+            "11111111",
+            "01000010"
+          ];
+          drawPixelShape(santaC, santaR, sleighShape, "#DC2626");
+        }
+      } 
+      else if (presetId === "diwali") {
+        // 1. Twinkling Stars
+        for (let i = 0; i < 40; i++) {
+          const starC = (i * 13) % cols;
+          const starR = (i * 7) % Math.floor(rows * 0.5);
+          const twinkle = Math.sin(time * 0.003 + i) > 0.2;
+          if (twinkle) {
+            drawPixel(starC, starR, "#FFFFFF");
+          }
+        }
+
+        // 2. Flickering Diyas
+        for (let c = 5; c < cols - 5; c += 12) {
+          const diyaBase = [
+            "11111",
+            "01110"
+          ];
+          drawPixelShape(c - 2, rows - 2, diyaBase, "#D97706"); // Amber
+          const flameColor = Math.sin(time * 0.025 + c) > 0 ? "#F59E0B" : "#EF4444";
+          drawPixel(c, rows - 3, flameColor);
+        }
+      } 
+      else if (presetId === "makarsankranti") {
+        // 1. Giant Sunset Sun
+        const sunCenterC = Math.floor(cols * 0.75);
+        const sunCenterR = Math.floor(rows * 0.65);
+        const sunRadius = 6;
+        for (let r = -sunRadius; r <= sunRadius; r++) {
+          for (let c = -sunRadius; c <= sunRadius; c++) {
+            if (c * c + r * r <= sunRadius * sunRadius) {
+              drawPixel(sunCenterC + c, sunCenterR + r, "#FDE047");
             }
           }
-          ctx.fillRect(c * cellSize + 0.5, r * cellSize + 0.5, cellSize - 1, cellSize - 1);
         }
+
+        // 2. Skyline Silhouette
+        drawSkylineSilhouette();
+
+        // 3. Floating Kites
+        const kiteColors = ["#EF4444", "#3B82F6", "#EC4899", "#8B5CF6", "#10B981"];
+        for (let i = 0; i < 5; i++) {
+          const speed = 0.0003 + i * 0.0001;
+          const kiteC = (cols * 0.1 + i * 15 + Math.sin(time * speed) * 4) % cols;
+          const kiteR = (rows * 0.2 + i * 5 + Math.cos(time * speed * 1.5) * 3) % (rows * 0.5);
+          const kiteShape = ["010", "111", "010"];
+          drawPixelShape(kiteC - 1, kiteR - 1, kiteShape, kiteColors[i % kiteColors.length]);
+          // Kite strings
+          drawPixel(kiteC, kiteR + 1, "#64748B");
+          drawPixel(kiteC - 1, kiteR + 2, "#64748B");
+        }
+      } 
+      else if (presetId === "dussehra") {
+        drawSkylineSilhouette();
+
+        // Rama (Left)
+        const ramaC = Math.max(3, Math.floor(cols * 0.12));
+        const ramaR = Math.floor(rows * 0.68);
+        const ramaShape = ["0100", "1110", "0100", "1010"];
+        drawPixelShape(ramaC, ramaR, ramaShape, "#2563EB");
+
+        // Ravana (Right)
+        const ravC = Math.min(cols - 12, Math.floor(cols * 0.82));
+        const ravR = Math.floor(rows * 0.65);
+        const ravShape = ["10101", "11111", "01110", "01010"];
+        drawPixelShape(ravC, ravR, ravShape, "#DC2626");
+
+        // Flying golden arrows
+        const arrowCycle = time % 3000;
+        const arrowDuration = 1800;
+        if (arrowCycle < arrowDuration) {
+          const p = arrowCycle / arrowDuration;
+          const arrowC = ramaC + 4 + p * (ravC - ramaC - 4);
+          drawPixel(Math.round(arrowC), Math.round(ramaR + 1), "#F59E0B");
+        }
+      } 
+      else if (presetId === "holi") {
+        // Splashes of paint
+        const holiColors = ["#EC4899", "#10B981", "#3B82F6", "#F59E0B", "#EF4444", "#8B5CF6"];
+        for (let i = 0; i < 8; i++) {
+          const splatC = (i * 19) % cols;
+          const splatR = (i * 11) % rows;
+          const activeColor = holiColors[i % holiColors.length];
+          drawPixel(splatC, splatR, activeColor);
+          drawPixel(splatC + 1, splatR, activeColor);
+          drawPixel(splatC, splatR + 1, activeColor);
+          if (i % 2 === 0) {
+            drawPixel(splatC - 1, splatR, activeColor);
+            drawPixel(splatC, splatR - 1, activeColor);
+          }
+        }
+        drawFlappingBirds();
+      } 
+      else {
+        // --- DEFAULT CLASSIC CANVAS ELEMENTS ---
+        
+        // 1. Clouds
+        const cloudColor = "#FFFFFF";
+        const cloud1Shape = ["0001110000", "0011111100", "0111111110", "1111111111"];
+        const cloud2Shape = ["001100", "011110", "111111"];
+        const cloud3Shape = ["00001111000", "00111111100", "11111111111"];
+
+        const cloud1C = (time * 0.0015) % (cols + 20) - 10;
+        drawPixelShape(cloud1C, Math.floor(rows * 0.12), cloud1Shape, cloudColor);
+
+        const cloud2C = ((time * 0.0008) + cols * 0.45) % (cols + 15) - 8;
+        drawPixelShape(cloud2C, Math.floor(rows * 0.06), cloud2Shape, cloudColor);
+
+        const cloud3C = ((time * 0.0011) + cols * 0.75) % (cols + 22) - 11;
+        drawPixelShape(cloud3C, Math.floor(rows * 0.18), cloud3Shape, cloudColor);
+
+        // 2. Plane
+        const planeCycle = time % 40000;
+        const planeDuration = 7000;
+        if (planeCycle < planeDuration) {
+          const p = planeCycle / planeDuration;
+          const planeC = p * (cols + 20) - 10;
+          const planeR = Math.floor(rows * 0.25);
+          const planeShape = ["0000100", "0001100", "1111111", "0001100", "0000100"];
+          drawPixelShape(planeC, planeR, planeShape, "#475569");
+          
+          if (Math.floor(time / 250) % 2 === 0) {
+            drawPixel(Math.round(planeC), Math.round(planeR) + 2, "#EF4444");
+          }
+        }
+
+        // 3. Birds
+        drawFlappingBirds();
+
+        // 4. Skyline Silhouette
+        drawSkylineSilhouette();
       }
 
-
-
-      // Draw random popping circles (digital rain ripple effect)
+      // Draw random popping circles (digital rain ripple effect / Diwali fireworks)
       if (Math.random() < 0.015) {
         poppingCircles.push({
           x: Math.random() * width,
@@ -417,20 +545,37 @@ export default function InteractivePixelArt() {
       poppingCircles = poppingCircles.filter(pc => pc.radius < pc.maxRadius && pc.alpha > 0);
 
       poppingCircles.forEach(pc => {
-        // Outer cyan ring
-        ctx.strokeStyle = `rgba(6, 182, 212, ${pc.alpha * 0.45})`;
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.arc(pc.x, pc.y, pc.radius, 0, Math.PI * 2);
-        ctx.stroke();
+        if (presetId === "diwali") {
+          // Colorful firework burst rings
+          const hue = (pc.x + pc.y) % 360;
+          ctx.strokeStyle = `hsla(${hue}, 90%, 65%, ${pc.alpha * 0.75})`;
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(pc.x, pc.y, pc.radius, 0, Math.PI * 2);
+          ctx.stroke();
+          
+          ctx.strokeStyle = `hsla(${(hue + 60) % 360}, 90%, 65%, ${pc.alpha * 0.4})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(pc.x, pc.y, pc.radius * 0.7, 0, Math.PI * 2);
+          ctx.stroke();
+        } else {
+          // Outer cyan ring
+          ctx.strokeStyle = `rgba(6, 182, 212, ${pc.alpha * 0.45})`;
+          ctx.lineWidth = 1.5;
+          ctx.beginPath();
+          ctx.arc(pc.x, pc.y, pc.radius, 0, Math.PI * 2);
+          ctx.stroke();
 
-        // Inner blue ring
-        ctx.strokeStyle = `rgba(37, 99, 235, ${pc.alpha * 0.25})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.arc(pc.x, pc.y, pc.radius * 0.7, 0, Math.PI * 2);
-        ctx.stroke();
+          // Inner blue ring
+          ctx.strokeStyle = `rgba(37, 99, 235, ${pc.alpha * 0.25})`;
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.arc(pc.x, pc.y, pc.radius * 0.7, 0, Math.PI * 2);
+          ctx.stroke();
+        }
       });
+
 
       // 3. Render brand text "CODERITHUM" & logo inside grid
       const textWidth = 45;
@@ -458,11 +603,14 @@ export default function InteractivePixelArt() {
       }
 
       // Draw Hashtag Logo
+      const brandColorPrimary = presetId === "diwali" ? "#06B6D4" : CRYSTAL_BLUE;
+      const brandColorSecondary = presetId === "diwali" ? "#FFFFFF" : DEEP_NAVY;
+
       for (let r = 0; r < 5; r++) {
         for (let c = 0; c < 5; c++) {
           if (hashtag[r][c] === "1") {
             const pulse = Math.sin(time * 0.003 + r + c) > 0;
-            drawPixel(logoStartC + c, logoStartR + r, pulse ? CYAN : CRYSTAL_BLUE);
+            drawPixel(logoStartC + c, logoStartR + r, pulse ? CYAN : brandColorPrimary);
           }
         }
       }
@@ -545,7 +693,7 @@ export default function InteractivePixelArt() {
           for (let c = 0; c < charWidth; c++) {
             if (rowStr[c] === "1") {
               const pulse = Math.sin(time * 0.002 + r + currentOffsetC * 0.2) > 0.1;
-              const color = pulse ? CRYSTAL_BLUE : DEEP_NAVY;
+              const color = pulse ? brandColorPrimary : brandColorSecondary;
               drawPixel(textStartC + currentOffsetC + c, textStartR + r, color);
             }
           }

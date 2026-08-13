@@ -1423,21 +1423,28 @@ export const initialProjects: ClubProject[] = [
 export const initialAlbums: GalleryAlbum[] = [
   {
     id: "hackathons-album",
-    name: "SIH internal selection rounds",
-    cover:
-      "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
+    name: "sih Grand finalist team 2025 Multimedia",
+    cover: withBasePath("/sih_2025_cover.jpg"),
     media: [
       {
-        url: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=600&q=80",
-        caption: "GEC Daman teams pitching smart solution parameters.",
+        url: withBasePath("/sih_2025_1.jpg"),
+        caption: "Team CodeRhythm traveling to the Smart India Hackathon 2025 Grand Finale.",
       },
       {
-        url: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&w=600&q=80",
-        caption: "Jury evaluating computer engineering web prototypes.",
+        url: withBasePath("/sih_2025_2.jpg"),
+        caption: "Team members displaying their official SIH 2025 Student Participant badges.",
       },
       {
-        url: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=600&q=80",
-        caption: "Internal award ceremony at the GEC Seminar Hall.",
+        url: withBasePath("/sih_2025_3.jpg"),
+        caption: "Celebrating on stage with the SIH 2025 Software Edition Finalist certificates.",
+      },
+      {
+        url: withBasePath("/sih_2025_4.jpg"),
+        caption: "CodeRhythm presenting their software prototype to the evaluation panel.",
+      },
+      {
+        url: withBasePath("/sih_2025_5.jpg"),
+        caption: "Smart India Hackathon 2025 group photo at Aryabhata Auditorium.",
       },
     ],
   },
@@ -1603,6 +1610,17 @@ export const initialTeam: TeamMember[] = [
     avatarStyle: {
       objectPosition: "center 20%",
       transform: "translateY(-2px) scale(1.24)",
+    },
+    linkedin: "https://linkedin.com",
+  },
+  {
+    name: "Aaryan Patel",
+    role: "Marketing & Outreach (Outreach Lead)",
+    category: "Marketing",
+    avatar: withBasePath("/aaryan-patel.png"),
+    avatarStyle: {
+      objectPosition: "center 10%",
+      transform: "translateY(18px) scale(1.25)",
     },
     linkedin: "https://linkedin.com",
   },

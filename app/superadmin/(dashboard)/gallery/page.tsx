@@ -38,7 +38,41 @@ export default function GalleryManagerPage() {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("coderithum_albums")
       if (stored) {
-        setAlbums(JSON.parse(stored))
+        const parsed = JSON.parse(stored)
+        const updated = parsed.map((album: any) => {
+          if (album.id === "hackathons-album") {
+            return {
+              ...album,
+              name: "sih Grand finalist team 2025 Multimedia",
+              cover: "/sih_2025_cover.jpg",
+              media: [
+                {
+                  url: "/sih_2025_1.jpg",
+                  caption: "Team CodeRhythm traveling to the Smart India Hackathon 2025 Grand Finale.",
+                },
+                {
+                  url: "/sih_2025_2.jpg",
+                  caption: "Team members displaying their official SIH 2025 Student Participant badges.",
+                },
+                {
+                  url: "/sih_2025_3.jpg",
+                  caption: "Celebrating on stage with the SIH 2025 Software Edition Finalist certificates.",
+                },
+                {
+                  url: "/sih_2025_4.jpg",
+                  caption: "CodeRhythm presenting their software prototype to the evaluation panel.",
+                },
+                {
+                  url: "/sih_2025_5.jpg",
+                  caption: "Smart India Hackathon 2025 group photo at Aryabhata Auditorium.",
+                },
+              ]
+            }
+          }
+          return album
+        })
+        localStorage.setItem("coderithum_albums", JSON.stringify(updated))
+        setAlbums(updated)
       }
       setLoading(false)
     }

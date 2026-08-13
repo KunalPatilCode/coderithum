@@ -35,7 +35,39 @@ export default function TeamManagerPage() {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("coderithum_team")
       if (stored) {
-        setTeam(JSON.parse(stored))
+        const parsed = JSON.parse(stored)
+        const hasAaryan = parsed.some((t: any) => t.name === "Aaryan Patel")
+        if (!hasAaryan) {
+          const updated = [...parsed, {
+            name: "Aaryan Patel",
+            role: "Marketing & Outreach (Outreach Lead)",
+            category: "Marketing",
+            avatar: "/aaryan-patel.png",
+            avatarStyle: {
+              objectPosition: "center 10%",
+              transform: "translateY(18px) scale(1.25)",
+            },
+            linkedin: "https://linkedin.com",
+          }]
+          localStorage.setItem("coderithum_team", JSON.stringify(updated))
+          setTeam(updated)
+        } else {
+          const updated = parsed.map((t: any) => {
+            if (t.name === "Aaryan Patel") {
+              return {
+                ...t,
+                avatar: "/aaryan-patel.png",
+                avatarStyle: {
+                  objectPosition: "center 10%",
+                  transform: "translateY(18px) scale(1.25)",
+                }
+              }
+            }
+            return t
+          })
+          localStorage.setItem("coderithum_team", JSON.stringify(updated))
+          setTeam(updated)
+        }
       }
       setLoading(false)
     }

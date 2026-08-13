@@ -182,6 +182,5 @@ export default function SuperAdminDashboardLayout({
         </div>
       </div>
     </div>
-    </div>
   )
 }

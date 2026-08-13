@@ -26,8 +26,8 @@ export default function TeamView({ team }: TeamViewProps) {
       if (memberKey === "vp") return t.role.includes("Vice President");
       if (memberKey === "tech_dir" || memberKey === "tech_lead") return (t.role.includes("Technical Lead") || t.role.includes("Technical Director") || t.role.includes("Technical Team Lead")) && !t.role.includes("President");
       if (memberKey === "incubator_lead") return t.role.includes("Cybersecurity Head") || t.role.includes("Incubator & Ops");
-      if (memberKey === "brand_lead") return t.role.includes("Marketing & Outreach");
-      if (memberKey === "outreach_lead") return t.role.includes("Marketing & Outreach") || t.role.includes("Graphics & UI") || t.role.includes("Outreach Lead");
+      if (memberKey === "brand_lead") return t.role.includes("Brand Lead") || (t.role.includes("Marketing & Outreach") && !t.role.includes("Outreach Lead"));
+      if (memberKey === "outreach_lead") return t.role.includes("Outreach Lead") || t.role.includes("Graphics & UI");
       if (memberKey === "research_lead") return t.role.includes("Data Science") || t.role.includes("AI & GenAI") || t.role.includes("Technical Lead");
       if (memberKey === "startup_lead") return t.role.includes("Club President") || t.role.includes("Vice President") || t.role.includes("Incubator & Ops");
       if (memberKey === "incubator_team") return t.role.includes("Incubator & Ops") || t.role.includes("Data Science") || t.role.includes("Technical Lead");

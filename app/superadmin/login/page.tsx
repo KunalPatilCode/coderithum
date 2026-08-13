@@ -135,8 +135,5 @@ export default function SuperAdminLoginPage() {
         </motion.div>
       </div>
     </div>
-        </motion.div>
-      </div>
-    </div>
   )
 }

@@ -40,7 +40,7 @@ export default function Home() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
   const [contactSuccess, setContactSuccess] = useState<boolean>(false);
-  const [activeAlbumId, setActiveAlbumId] = useState<string | null>("hackathons-album");
+  const [activeAlbumId, setActiveAlbumId] = useState<string | null>(null);
 
   // State Data using React state for dynamic reactivity
   const [events, setEvents] = useState<any[]>([]);
@@ -70,7 +70,41 @@ export default function Home() {
 
       const storedAlbums = localStorage.getItem("coderithum_albums");
       if (storedAlbums) {
-        setAlbums(JSON.parse(storedAlbums));
+        const parsed = JSON.parse(storedAlbums);
+        const updated = parsed.map((album: any) => {
+          if (album.id === "hackathons-album") {
+            return {
+              ...album,
+              name: "sih Grand finalist team 2025 Multimedia",
+              cover: "/sih_2025_cover.jpg",
+              media: [
+                {
+                  url: "/sih_2025_1.jpg",
+                  caption: "Team CodeRhythm traveling to the Smart India Hackathon 2025 Grand Finale.",
+                },
+                {
+                  url: "/sih_2025_2.jpg",
+                  caption: "Team members displaying their official SIH 2025 Student Participant badges.",
+                },
+                {
+                  url: "/sih_2025_3.jpg",
+                  caption: "Celebrating on stage with the SIH 2025 Software Edition Finalist certificates.",
+                },
+                {
+                  url: "/sih_2025_4.jpg",
+                  caption: "CodeRhythm presenting their software prototype to the evaluation panel.",
+                },
+                {
+                  url: "/sih_2025_5.jpg",
+                  caption: "Smart India Hackathon 2025 group photo at Aryabhata Auditorium.",
+                },
+              ]
+            };
+          }
+          return album;
+        });
+        localStorage.setItem("coderithum_albums", JSON.stringify(updated));
+        setAlbums(updated);
       } else {
         localStorage.setItem("coderithum_albums", JSON.stringify(initialAlbums));
         setAlbums(initialAlbums);
@@ -78,7 +112,39 @@ export default function Home() {
 
       const storedTeam = localStorage.getItem("coderithum_team");
       if (storedTeam) {
-        setTeam(JSON.parse(storedTeam));
+        const parsed = JSON.parse(storedTeam);
+        const hasAaryan = parsed.some((t: any) => t.name === "Aaryan Patel");
+        if (!hasAaryan) {
+          const updated = [...parsed, {
+            name: "Aaryan Patel",
+            role: "Marketing & Outreach (Outreach Lead)",
+            category: "Marketing",
+            avatar: "/aaryan-patel.png",
+            avatarStyle: {
+              objectPosition: "center 10%",
+              transform: "translateY(18px) scale(1.25)",
+            },
+            linkedin: "https://linkedin.com",
+          }];
+          localStorage.setItem("coderithum_team", JSON.stringify(updated));
+          setTeam(updated);
+        } else {
+          const updated = parsed.map((t: any) => {
+            if (t.name === "Aaryan Patel") {
+              return {
+                ...t,
+                avatar: "/aaryan-patel.png",
+                avatarStyle: {
+                  objectPosition: "center 10%",
+                  transform: "translateY(18px) scale(1.25)",
+                }
+              };
+            }
+            return t;
+          });
+          localStorage.setItem("coderithum_team", JSON.stringify(updated));
+          setTeam(updated);
+        }
       } else {
         localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));
         setTeam(initialTeam);

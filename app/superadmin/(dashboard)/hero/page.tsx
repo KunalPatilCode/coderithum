@@ -712,44 +712,7 @@ export default function HeroThemeManagerPage() {
             </div>
           </div>
 
-          {/* Hero Content aligned exactly like home view */}
-          <div className="relative z-10 w-full max-w-4xl px-8 flex flex-col items-center text-center space-y-6">
-            <div className="inline-block px-3 py-1 text-xs font-mono font-bold uppercase tracking-widest text-white border border-white/30 shadow-[3px_3px_0px_#000]" style={{ backgroundColor: config.accentColor }}>
-              {config.badgeText || "CODERITHUM"}
-            </div>
-            
-            <div className="space-y-2">
-              <h1 className="text-xl md:text-3xl font-black text-white/90 font-mono max-w-2xl leading-tight">
-                {config.title}
-              </h1>
-              <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-wider font-mono">
-                {config.highlightTitle}
-              </h2>
-            </div>
-
-            <p className="text-xs md:text-sm text-slate-300 font-mono leading-relaxed max-w-xl">
-              {config.subtitle}
-            </p>
-
-            {/* CTAs */}
-            <div className="pt-4 flex gap-4">
-              <button
-                type="button"
-                className="px-6 py-2.5 text-xs md:text-sm font-mono font-bold text-white uppercase border-2 border-slate-900 shadow-[3px_3px_0px_#000]"
-                style={{ backgroundColor: config.accentColor }}
-              >
-                {config.primaryCtaText || "Register Now"}
-              </button>
-              {config.secondaryCtaText && (
-                <button
-                  type="button"
-                  className="px-6 py-2.5 text-xs md:text-sm font-mono font-bold bg-white text-slate-900 uppercase border-2 border-slate-900 shadow-[3px_3px_0px_#000]"
-                >
-                  {config.secondaryCtaText}
-                </button>
-              )}
-            </div>
-          </div>
+          {/* Removed text overlay layer to match actual landing page hero view */}
         </div>
       )}
 

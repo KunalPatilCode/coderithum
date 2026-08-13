@@ -78,7 +78,7 @@ export default function Home() {
               name: "sih Grand finalist team 2025 Multimedia",
               cover: "/sih_2025_cover.jpg",
               coverStyle: {
-                objectPosition: "center 10%",
+                objectPosition: "center 15%",
               },
               media: [
                 {

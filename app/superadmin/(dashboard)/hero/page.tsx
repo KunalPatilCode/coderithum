@@ -13,7 +13,9 @@ import {
   RotateCcw, 
   Type, 
   Layers, 
-  Image as ImageIcon
+  Image as ImageIcon,
+  Maximize2,
+  X
 } from "lucide-react"
 import { HeroThemeConfig } from "@/types"
 import { initialHeroConfig } from "@/data/mockData"
@@ -224,6 +226,7 @@ export default function HeroThemeManagerPage() {
   const [config, setConfig] = useState<HeroThemeConfig>(initialHeroConfig)
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState<"preset" | "customize">("preset")
+  const [isFullScreen, setIsFullScreen] = useState(false)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -564,7 +567,16 @@ export default function HeroThemeManagerPage() {
               {/* Preview Canvas Header */}
               <div className="p-3 bg-slate-100 border-b-2 border-slate-900 flex items-center justify-between">
                 <span className="text-[10px] font-mono font-bold text-slate-700 uppercase">Interactive Banner Preview</span>
-                <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsFullScreen(true)}
+                    className="flex items-center gap-1.5 px-2 py-1 text-[9px] font-mono font-bold bg-white text-slate-900 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#000] hover:bg-slate-50 transition-all cursor-pointer hover:translate-x-[0.5px] hover:translate-y-[0.5px] hover:shadow-[1px_1px_0px_#000]"
+                  >
+                    <Maximize2 className="size-2.5" /> Full Screen
+                  </button>
+                  <span className="size-2 rounded-full bg-emerald-500 animate-pulse" />
+                </div>
               </div>
 
               {/* Dynamic Hero Banner Body */}
@@ -655,6 +667,68 @@ export default function HeroThemeManagerPage() {
         </div>
 
       </div>
+
+      {isFullScreen && (
+        <div className="fixed inset-0 z-50 bg-slate-900 flex flex-col justify-center items-center overflow-hidden">
+          {/* Background Live Canvas */}
+          <div className="absolute inset-0 w-full h-full z-0 opacity-100 pointer-events-none bg-white">
+            <InteractivePixelArt presetId={config.presetId} bannerImage={config.bannerImage} />
+          </div>
+
+          {/* Top Header Overlay mimicking real header */}
+          <div className="absolute top-0 left-0 w-full p-6 flex items-center justify-between z-20 bg-gradient-to-b from-black/40 to-transparent pointer-events-none">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-mono font-bold text-white uppercase tracking-wider">Interactive Full Screen Preview</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsFullScreen(false)}
+              className="pointer-events-auto flex items-center gap-1.5 px-3 py-1.5 text-xs font-mono font-bold bg-white text-slate-900 border-2 border-slate-900 shadow-[2px_2px_0px_#000] hover:bg-slate-100 transition-all cursor-pointer rounded-none"
+            >
+              <X className="size-4" /> Close Preview
+            </button>
+          </div>
+
+          {/* Hero Content aligned exactly like home view */}
+          <div className="relative z-10 w-full max-w-4xl px-8 flex flex-col items-center text-center space-y-6">
+            <div className="inline-block px-3 py-1 text-xs font-mono font-bold uppercase tracking-widest text-white border border-white/30 shadow-[3px_3px_0px_#000]" style={{ backgroundColor: config.accentColor }}>
+              {config.badgeText || "CODERITHUM"}
+            </div>
+            
+            <div className="space-y-2">
+              <h1 className="text-xl md:text-3xl font-black text-white/90 font-mono max-w-2xl leading-tight">
+                {config.title}
+              </h1>
+              <h2 className="text-3xl md:text-5xl font-black text-white uppercase tracking-wider font-mono">
+                {config.highlightTitle}
+              </h2>
+            </div>
+
+            <p className="text-xs md:text-sm text-slate-300 font-mono leading-relaxed max-w-xl">
+              {config.subtitle}
+            </p>
+
+            {/* CTAs */}
+            <div className="pt-4 flex gap-4">
+              <button
+                type="button"
+                className="px-6 py-2.5 text-xs md:text-sm font-mono font-bold text-white uppercase border-2 border-slate-900 shadow-[3px_3px_0px_#000]"
+                style={{ backgroundColor: config.accentColor }}
+              >
+                {config.primaryCtaText || "Register Now"}
+              </button>
+              {config.secondaryCtaText && (
+                <button
+                  type="button"
+                  className="px-6 py-2.5 text-xs md:text-sm font-mono font-bold bg-white text-slate-900 uppercase border-2 border-slate-900 shadow-[3px_3px_0px_#000]"
+                >
+                  {config.secondaryCtaText}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   )

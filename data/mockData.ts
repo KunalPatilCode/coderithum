@@ -1446,6 +1446,26 @@ export const initialAlbums: GalleryAlbum[] = [
         url: withBasePath("/sih_2025_5.jpg"),
         caption: "Smart India Hackathon 2025 group photo at Aryabhata Auditorium.",
       },
+      {
+        url: withBasePath("/sih_2025_6.jpg"),
+        caption: "Team members collaborating and writing code during the 36-hour hackathon sprint.",
+      },
+      {
+        url: withBasePath("/sih_2025_7.jpg"),
+        caption: "Developing the frontend application and backend endpoints in the coding arena.",
+      },
+      {
+        url: withBasePath("/sih_2025_8.jpg"),
+        caption: "Team Multimedia posing together with their laptops in the SIH work lab.",
+      },
+      {
+        url: withBasePath("/sih_2025_9.jpg"),
+        caption: "Walkthrough of screens and features for the judges during the evaluation rounds.",
+      },
+      {
+        url: withBasePath("/sih_2025_10.jpg"),
+        caption: "Final integrations and testing of the system next to the team banner.",
+      },
     ],
   },
   {

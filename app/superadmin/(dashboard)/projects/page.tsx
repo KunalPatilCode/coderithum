@@ -16,6 +16,7 @@ import {
   TableCell
 } from "@/components/ui/table"
 import { Code2, Plus, Edit2, Trash2, ArrowLeft } from "lucide-react"
+import { broadcastDataChange } from "@/types"
 
 export default function ProjectsManagerPage() {
   const { toast } = useToast()
@@ -54,8 +55,8 @@ export default function ProjectsManagerPage() {
   }, [searchParams])
 
   const saveToStorage = (updatedList: any[]) => {
-    localStorage.setItem("coderithum_projects", JSON.stringify(updatedList))
     setProjects(updatedList)
+    broadcastDataChange("coderithum_projects", updatedList)
   }
 
   const handleOpenAdd = () => {

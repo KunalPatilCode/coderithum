@@ -1499,7 +1499,16 @@ export const initialTeam: TeamMember[] = [
     role: "Club President",
     category: "Leadership",
     avatar: withBasePath("/kunalp.png?v=13"),
-    avatarStyle: { transform: "translate(6px, -46px) scale(2.0)" },
+    photoPosition: {
+      scale: 1.25,
+      offsetX: 0,
+      offsetY: 0,
+      objectPosition: "center 10%",
+    },
+    avatarStyle: {
+      objectPosition: "center 10%",
+      transform: "scale(1.25) translate(0%, 0%)",
+    },
     github: "https://github.com/KunalPatilCode",
     linkedin:
       "https://www.linkedin.com/in/kunal-patil29?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
@@ -1509,9 +1518,15 @@ export const initialTeam: TeamMember[] = [
     role: "Vice President & UI/UX Head",
     category: "Leadership",
     avatar: withBasePath("/maitri.png?v=11"),
+    photoPosition: {
+      scale: 1.2,
+      offsetX: 0,
+      offsetY: 5,
+      objectPosition: "center 18%",
+    },
     avatarStyle: {
       objectPosition: "center 18%",
-      transform: "translateY(18px) scale(1.3)",
+      transform: "scale(1.2) translate(0%, 5%)",
     },
     github: "https://github.com/Maitrify",
     linkedin:
@@ -1522,9 +1537,15 @@ export const initialTeam: TeamMember[] = [
     role: "Chief Technical Lead",
     category: "Technical",
     avatar: withBasePath("/ismile.png?v=12"),
+    photoPosition: {
+      scale: 1.2,
+      offsetX: 0,
+      offsetY: 5,
+      objectPosition: "center 16%",
+    },
     avatarStyle: {
       objectPosition: "center 16%",
-      transform: "translate(-6px, 16px) scale(1.25)",
+      transform: "scale(1.2) translate(0%, 5%)",
     },
     github: "https://github.com",
     linkedin: "https://linkedin.com",

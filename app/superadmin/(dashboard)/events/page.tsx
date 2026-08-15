@@ -16,6 +16,7 @@ import {
   TableCell
 } from "@/components/ui/table"
 import { Calendar, Plus, Edit2, Trash2, ArrowLeft } from "lucide-react"
+import { broadcastDataChange } from "@/types"
 
 export default function EventsManagerPage() {
   const { toast } = useToast()
@@ -56,8 +57,8 @@ export default function EventsManagerPage() {
   }, [searchParams])
 
   const saveToStorage = (updatedList: any[]) => {
-    localStorage.setItem("coderithum_events", JSON.stringify(updatedList))
     setEvents(updatedList)
+    broadcastDataChange("coderithum_events", updatedList)
   }
 
   const handleOpenAdd = () => {

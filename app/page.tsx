@@ -130,30 +130,22 @@ export default function Home() {
             role: "Marketing & Outreach (Outreach Lead)",
             category: "Marketing",
             avatar: "/aaryan-patel.png",
+            photoPosition: {
+              scale: 1.2,
+              offsetX: 0,
+              offsetY: 5,
+              objectPosition: "center 10%",
+            },
             avatarStyle: {
               objectPosition: "center 10%",
-              transform: "translateY(18px) scale(1.25)",
+              transform: "scale(1.2) translate(0%, 5%)",
             },
             linkedin: "https://linkedin.com",
           }];
           localStorage.setItem("coderithum_team", JSON.stringify(updated));
           setTeam(updated);
         } else {
-          const updated = parsed.map((t: any) => {
-            if (t.name === "Aaryan Patel") {
-              return {
-                ...t,
-                avatar: "/aaryan-patel.png",
-                avatarStyle: {
-                  objectPosition: "center 10%",
-                  transform: "translateY(18px) scale(1.25)",
-                }
-              };
-            }
-            return t;
-          });
-          localStorage.setItem("coderithum_team", JSON.stringify(updated));
-          setTeam(updated);
+          setTeam(parsed);
         }
       } else {
         localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));
@@ -168,6 +160,47 @@ export default function Home() {
         setAchievements(initialAchievements);
       }
     }
+
+    const syncAllPublicData = () => {
+      if (typeof window === "undefined") return;
+      try {
+        const storedHero = localStorage.getItem("coderithum_hero_config");
+        if (storedHero) setHeroConfig(JSON.parse(storedHero));
+
+        const storedEvents = localStorage.getItem("coderithum_events");
+        if (storedEvents) setEvents(JSON.parse(storedEvents));
+
+        const storedProjects = localStorage.getItem("coderithum_projects");
+        if (storedProjects) setProjects(JSON.parse(storedProjects));
+
+        const storedAlbums = localStorage.getItem("coderithum_albums");
+        if (storedAlbums) setAlbums(JSON.parse(storedAlbums));
+
+        const storedTeam = localStorage.getItem("coderithum_team");
+        if (storedTeam) setTeam(JSON.parse(storedTeam));
+
+        const storedAchievements = localStorage.getItem("coderithum_achievements");
+        if (storedAchievements) setAchievements(JSON.parse(storedAchievements));
+      } catch (err) {
+        console.error("Error synchronizing public data:", err);
+      }
+    };
+
+    window.addEventListener("storage", syncAllPublicData);
+    window.addEventListener("coderithum_data_sync", syncAllPublicData);
+    window.addEventListener("team_updated", syncAllPublicData);
+    window.addEventListener("events_updated", syncAllPublicData);
+    window.addEventListener("projects_updated", syncAllPublicData);
+    window.addEventListener("albums_updated", syncAllPublicData);
+
+    return () => {
+      window.removeEventListener("storage", syncAllPublicData);
+      window.removeEventListener("coderithum_data_sync", syncAllPublicData);
+      window.removeEventListener("team_updated", syncAllPublicData);
+      window.removeEventListener("events_updated", syncAllPublicData);
+      window.removeEventListener("projects_updated", syncAllPublicData);
+      window.removeEventListener("albums_updated", syncAllPublicData);
+    };
   }, []);
 
   // Scroll to top on view changes

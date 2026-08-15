@@ -16,7 +16,7 @@ import {
   ExternalLink,
   Layers
 } from "lucide-react"
-import { TeamMember } from "@/types"
+import { TeamMember, getMemberAvatarStyle, getMemberTierLevel } from "@/types"
 
 interface TeamHierarchyGraphProps {
   team: TeamMember[]
@@ -36,13 +36,9 @@ export default function TeamHierarchyGraph({
   const [selectedMemberModal, setSelectedMemberModal] = useState<TeamMember | null>(null)
   const [collapsedTiers, setCollapsedTiers] = useState<Record<number, boolean>>({})
 
-  // Categorize members into hierarchy tiers based on tierLevel or category fallback
+  // Categorize members into hierarchy tiers based on getMemberTierLevel helper
   const getTierLevel = (member: TeamMember): 1 | 2 | 3 | 4 => {
-    if (member.tierLevel) return member.tierLevel
-    if (member.category === "Faculty") return 1
-    if (member.category === "Leadership") return 2
-    if (member.role.toLowerCase().includes("lead") || member.role.toLowerCase().includes("director")) return 3
-    return 4
+    return getMemberTierLevel(member)
   }
 
   // Filter members by year and search query
@@ -84,10 +80,7 @@ export default function TeamHierarchyGraph({
 
   const renderNodeCard = (m: TeamMember, level: number) => {
     const avatarSrc = m.avatar || "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80"
-    const photoStyle = m.photoPosition ? {
-      objectPosition: m.photoPosition.objectPosition || "center top",
-      transform: `scale(${m.photoPosition.scale || 1}) translate(${m.photoPosition.offsetX || 0}px, ${m.photoPosition.offsetY || 0}px)`
-    } : m.avatarStyle
+    const photoStyle = getMemberAvatarStyle(m)
 
     return (
       <motion.div
@@ -110,7 +103,7 @@ export default function TeamHierarchyGraph({
               src={avatarSrc}
               alt={m.name}
               style={photoStyle}
-              className="w-full h-full object-cover"
+              className="w-full h-full"
               onError={(e: any) => {
                 e.target.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80"
               }}
@@ -298,11 +291,15 @@ export default function TeamHierarchyGraph({
             </div>
 
             <div className="flex items-center gap-4">
-              <img
-                src={selectedMemberModal.avatar}
-                alt={selectedMemberModal.name}
-                className="size-16 border-2 border-slate-900 bg-slate-100 object-cover shadow-[2px_2px_0px_#000]"
-              />
+              <div className="relative size-16 overflow-hidden border-2 border-slate-900 bg-slate-100 shadow-[2px_2px_0px_#000] shrink-0">
+                <img
+                  src={selectedMemberModal.avatar}
+                  alt={selectedMemberModal.name}
+                  style={getMemberAvatarStyle(selectedMemberModal)}
+                  className="w-full h-full"
+                  onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" }}
+                />
+              </div>
               <div>
                 <h3 className="text-sm font-bold font-mono text-slate-900">{selectedMemberModal.name}</h3>
                 <p className="text-xs font-mono text-blue-600 font-bold mt-0.5">{selectedMemberModal.role}</p>

@@ -5,14 +5,14 @@ import { useToast } from "@/components/ui/use-toast"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Palette, 
-  Sparkles, 
-  Eye, 
-  Save, 
-  RotateCcw, 
-  Type, 
-  Layers, 
+import {
+  Palette,
+  Sparkles,
+  Eye,
+  Save,
+  RotateCcw,
+  Type,
+  Layers,
   Image as ImageIcon,
   Maximize2,
   X
@@ -284,7 +284,7 @@ export default function HeroThemeManagerPage() {
 
   return (
     <div className="h-full flex flex-col gap-6 text-slate-900 min-h-0">
-      
+
       {/* Header Bar */}
       <div className="flex items-center justify-between shrink-0">
         <div>
@@ -308,29 +308,27 @@ export default function HeroThemeManagerPage() {
 
       {/* Main Grid View */}
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0 overflow-y-auto pb-12">
-        
+
         {/* Left Column: Configuration Controls (7 cols) */}
         <div className="lg:col-span-7 space-y-6">
-          
+
           {/* Tab Switcher */}
           <div className="flex border-2 border-slate-900 bg-white shadow-[2px_2px_0px_#000]">
             <button
               onClick={() => setActiveTab("preset")}
-              className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer ${
-                activeTab === "preset"
+              className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 cursor-pointer ${activeTab === "preset"
                   ? "bg-slate-900 text-white"
                   : "bg-white text-slate-700 hover:bg-slate-50"
-              }`}
+                }`}
             >
               <Sparkles className="size-3.5" /> Presets Gallery
             </button>
             <button
               onClick={() => setActiveTab("customize")}
-              className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 border-l-2 border-slate-900 cursor-pointer ${
-                activeTab === "customize"
+              className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-2 border-l-2 border-slate-900 cursor-pointer ${activeTab === "customize"
                   ? "bg-slate-900 text-white"
                   : "bg-white text-slate-700 hover:bg-slate-50"
-              }`}
+                }`}
             >
               <Palette className="size-3.5" /> Customizer Settings
             </button>
@@ -346,24 +344,23 @@ export default function HeroThemeManagerPage() {
                     <Card
                       key={preset.id}
                       onClick={() => handleApplyPreset(preset)}
-                      className={`p-4 border-2 border-slate-900 rounded-none cursor-pointer transition-all ${
-                        isSelected 
-                          ? "bg-blue-50/80 shadow-[4px_4px_0px_#000] ring-2 ring-blue-600" 
+                      className={`p-4 border-2 border-slate-900 rounded-none cursor-pointer transition-all ${isSelected
+                          ? "bg-blue-50/80 shadow-[4px_4px_0px_#000] ring-2 ring-blue-600"
                           : "bg-white shadow-[2px_2px_0px_#000] hover:shadow-[3px_3px_0px_#000]"
-                      }`}
+                        }`}
                     >
                       <div className="flex items-start justify-between">
                         <Badge variant={isSelected ? "default" : "secondary"}>
                           {isSelected ? "Active Preset" : "Preset"}
                         </Badge>
-                        <div 
+                        <div
                           className="size-4 rounded-full border border-slate-900"
                           style={{ backgroundColor: preset.config.accentColor }}
                         />
                       </div>
                       <h3 className="text-xs font-bold text-slate-900 uppercase font-mono mt-3">{preset.name}</h3>
                       <p className="text-[10px] text-slate-600 font-mono mt-1 leading-relaxed">{preset.description}</p>
-                      
+
                       <div className="mt-3 pt-2 border-t border-slate-200 flex items-center justify-between text-[9px] font-mono text-slate-500">
                         <span>Canvas: {preset.config.backgroundStyle}</span>
                         <span>Layout: {preset.config.layoutStyle}</span>
@@ -375,7 +372,7 @@ export default function HeroThemeManagerPage() {
             </div>
           ) : (
             <div className="space-y-6">
-              
+
               {/* Text & Badges Customization */}
               <Card className="p-5 bg-white border-2 border-slate-900 rounded-none shadow-[3px_3px_0px_#000] space-y-4">
                 <div className="flex items-center gap-2 border-b-2 border-slate-900 pb-2 text-xs font-bold font-mono uppercase text-slate-900">
@@ -472,9 +469,8 @@ export default function HeroThemeManagerPage() {
                         key={c.hex}
                         type="button"
                         onClick={() => setConfig({ ...config, accentColor: c.hex, presetId: "custom" })}
-                        className={`flex items-center gap-2 px-3 py-1.5 border-2 border-slate-900 text-xs font-mono font-bold transition-all cursor-pointer shadow-[1.5px_1.5px_0px_#000] ${
-                          config.accentColor === c.hex ? "bg-slate-900 text-white" : "bg-white text-slate-800 hover:bg-slate-50"
-                        }`}
+                        className={`flex items-center gap-2 px-3 py-1.5 border-2 border-slate-900 text-xs font-mono font-bold transition-all cursor-pointer shadow-[1.5px_1.5px_0px_#000] ${config.accentColor === c.hex ? "bg-slate-900 text-white" : "bg-white text-slate-800 hover:bg-slate-50"
+                          }`}
                       >
                         <span className={`size-3.5 rounded-full border border-white ${c.bg}`} />
                         {c.name}
@@ -564,7 +560,7 @@ export default function HeroThemeManagerPage() {
 
           <div className="sticky top-4">
             <Card className="border-2 border-slate-900 bg-white shadow-[4px_4px_0px_#000] rounded-none overflow-hidden">
-              
+
               {/* Preview Canvas Header */}
               <div className="p-3 bg-slate-100 border-b-2 border-slate-900 flex items-center justify-between">
                 <span className="text-[10px] font-mono font-bold text-slate-700 uppercase">Interactive Banner Preview</span>
@@ -582,7 +578,7 @@ export default function HeroThemeManagerPage() {
 
               {/* Dynamic Hero Banner Body */}
               <div className="relative min-h-[320px] max-h-[320px] bg-white border-b-2 border-slate-900 overflow-hidden flex flex-col justify-start rounded-none">
-                
+
                 {/* 1. Hero Section covering top 50% (160px height) */}
                 <div className="relative h-[160px] min-h-[160px] w-full border-b border-slate-300 overflow-hidden flex flex-col justify-between p-2 bg-white">
                   {/* Background Live Canvas */}
@@ -593,27 +589,27 @@ export default function HeroThemeManagerPage() {
                   )}
 
                   {config.backgroundStyle === "cyber-grid" && (
-                    <div 
+                    <div
                       className="absolute inset-0 z-0 opacity-25 pointer-events-none bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"
                       style={{ backgroundColor: "#090d16" }}
                     />
                   )}
 
                   {config.backgroundStyle === "cosmic-particles" && (
-                    <div 
+                    <div
                       className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-slate-950 via-slate-900 to-amber-950/40"
                     />
                   )}
 
                   {config.backgroundStyle === "gradient-wave" && (
-                    <div 
+                    <div
                       className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-violet-950 via-slate-900 to-blue-950"
                     />
                   )}
 
                   {/* Optional Banner Image Overlay */}
                   {config.bannerImage && (
-                    <div 
+                    <div
                       className="absolute inset-0 z-0 opacity-20 bg-cover bg-center pointer-events-none mix-blend-overlay"
                       style={{ backgroundImage: `url(${config.bannerImage})` }}
                     />
@@ -682,7 +678,7 @@ export default function HeroThemeManagerPage() {
 
       {isFullScreen && (
         <div className="fixed inset-0 z-50 bg-white flex flex-col overflow-y-auto">
-          
+
           {/* Top Header Overlay mimicking real header */}
           <div className="sticky top-4 z-20 px-4 md:px-6 w-full max-w-7xl mx-auto pointer-events-none shrink-0">
             <div className="w-full backdrop-blur-md bg-white/95 border border-slate-400/80 px-5 md:px-7 h-14 rounded-full flex items-center justify-between shadow-md pointer-events-auto">
@@ -730,7 +726,7 @@ export default function HeroThemeManagerPage() {
           {/* Main Grid View below hero section replicating landing page top fold */}
           <div className="max-w-7xl mx-auto px-4 md:px-6 w-full flex-1 flex flex-col justify-start pb-20 mt-16">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-              
+
               {/* Mock Announcement Column (5 cols) */}
               <div className="lg:col-span-5 flex flex-col">
                 <div className="p-5 rounded-none bg-blue-50 border-2 border-blue-600/30 flex flex-col justify-between gap-5 shadow-[4px_4px_0px_#000] flex-1">
@@ -785,7 +781,7 @@ export default function HeroThemeManagerPage() {
                         <span className="px-2 py-0.5 border border-slate-400 text-[10px] font-mono">&gt;</span>
                       </div>
                     </div>
-                    
+
                     <div className="grid grid-cols-7 gap-1 text-center text-[9px] font-mono font-bold text-slate-500 mb-2">
                       <span>SUN</span><span>MON</span><span>TUE</span><span>WED</span><span>THU</span><span>FRI</span><span>SAT</span>
                     </div>

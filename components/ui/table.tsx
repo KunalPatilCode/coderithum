@@ -19,9 +19,8 @@ export function TableBody({ className, ...props }: React.HTMLAttributes<HTMLTabl
 export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
     <tr
-      className={`border-b-2 border-slate-900 bg-white transition-colors hover:bg-slate-50 data-[state=selected]:bg-slate-100 ${
-        className || ""
-      }`}
+      className={`border-b-2 border-slate-900 bg-white transition-colors hover:bg-slate-50 data-[state=selected]:bg-slate-100 ${className || ""
+        }`}
       {...props}
     />
   )
@@ -30,9 +29,8 @@ export function TableRow({ className, ...props }: React.HTMLAttributes<HTMLTable
 export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTableCellElement>) {
   return (
     <th
-      className={`h-10 px-4 text-left align-middle font-mono text-[9px] font-bold uppercase tracking-wider text-slate-600 [&:has([role=checkbox])]:pr-0 ${
-        className || ""
-      }`}
+      className={`h-10 px-4 text-left align-middle font-mono text-[9px] font-bold uppercase tracking-wider text-slate-600 [&:has([role=checkbox])]:pr-0 ${className || ""
+        }`}
       {...props}
     />
   )
@@ -41,9 +39,8 @@ export function TableHead({ className, ...props }: React.ThHTMLAttributes<HTMLTa
 export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
     <td
-      className={`p-4 align-middle font-mono text-xs text-slate-900 [&:has([role=checkbox])]:pr-0 ${
-        className || ""
-      }`}
+      className={`p-4 align-middle font-mono text-xs text-slate-900 [&:has([role=checkbox])]:pr-0 ${className || ""
+        }`}
       {...props}
     />
   )

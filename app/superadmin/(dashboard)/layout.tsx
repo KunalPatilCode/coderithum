@@ -17,7 +17,7 @@ export default function SuperAdminDashboardLayout({
   const [authorized, setAuthorized] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
-  
+
   const isSingleScreen = pathname === "/superadmin" || pathname === "/superadmin/" || pathname === "/superadmin/settings"
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function SuperAdminDashboardLayout({
           <div className="flex items-center gap-4">
             {/* User Avatar Card Dropdown */}
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="flex items-center gap-3 px-3 py-1.5 rounded-none bg-white border-2 border-slate-900 hover:bg-slate-50 shadow-[2px_2px_0px_#000] transition-all select-none cursor-pointer"
               >
@@ -121,25 +121,25 @@ export default function SuperAdminDashboardLayout({
                 <>
                   {/* Backdrop click closer */}
                   <div className="fixed inset-0 z-30" onClick={() => setDropdownOpen(false)} />
-                  
+
                   {/* Dropdown Menu */}
                   <div className="absolute right-0 mt-2 w-48 bg-white border-2 border-slate-900 rounded-none py-2 shadow-[4px_4px_0px_#000] z-40 text-xs font-semibold animate-in fade-in slide-in-from-top-2 duration-150">
                     <div className="px-4 py-2 border-b-2 border-slate-900 text-slate-500">
                       <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest font-mono">Active User</p>
                       <p className="text-slate-900 mt-0.5 truncate text-[11px] font-mono font-bold">admin@coderithum.com</p>
                     </div>
-                    
-                    <Link 
-                      href="/superadmin/settings" 
+
+                    <Link
+                      href="/superadmin/settings"
                       className="flex items-center gap-2 px-4 py-2.5 text-slate-700 hover:text-blue-600 hover:bg-blue-50 transition-colors"
                       onClick={() => setDropdownOpen(false)}
                     >
                       <Settings className="size-3.5 text-blue-600" />
                       System Settings
                     </Link>
-                    
+
                     <div className="border-t-2 border-slate-900 mt-1 pt-1">
-                      <button 
+                      <button
                         onClick={() => {
                           setDropdownOpen(false);
                           handleLogout();
@@ -175,9 +175,8 @@ export default function SuperAdminDashboardLayout({
         </header>
 
         {/* Dynamic viewport layout */}
-        <div className={`flex-1 p-4 md:p-6 bg-white bg-grid-pattern min-h-0 ${
-          isSingleScreen ? "flex flex-col overflow-hidden" : "overflow-y-auto"
-        }`}>
+        <div className={`flex-1 p-4 md:p-6 bg-white bg-grid-pattern min-h-0 ${isSingleScreen ? "flex flex-col overflow-hidden" : "overflow-y-auto"
+          }`}>
           {children}
         </div>
       </div>

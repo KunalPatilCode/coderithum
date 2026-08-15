@@ -1,15 +1,15 @@
 import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { 
-  LayoutDashboard, 
+import {
+  LayoutDashboard,
   Sparkles,
-  Calendar, 
+  Calendar,
   Bell,
-  Code2, 
-  Users2, 
-  Trophy, 
-  Image, 
+  Code2,
+  Users2,
+  Trophy,
+  Image,
   Settings,
   HelpCircle
 } from "lucide-react"
@@ -47,11 +47,10 @@ export function SuperAdminSidebar({ className }: { className?: string }) {
             <Link
               key={item.name}
               href={item.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-none font-mono text-[10px] font-bold uppercase tracking-wider transition-all duration-300 ${
-                isActive
+              className={`flex items-center gap-3 px-4 py-3 rounded-none font-mono text-[10px] font-bold uppercase tracking-wider transition-all duration-300 ${isActive
                   ? "bg-blue-600 text-white border-2 border-slate-900 shadow-[3px_3px_0px_#000]"
                   : "text-slate-600 hover:text-slate-900 hover:bg-slate-50 border-2 border-transparent hover:border-slate-900"
-              }`}
+                }`}
             >
               <Icon className={`size-4 ${isActive ? "text-white" : "text-slate-500"}`} />
               <span>{item.name}</span>

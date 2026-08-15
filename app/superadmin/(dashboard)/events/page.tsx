@@ -7,13 +7,13 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableRow, 
-  TableHead, 
-  TableCell 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell
 } from "@/components/ui/table"
 import { Calendar, Plus, Edit2, Trash2, ArrowLeft } from "lucide-react"
 
@@ -157,7 +157,7 @@ export default function EventsManagerPage() {
 
   return (
     <div className="h-full flex flex-col gap-6 text-slate-900 min-h-0">
-      
+
       {/* Title Header */}
       <div className="flex items-center justify-between shrink-0">
         <div>
@@ -165,8 +165,8 @@ export default function EventsManagerPage() {
             {view === "list" ? "Events Manager" : editId ? "Edit Event" : "Create Event"}
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            {view === "list" 
-              ? "Schedule workshops, hackathons, orientations, and other club events." 
+            {view === "list"
+              ? "Schedule workshops, hackathons, orientations, and other club events."
               : "Fill out the fields to publish or modify the event details."}
           </p>
         </div>
@@ -222,17 +222,17 @@ export default function EventsManagerPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1.5">
-                          <Button 
-                            variant="secondary" 
-                            className="size-8 p-0" 
+                          <Button
+                            variant="secondary"
+                            className="size-8 p-0"
                             onClick={() => handleOpenEdit(evt)}
                             title="Edit Event"
                           >
                             <Edit2 className="size-3.5" />
                           </Button>
-                          <Button 
-                            variant="destructive" 
-                            className="size-8 p-0" 
+                          <Button
+                            variant="destructive"
+                            className="size-8 p-0"
                             onClick={() => handleDelete(evt.id)}
                             title="Delete Event"
                           >

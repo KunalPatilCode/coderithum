@@ -5,21 +5,21 @@ import { useToast } from "@/components/ui/use-toast"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableRow, 
-  TableHead, 
-  TableCell 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell
 } from "@/components/ui/table"
-import { 
-  Bell, 
-  Calendar, 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  ArrowLeft, 
+import {
+  Bell,
+  Calendar,
+  Plus,
+  Edit2,
+  Trash2,
+  ArrowLeft,
   Link as LinkIcon,
   Pin,
   CheckCircle,
@@ -164,7 +164,7 @@ export default function AnnouncementsManagerPage() {
 
   return (
     <div className="h-full flex flex-col gap-6 text-slate-900 min-h-0">
-      
+
       {/* Header Bar */}
       <div className="flex items-center justify-between shrink-0">
         <div>
@@ -193,7 +193,7 @@ export default function AnnouncementsManagerPage() {
       <div className="flex-1 min-h-0 overflow-y-auto">
         {view === "list" ? (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            
+
             {/* Announcements Table (8 cols) */}
             <div className="lg:col-span-8 space-y-4">
               <Card className="border-2 border-slate-900 rounded-none overflow-hidden bg-white shadow-[3px_3px_0px_#000]">
@@ -253,9 +253,8 @@ export default function AnnouncementsManagerPage() {
                             <TableCell>
                               <button
                                 onClick={() => handleToggleActive(ann)}
-                                className={`px-2 py-0.5 text-[9px] font-mono font-bold uppercase border border-slate-900 cursor-pointer ${
-                                  ann.status === "active" ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"
-                                }`}
+                                className={`px-2 py-0.5 text-[9px] font-mono font-bold uppercase border border-slate-900 cursor-pointer ${ann.status === "active" ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"
+                                  }`}
                               >
                                 {ann.status}
                               </button>
@@ -263,17 +262,17 @@ export default function AnnouncementsManagerPage() {
 
                             <TableCell className="text-right">
                               <div className="flex justify-end gap-1.5">
-                                <Button 
-                                  variant="secondary" 
-                                  className="size-8 p-0" 
+                                <Button
+                                  variant="secondary"
+                                  className="size-8 p-0"
                                   onClick={() => handleOpenEdit(ann)}
                                   title="Edit Announcement"
                                 >
                                   <Edit2 className="size-3.5" />
                                 </Button>
-                                <Button 
-                                  variant="destructive" 
-                                  className="size-8 p-0" 
+                                <Button
+                                  variant="destructive"
+                                  className="size-8 p-0"
                                   onClick={() => handleDelete(ann.id)}
                                   title="Delete Announcement"
                                 >

@@ -5,24 +5,24 @@ import { useToast } from "@/components/ui/use-toast"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableRow, 
-  TableHead, 
-  TableCell 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell
 } from "@/components/ui/table"
-import { 
-  Users2, 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  ArrowLeft, 
-  Image as ImageIcon, 
-  Layers, 
-  Sliders, 
-  Upload, 
+import {
+  Users2,
+  Plus,
+  Edit2,
+  Trash2,
+  ArrowLeft,
+  Image as ImageIcon,
+  Layers,
+  Sliders,
+  Upload,
   RotateCcw,
   Crop,
   Eye,
@@ -266,7 +266,7 @@ export default function TeamManagerPage() {
 
   return (
     <div className="h-full flex flex-col gap-6 text-slate-900 min-h-0">
-      
+
       {/* Title & Navigation Header */}
       <div className="flex items-center justify-between shrink-0">
         <div>
@@ -294,25 +294,22 @@ export default function TeamManagerPage() {
         <div className="flex border-2 border-slate-900 bg-white shadow-[2px_2px_0px_#000] shrink-0">
           <button
             onClick={() => setActiveTab("roster")}
-            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer ${
-              activeTab === "roster" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-            }`}
+            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer ${activeTab === "roster" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
           >
             <Users2 className="size-3.5" /> Roster Table ({team.length})
           </button>
           <button
             onClick={() => setActiveTab("hierarchy")}
-            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${
-              activeTab === "hierarchy" ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-            }`}
+            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${activeTab === "hierarchy" ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
           >
             <Layers className="size-3.5" /> Visual Hierarchy Graph
           </button>
           <button
             onClick={() => setActiveTab("photos")}
-            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${
-              activeTab === "photos" ? "bg-purple-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-            }`}
+            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${activeTab === "photos" ? "bg-purple-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
           >
             <ImageIcon className="size-3.5" /> Photo Deck & Crop Manager
           </button>
@@ -344,10 +341,10 @@ export default function TeamManagerPage() {
                       <TableRow key={idx}>
                         <TableCell className="font-semibold">
                           <div className="flex items-center gap-3">
-                            <img 
-                              src={m.avatar} 
-                              alt={m.name} 
-                              className="size-9 rounded-none bg-slate-100 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#000] object-cover shrink-0" 
+                            <img
+                              src={m.avatar}
+                              alt={m.name}
+                              className="size-9 rounded-none bg-slate-100 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#000] object-cover shrink-0"
                               style={m.avatarStyle}
                               onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" }}
                             />
@@ -370,25 +367,25 @@ export default function TeamManagerPage() {
                         </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1.5">
-                            <Button 
-                              variant="outline" 
-                              className="size-8 p-0" 
+                            <Button
+                              variant="outline"
+                              className="size-8 p-0"
                               onClick={() => handleOpenPhotoAdjuster(idx)}
                               title="Crop & Adjust Photo"
                             >
                               <Crop className="size-3.5 text-purple-600" />
                             </Button>
-                            <Button 
-                              variant="secondary" 
-                              className="size-8 p-0" 
+                            <Button
+                              variant="secondary"
+                              className="size-8 p-0"
                               onClick={() => handleOpenEdit(m, idx)}
                               title="Edit Member"
                             >
                               <Edit2 className="size-3.5" />
                             </Button>
-                            <Button 
-                              variant="destructive" 
-                              className="size-8 p-0" 
+                            <Button
+                              variant="destructive"
+                              className="size-8 p-0"
                               onClick={() => handleDelete(idx)}
                               title="Remove Member"
                             >
@@ -612,7 +609,7 @@ export default function TeamManagerPage() {
       {photoModalMemberIndex !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="relative w-full max-w-lg bg-white border-2 border-slate-900 p-6 shadow-[8px_8px_0px_#000] space-y-5 animate-in zoom-in-95 duration-150">
-            
+
             <div className="flex items-center justify-between border-b-2 border-slate-900 pb-3">
               <div className="flex items-center gap-2">
                 <Crop className="size-4 text-purple-600" />
@@ -629,7 +626,7 @@ export default function TeamManagerPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-              
+
               {/* Live Preview Card */}
               <div className="flex flex-col items-center justify-center space-y-2 p-4 bg-slate-50 border-2 border-slate-900 shadow-[2px_2px_0px_#000]">
                 <span className="text-[9px] font-mono font-bold uppercase text-slate-500">Live Frame Preview</span>

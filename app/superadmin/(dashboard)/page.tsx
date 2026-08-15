@@ -2,14 +2,14 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { 
-  Calendar, 
-  Code2, 
-  Users2, 
-  Trophy, 
-  ArrowRight, 
-  Plus, 
-  Activity, 
+import {
+  Calendar,
+  Code2,
+  Users2,
+  Trophy,
+  ArrowRight,
+  Plus,
+  Activity,
   ShieldCheck,
   AlertCircle,
   Sparkles,

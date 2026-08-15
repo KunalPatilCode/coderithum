@@ -55,7 +55,75 @@ export interface TeamMember {
     offsetX?: number;
     offsetY?: number;
     objectPosition?: string;
+    objectFit?: "cover" | "contain" | "fill";
   };
+}
+
+export function getMemberAvatarStyle(member?: Partial<TeamMember> | null): React.CSSProperties {
+  if (!member) return { objectPosition: "center center", objectFit: "cover" };
+
+  if (member.photoPosition) {
+    const { scale = 1, offsetX = 0, offsetY = 0, objectPosition = "center center", objectFit = "cover" } = member.photoPosition;
+    const xStr = typeof offsetX === "number" ? `${offsetX}%` : offsetX;
+    const yStr = typeof offsetY === "number" ? `${offsetY}%` : offsetY;
+    return {
+      objectFit: objectFit || "cover",
+      objectPosition: objectPosition || "center center",
+      transform: `scale(${scale}) translate(${xStr}, ${yStr})`,
+      transformOrigin: "center center",
+    };
+  }
+
+  if (member.avatarStyle) {
+    const styleObj = { ...member.avatarStyle };
+    if (!styleObj.objectFit) {
+      styleObj.objectFit = "cover";
+    }
+    if (typeof styleObj.transform === "string" && styleObj.transform.includes("px")) {
+      styleObj.transform = styleObj.transform.replace(/translate\([^)]+\)/g, (match) => {
+        return match.replace(/(-?\d+)px/g, (_, num) => {
+          const val = parseInt(num, 10);
+          const pct = Math.sign(val) * Math.min(Math.abs(val) / 4, 15);
+          return `${pct.toFixed(0)}%`;
+        });
+      });
+    }
+    return styleObj;
+  }
+
+  return {
+    objectFit: "cover",
+    objectPosition: "center center",
+  };
+}
+
+export function broadcastDataChange(key: string, data: any) {
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch (err) {
+      console.error(`Storage error saving ${key}:`, err);
+    }
+    window.dispatchEvent(new Event("storage"));
+    window.dispatchEvent(new CustomEvent("coderithum_data_sync", { detail: { key, data } }));
+    window.dispatchEvent(new CustomEvent(`${key.replace("coderithum_", "")}_updated`, { detail: data }));
+  }
+}
+
+export function getMemberTierLevel(member?: Partial<TeamMember> | null): 1 | 2 | 3 | 4 {
+  if (!member) return 4;
+  if (member.tierLevel && [1, 2, 3, 4].includes(member.tierLevel)) {
+    return member.tierLevel;
+  }
+  if (member.category === "Faculty") return 1;
+  const roleLower = (member.role || "").toLowerCase();
+  if (member.category === "Leadership" || roleLower.includes("president") || roleLower.includes("chair")) {
+    return 2;
+  }
+  if (roleLower.includes("lead") || roleLower.includes("director") || roleLower.includes("head")) {
+    return 3;
+  }
+  return 4;
 }
 
 export interface ClubAchievement {

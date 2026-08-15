@@ -15,6 +15,7 @@ import {
   TableCell 
 } from "@/components/ui/table"
 import { Trophy, Plus, Edit2, Trash2, ArrowLeft } from "lucide-react"
+import { broadcastDataChange } from "@/types"
 
 export default function AchievementsManagerPage() {
   const { toast } = useToast()
@@ -42,8 +43,8 @@ export default function AchievementsManagerPage() {
   }, [])
 
   const saveToStorage = (updatedList: any[]) => {
-    localStorage.setItem("coderithum_achievements", JSON.stringify(updatedList))
     setAchievements(updatedList)
+    broadcastDataChange("coderithum_achievements", updatedList)
   }
 
   const handleOpenAdd = () => {

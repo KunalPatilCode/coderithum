@@ -15,6 +15,7 @@ import {
   TableCell 
 } from "@/components/ui/table"
 import { Image, Plus, Edit2, Trash2, ArrowLeft, ArrowUpRight } from "lucide-react"
+import { broadcastDataChange } from "@/types"
 
 export default function GalleryManagerPage() {
   const { toast } = useToast()
@@ -71,7 +72,7 @@ export default function GalleryManagerPage() {
           }
           return album
         })
-        localStorage.setItem("coderithum_albums", JSON.stringify(updated))
+        broadcastDataChange("coderithum_albums", updated)
         setAlbums(updated)
       }
       setLoading(false)
@@ -79,8 +80,8 @@ export default function GalleryManagerPage() {
   }, [])
 
   const saveToStorage = (updatedList: any[]) => {
-    localStorage.setItem("coderithum_albums", JSON.stringify(updatedList))
     setAlbums(updatedList)
+    broadcastDataChange("coderithum_albums", updatedList)
   }
 
   const handleOpenAddAlbum = () => {

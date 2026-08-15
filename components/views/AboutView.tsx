@@ -27,7 +27,7 @@ import {
   Server,
   Trophy
 } from "lucide-react";
-import { TeamMember } from "../../types";
+import { TeamMember, getMemberAvatarStyle } from "../../types";
 import InteractiveHeading from "../InteractiveHeading";
 import AnimatedCounter from "../AnimatedCounter";
 
@@ -1032,8 +1032,8 @@ export default function AboutView({ team, setView }: AboutViewProps) {
                 className="p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] transition-all text-center items-center"
               >
                 <div className="space-y-3 flex flex-col items-center">
-                  <div className="w-24 h-24 rounded-full overflow-hidden border-2 border-slate-900 shadow-[3px_3px_0px_#000] bg-slate-100 shrink-0">
-                    <img src={fac.avatar} alt={fac.name} className="w-full h-full object-cover" />
+                  <div className="w-24 h-24 rounded-none overflow-hidden border-2 border-slate-900 shadow-[2px_2px_0px_#000] bg-slate-100 shrink-0">
+                    <img src={fac.avatar} alt={fac.name} className="w-full h-full" style={getMemberAvatarStyle(fac)} />
                   </div>
                   <div>
                     <h4 className="text-base font-black text-slate-900">{fac.name}</h4>

@@ -25,7 +25,7 @@ import {
   CheckCircle,
   Eye
 } from "lucide-react"
-import { AnnouncementItem, ClubEvent } from "@/types"
+import { AnnouncementItem, ClubEvent, broadcastDataChange } from "@/types"
 import { initialAnnouncements, initialEvents } from "@/data/mockData"
 
 export default function AnnouncementsManagerPage() {
@@ -68,8 +68,8 @@ export default function AnnouncementsManagerPage() {
   }, [])
 
   const saveToStorage = (updatedList: AnnouncementItem[]) => {
-    localStorage.setItem("coderithum_announcements", JSON.stringify(updatedList))
     setAnnouncements(updatedList)
+    broadcastDataChange("coderithum_announcements", updatedList)
   }
 
   const handleOpenAdd = (eventId?: string) => {

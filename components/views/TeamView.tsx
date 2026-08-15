@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Github, Linkedin } from "../Icons";
-import { TeamMember } from "../../types";
+import { TeamMember, getMemberAvatarStyle } from "../../types";
 import InteractiveHeading from "../InteractiveHeading";
 import TeamHierarchyGraph from "../TeamHierarchyGraph";
 import { Layers, LayoutGrid } from "lucide-react";
@@ -72,39 +72,41 @@ export default function TeamView({ team }: TeamViewProps) {
     };
 
     if (member) {
+      const photoStyle = getMemberAvatarStyle(member);
+
       return (
         <motion.div
           variants={variants}
           initial="hidden"
           animate="visible"
           whileHover={{
-            y: -4,
+            y: -3,
             scale: 1.02,
             transition: { duration: 0.15 }
           }}
-          className={`w-full ${compact ? 'max-w-[240px] h-[240px] p-3.5' : 'max-w-[300px] h-[300px] p-5'} mx-auto bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] hover:shadow-[6px_6px_0px_#000] flex flex-col items-center text-center space-y-2.5 transition-all select-none z-10`}
+          className={`w-full ${compact ? 'max-w-[190px] h-[210px] p-3' : 'max-w-[230px] h-[235px] p-4'} mx-auto bg-white border-2 border-slate-900 shadow-[3px_3px_0px_#000] hover:shadow-[5px_5px_0px_#000] flex flex-col items-center justify-between text-center transition-all select-none z-10 shrink-0`}
         >
-          <div className={`${compact ? 'w-16 h-16' : 'w-24 h-24'} rounded-full overflow-hidden border-2 border-slate-900 bg-slate-100 shrink-0 shadow flex items-center justify-center`}>
+          <div className={`${compact ? 'w-14 h-14' : 'w-20 h-20'} rounded-none overflow-hidden border-2 border-slate-900 bg-slate-100 shrink-0 shadow-[2px_2px_0px_#000] flex items-center justify-center transition-transform hover:scale-105`}>
             <img
               src={member.avatar}
               alt={member.name}
-              className={`w-full h-full object-cover ${member.avatarClassName || ""}`}
-              style={member.avatarStyle}
+              className="w-full h-full"
+              style={photoStyle}
             />
           </div>
-          <div className="flex-1 flex flex-col justify-center w-full">
-            <div className="text-[10px] sm:text-xs font-mono font-bold text-blue-600 uppercase tracking-wider line-clamp-1">{title}</div>
-            <h4 className={`${compact ? 'text-xs' : 'text-sm'} font-black text-slate-900 mt-0.5`}>{member.name}</h4>
-            <p className="text-[10px] text-slate-500 mt-0.5">{member.role}</p>
+          <div className="my-auto w-full flex flex-col items-center text-center">
+            <div className="text-[10px] font-mono font-bold text-blue-600 uppercase tracking-wider line-clamp-1 truncate w-full px-1">{title}</div>
+            <h4 className={`${compact ? 'text-xs' : 'text-sm'} font-black text-slate-900 mt-0.5 tracking-tight leading-snug line-clamp-1 truncate w-full px-1`}>{member.name}</h4>
+            <p className="text-[10px] text-slate-500 mt-0.5 font-medium line-clamp-2 leading-tight h-[26px] flex items-center justify-center text-center w-full px-1">{member.role}</p>
           </div>
-          <div className="flex items-center gap-2 pt-1 shrink-0">
+          <div className="w-full mt-auto pt-2 border-t border-slate-200 flex items-center justify-center gap-2 shrink-0 h-7">
             {member.github && (
-              <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-black transition-colors p-0.5">
+              <a href={member.github} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 p-1 rounded transition-colors" title="GitHub">
                 <Github className="w-3.5 h-3.5" />
               </a>
             )}
             {member.linkedin && (
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-black transition-colors p-0.5">
+              <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className="text-slate-500 hover:text-blue-600 hover:bg-slate-100 p-1 rounded transition-colors" title="LinkedIn">
                 <Linkedin className="w-3.5 h-3.5" />
               </a>
             )}
@@ -119,7 +121,7 @@ export default function TeamView({ team }: TeamViewProps) {
         initial="hidden"
         animate="visible"
         whileHover={{ scale: 1.01 }}
-        className={`w-full ${compact ? 'max-w-[240px] h-[240px] p-3.5' : 'max-w-[300px] h-[300px] p-5'} mx-auto bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center text-center justify-center`}
+        className={`w-full ${compact ? 'max-w-[190px] h-[210px] p-3' : 'max-w-[230px] h-[235px] p-4'} mx-auto bg-slate-50 border-2 border-dashed border-slate-300 flex flex-col items-center text-center justify-center shrink-0`}
       >
         <div className="text-xs font-mono text-slate-500 uppercase tracking-wider font-bold">{title}</div>
         <div className="text-[10px] text-slate-400 font-mono mt-1">Vacant / Cohort Core</div>
@@ -160,17 +162,15 @@ export default function TeamView({ team }: TeamViewProps) {
           <div className="inline-flex border-2 border-slate-900 bg-white shadow-[3px_3px_0px_#000]">
             <button
               onClick={() => setViewMode("org")}
-              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${
-                viewMode === "org" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-              }`}
+              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${viewMode === "org" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+                }`}
             >
               <LayoutGrid className="size-3.5" /> Org Chart View
             </button>
             <button
               onClick={() => setViewMode("graph")}
-              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${
-                viewMode === "graph" ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-              }`}
+              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${viewMode === "graph" ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+                }`}
             >
               <Layers className="size-3.5" /> Visual Hierarchy Graph
             </button>
@@ -184,97 +184,97 @@ export default function TeamView({ team }: TeamViewProps) {
         /* Main Organizational Tree */
         <div className="w-full max-w-6xl mx-auto p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] space-y-8 overflow-x-auto">
 
-        <div className="min-w-[850px] flex flex-col items-center py-4">
+          <div className="min-w-[850px] flex flex-col items-center py-4">
 
-          {/* Level 1: Faculty Mentor */}
-          {renderNode("Faculty Mentor", "faculty", 0.1)}
-          {renderArrow(0.25)}
+            {/* Level 1: Faculty Mentor */}
+            {renderNode("Faculty Mentor", "faculty", 0.1)}
+            {renderArrow(0.25)}
 
-          {/* Level 2: President */}
-          {renderNode("President", "president", 0.4)}
-          {renderArrow(0.55)}
+            {/* Level 2: President */}
+            {renderNode("President", "president", 0.4)}
+            {renderArrow(0.55)}
 
-          {/* Level 3: Vice President */}
-          {renderNode("Vice President", "vp", 0.7)}
+            {/* Level 3: Vice President */}
+            {renderNode("Vice President", "vp", 0.7)}
 
-          {/* VP to Division Connection Lines */}
-          <div className="flex flex-col items-center w-full mt-2">
-            <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 0.85, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
-            <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.05, duration: 0.3 }} className="origin-center w-[70%] h-[3px] bg-slate-900" />
-            <div className="flex justify-between w-[70%] h-6">
-              <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
-              <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
-              <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+            {/* VP to Division Connection Lines */}
+            <div className="flex flex-col items-center w-full mt-2">
+              <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 0.85, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
+              <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 1.05, duration: 0.3 }} className="origin-center w-[70%] h-[3px] bg-slate-900" />
+              <div className="flex justify-between w-[70%] h-6">
+                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.35, duration: 0.2 }} className="origin-top w-[3px] h-full bg-slate-900" />
+              </div>
             </div>
+
+            {/* Columns Grid */}
+            <div className="grid grid-cols-3 gap-8 w-full mt-2">
+
+              {/* Column 1: Technical Division */}
+              <div className="flex flex-col items-center">
+                {renderNode("Technical Director", "tech_dir", 1.4)}
+                {renderArrow(1.55)}
+
+                <div className="flex flex-col items-center w-full">
+                  <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.8, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
+                  <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.0, duration: 0.25 }} className="origin-center w-full h-[3px] bg-slate-900" />
+                  <div className="w-full mt-3 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      {domains.map((domain, index) => (
+                        <div key={domain.id} className="w-full">
+                          {renderNode(domain.title, domain.key, 2.1 + index * 0.08, true)}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Column 2: Incubator & Ops Division */}
+              <div className="flex flex-col items-center">
+                {renderNode("Incubator & Ops Lead", "incubator_lead", 1.4)}
+                {renderArrow(1.55)}
+                <div className="flex flex-col items-center w-full">
+                  <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.8, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
+                  <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.0, duration: 0.25 }} className="origin-center w-full h-[3px] bg-slate-900" />
+                  <div className="w-full mt-3 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      {renderNode("Research Leads", "research_lead", 2.1, true)}
+                      {renderNode("Startup Leads", "startup_lead", 2.18, true)}
+                      {renderNode("Incubator Teams / Research Fellows", "incubator_team", 2.26, true)}
+                      {renderNode("Product Management Leads", "product_mgmt", 2.34, true)}
+                      {renderNode("IPR & Patent Support", "ipr_support", 2.42, true)}
+                      {renderNode("Treasury & Resource Leads", "treasury_resource", 2.5, true)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Column 3: Community & Brand Division */}
+              <div className="flex flex-col items-center">
+                {renderNode("Community & Brand Lead", "brand_lead", 1.4)}
+                {renderArrow(1.55)}
+                <div className="flex flex-col items-center w-full">
+                  <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.8, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
+                  <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.0, duration: 0.25 }} className="origin-center w-full h-[3px] bg-slate-900" />
+                  <div className="w-full mt-3 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      {renderNode("Outreach Leads (Design, Event...)", "outreach_lead", 2.1, true)}
+                      {renderNode("Operations Core (Media, HR, Fin)", "operations_core", 2.18, true)}
+                      {renderNode("Community & Growth Teams", "community_growth", 2.26, true)}
+                      {renderNode("Creative & Design Leads", "creative_design", 2.34, true)}
+                      {renderNode("Public Relations Leads", "pr_relations", 2.42, true)}
+                      {renderNode("Sponsorship & Corporate Relations", "sponsorship_relations", 2.5, true)}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
-
-          {/* Columns Grid */}
-          <div className="grid grid-cols-3 gap-8 w-full mt-2">
-
-            {/* Column 1: Technical Division */}
-            <div className="flex flex-col items-center">
-              {renderNode("Technical Director", "tech_dir", 1.4)}
-              {renderArrow(1.55)}
-
-              <div className="flex flex-col items-center w-full">
-                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.8, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
-                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.0, duration: 0.25 }} className="origin-center w-full h-[3px] bg-slate-900" />
-                <div className="w-full mt-3 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    {domains.map((domain, index) => (
-                      <div key={domain.id} className="w-full">
-                        {renderNode(domain.title, domain.key, 2.1 + index * 0.08, true)}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Column 2: Incubator & Ops Division */}
-            <div className="flex flex-col items-center">
-              {renderNode("Incubator & Ops Lead", "incubator_lead", 1.4)}
-              {renderArrow(1.55)}
-              <div className="flex flex-col items-center w-full">
-                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.8, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
-                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.0, duration: 0.25 }} className="origin-center w-full h-[3px] bg-slate-900" />
-                <div className="w-full mt-3 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    {renderNode("Research Leads", "research_lead", 2.1, true)}
-                    {renderNode("Startup Leads", "startup_lead", 2.18, true)}
-                    {renderNode("Incubator Teams / Research Fellows", "incubator_team", 2.26, true)}
-                    {renderNode("Product Management Leads", "product_mgmt", 2.34, true)}
-                    {renderNode("IPR & Patent Support", "ipr_support", 2.42, true)}
-                    {renderNode("Treasury & Resource Leads", "treasury_resource", 2.5, true)}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Column 3: Community & Brand Division */}
-            <div className="flex flex-col items-center">
-              {renderNode("Community & Brand Lead", "brand_lead", 1.4)}
-              {renderArrow(1.55)}
-              <div className="flex flex-col items-center w-full">
-                <motion.div initial={{ scaleY: 0 }} animate={{ scaleY: 1 }} transition={{ delay: 1.8, duration: 0.2 }} className="origin-top w-[3px] h-6 bg-slate-900" />
-                <motion.div initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ delay: 2.0, duration: 0.25 }} className="origin-center w-full h-[3px] bg-slate-900" />
-                <div className="w-full mt-3 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    {renderNode("Outreach Leads (Design, Event...)", "outreach_lead", 2.1, true)}
-                    {renderNode("Operations Core (Media, HR, Fin)", "operations_core", 2.18, true)}
-                    {renderNode("Community & Growth Teams", "community_growth", 2.26, true)}
-                    {renderNode("Creative & Design Leads", "creative_design", 2.34, true)}
-                    {renderNode("Public Relations Leads", "pr_relations", 2.42, true)}
-                    {renderNode("Sponsorship & Corporate Relations", "sponsorship_relations", 2.5, true)}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
         </div>
-      </div>
       )}
     </motion.div>
   );

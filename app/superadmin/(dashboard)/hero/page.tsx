@@ -17,7 +17,7 @@ import {
   Maximize2,
   X
 } from "lucide-react"
-import { HeroThemeConfig } from "@/types"
+import { HeroThemeConfig, broadcastDataChange } from "@/types"
 import { initialHeroConfig } from "@/data/mockData"
 import InteractivePixelArt from "@/components/InteractivePixelArt"
 import CoderithumLogoSvg from "@/components/CoderithumLogoSvg"
@@ -222,6 +222,8 @@ const ACCENT_COLORS = [
   { name: "Rose", hex: "#e11d48", bg: "bg-rose-600" },
 ]
 
+
+
 export default function HeroThemeManagerPage() {
   const { toast } = useToast()
   const [config, setConfig] = useState<HeroThemeConfig>(initialHeroConfig)
@@ -255,6 +257,7 @@ export default function HeroThemeManagerPage() {
   const handleSave = () => {
     if (typeof window !== "undefined") {
       localStorage.setItem("coderithum_hero_config", JSON.stringify(config))
+      broadcastDataChange("coderithum_hero_config", config)
       toast({
         title: "Hero Theme Saved!",
         description: "Public landing hero configuration updated successfully.",
@@ -267,6 +270,7 @@ export default function HeroThemeManagerPage() {
     setConfig(initialHeroConfig)
     if (typeof window !== "undefined") {
       localStorage.setItem("coderithum_hero_config", JSON.stringify(initialHeroConfig))
+      broadcastDataChange("coderithum_hero_config", initialHeroConfig)
     }
     toast({
       title: "Reset to Default",

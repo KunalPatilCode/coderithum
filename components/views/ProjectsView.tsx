@@ -24,7 +24,7 @@ export default function ProjectsView({ projects, setView, setSelectedId }: Proje
       className="space-y-16"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <InteractiveHeading text="Innovation Hub" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <InteractiveHeading text="Innovation Hub" as="h2" className="text-xs font-mono tracking-widest text-theme uppercase" />
         <div>
           <InteractiveHeading text="Technical Projects" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
         </div>
@@ -59,7 +59,7 @@ export default function ProjectsView({ projects, setView, setSelectedId }: Proje
                   />
                 </div>
               </div>
-              <h4 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{project.title}</h4>
+              <h4 className="text-xl font-bold text-slate-900 group-hover:text-theme transition-colors">{project.title}</h4>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{project.shortDesc}</p>
             </div>
             <div className="space-y-4">
@@ -70,7 +70,7 @@ export default function ProjectsView({ projects, setView, setSelectedId }: Proje
               </div>
               <button
                 onClick={() => handleProjectClick(project.id)}
-                className="w-full py-2.5 bg-blue-50 border-2 border-blue-600 rounded-none text-xs font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] cursor-pointer"
+                className="w-full py-2.5 bg-theme-light border-2 border-theme rounded-none text-xs font-bold text-theme hover:bg-theme hover:text-white transition-all shadow-[3px_3px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] cursor-pointer"
               >
                 View Project Details
               </button>

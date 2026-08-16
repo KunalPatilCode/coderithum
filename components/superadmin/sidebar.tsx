@@ -20,7 +20,6 @@ export function SuperAdminSidebar({ className }: { className?: string }) {
 
   const navItems = [
     { name: "Overview", href: "/superadmin", icon: LayoutDashboard },
-    { name: "Hero Theme Manager", href: "/superadmin/hero", icon: Sparkles },
     { name: "Events Manager", href: "/superadmin/events", icon: Calendar },
     { name: "Announcements & Sync", href: "/superadmin/announcements", icon: Bell },
     { name: "Projects Manager", href: "/superadmin/projects", icon: Code2 },

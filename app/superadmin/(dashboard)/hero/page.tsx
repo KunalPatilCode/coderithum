@@ -349,9 +349,14 @@ export default function HeroThemeManagerPage() {
                       key={preset.id}
                       onClick={() => handleApplyPreset(preset)}
                       className={`p-4 border-2 border-slate-900 rounded-none cursor-pointer transition-all ${isSelected
-                          ? "bg-blue-50/80 shadow-[4px_4px_0px_#000] ring-2 ring-blue-600"
+                          ? "shadow-[4px_4px_0px_#000] ring-2"
                           : "bg-white shadow-[2px_2px_0px_#000] hover:shadow-[3px_3px_0px_#000]"
                         }`}
+                      style={isSelected ? { 
+                        backgroundColor: `${preset.config.accentColor}12`,
+                        borderColor: preset.config.accentColor,
+                        outlineColor: preset.config.accentColor
+                      } : {}}
                     >
                       <div className="flex items-start justify-between">
                         <Badge variant={isSelected ? "default" : "secondary"}>
@@ -364,6 +369,22 @@ export default function HeroThemeManagerPage() {
                       </div>
                       <h3 className="text-xs font-bold text-slate-900 uppercase font-mono mt-3">{preset.name}</h3>
                       <p className="text-[10px] text-slate-600 font-mono mt-1 leading-relaxed">{preset.description}</p>
+
+                      {/* Display image thumbnail if preset has a bannerImage, or styled canvas box if not */}
+                      {preset.config.bannerImage ? (
+                        <div className="w-full h-24 border-2 border-slate-900 mt-3 overflow-hidden relative rounded-none shrink-0 shadow-[1.5px_1.5px_0px_#000]">
+                          <img
+                            src={preset.config.bannerImage}
+                            alt={preset.name}
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-full h-24 border-2 border-slate-900 mt-3 overflow-hidden relative rounded-none shrink-0 shadow-[1.5px_1.5px_0px_#000] bg-slate-950 flex flex-col items-center justify-center text-center p-2 font-mono">
+                          <span className="text-[7px] font-bold uppercase tracking-widest text-slate-400">Canvas Rendering</span>
+                          <span className="text-[9px] font-bold text-white mt-1 uppercase tracking-wide">{preset.config.backgroundStyle}</span>
+                        </div>
+                      )}
 
                       <div className="mt-3 pt-2 border-t border-slate-200 flex items-center justify-between text-[9px] font-mono text-slate-500">
                         <span>Canvas: {preset.config.backgroundStyle}</span>
@@ -467,7 +488,7 @@ export default function HeroThemeManagerPage() {
 
                 <div>
                   <label className={labelClass}>Accent Theme Color Palette</label>
-                  <div className="flex items-center gap-3 pt-1">
+                  <div className="flex flex-wrap items-center gap-3 pt-1">
                     {ACCENT_COLORS.map((c) => (
                       <button
                         key={c.hex}
@@ -480,6 +501,24 @@ export default function HeroThemeManagerPage() {
                         {c.name}
                       </button>
                     ))}
+                    
+                    {/* Custom Color Selector */}
+                    <div className="flex items-center gap-1.5 px-3 py-1 bg-white border-2 border-slate-900 text-xs font-mono font-bold shadow-[1.5px_1.5px_0px_#000]">
+                      <input
+                        type="color"
+                        value={config.accentColor}
+                        onChange={(e) => setConfig({ ...config, accentColor: e.target.value, presetId: "custom" })}
+                        className="size-5 border border-slate-400 bg-transparent cursor-pointer rounded-none"
+                        title="Choose custom accent color"
+                      />
+                      <input
+                        type="text"
+                        value={config.accentColor}
+                        onChange={(e) => setConfig({ ...config, accentColor: e.target.value, presetId: "custom" })}
+                        className="w-16 h-5 text-[10px] px-1 bg-slate-50 text-slate-700 border border-slate-300 font-mono text-center focus:outline-none"
+                        placeholder="#ffffff"
+                      />
+                    </div>
                   </div>
                 </div>
 
@@ -608,14 +647,6 @@ export default function HeroThemeManagerPage() {
                   {config.backgroundStyle === "gradient-wave" && (
                     <div
                       className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-violet-950 via-slate-900 to-blue-950"
-                    />
-                  )}
-
-                  {/* Optional Banner Image Overlay */}
-                  {config.bannerImage && (
-                    <div
-                      className="absolute inset-0 z-0 opacity-20 bg-cover bg-center pointer-events-none mix-blend-overlay"
-                      style={{ backgroundImage: `url(${config.bannerImage})` }}
                     />
                   )}
 

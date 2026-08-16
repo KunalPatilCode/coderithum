@@ -18,7 +18,7 @@ export default function ContactView({ contactSuccess, setContactSuccess }: Conta
       className="space-y-16"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <InteractiveHeading text="Get In Touch" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <InteractiveHeading text="Get In Touch" as="h2" className="text-xs font-mono tracking-widest text-theme uppercase" />
         <div>
           <InteractiveHeading text="Contact Coderithum" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
         </div>
@@ -33,21 +33,21 @@ export default function ContactView({ contactSuccess, setContactSuccess }: Conta
 
             <div className="space-y-4">
               <div className="flex items-start gap-3">
-                <Mail className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                <Mail className="w-4 h-4 text-theme mt-0.5 shrink-0" />
                 <div>
                   <div className="text-xs font-semibold text-slate-900">Email Address</div>
                   <a href="mailto:coderithum.tech@gmail.com" className="text-xs text-slate-600 hover:text-black transition-colors">coderithum.tech@gmail.com</a>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                <MapPin className="w-4 h-4 text-theme mt-0.5 shrink-0" />
                 <div>
                   <div className="text-xs font-semibold text-slate-900">Office Location</div>
                   <div className="text-xs text-slate-600 leading-relaxed mt-0.5">Tech Lab 402, Computer Science Block, Main University Campus</div>
                 </div>
               </div>
               <div className="flex items-start gap-3">
-                <Phone className="w-4 h-4 text-blue-600 mt-0.5 shrink-0" />
+                <Phone className="w-4 h-4 text-theme mt-0.5 shrink-0" />
                 <div>
                   <div className="text-xs font-semibold text-slate-900">Technical Support</div>
                   <div className="text-xs text-slate-600 mt-0.5">+91 98765 43210</div>
@@ -101,24 +101,24 @@ export default function ContactView({ contactSuccess, setContactSuccess }: Conta
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-mono text-slate-600 uppercase">First Name</label>
-                    <input required type="text" placeholder="Kunal" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" />
+                    <input required type="text" placeholder="Kunal" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-theme transition-colors" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-mono text-slate-600 uppercase">Email Address</label>
-                    <input required type="email" placeholder="kunal@example.com" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" />
+                    <input required type="email" placeholder="kunal@example.com" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-theme transition-colors" />
                   </div>
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-mono text-slate-600 uppercase">Topic / Subject</label>
-                  <input required type="text" placeholder="DevHack 2026 Participation Query" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" />
+                  <input required type="text" placeholder="DevHack 2026 Participation Query" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-theme transition-colors" />
                 </div>
                 <div className="space-y-1.5">
                   <label className="text-[10px] font-mono text-slate-600 uppercase">Message Body</label>
-                  <textarea required rows={4} placeholder="Hi Coderithum technical team, I wanted to inquire if students from second year..." className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-500 transition-colors" />
+                  <textarea required rows={4} placeholder="Hi Coderithum technical team, I wanted to inquire if students from second year..." className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-theme transition-colors" />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-2.5 bg-blue-600 border-2 border-blue-700 hover:bg-blue-500 text-white rounded-none text-xs font-bold shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#000] transition-all cursor-pointer"
+                  className="w-full py-2.5 bg-theme border-2 border-theme-hover hover:bg-theme-hover text-white rounded-none text-xs font-bold shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#000] transition-all cursor-pointer"
                 >
                   Submit Inquiry
                 </button>

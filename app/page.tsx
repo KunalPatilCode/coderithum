@@ -18,6 +18,7 @@ import ProjectsView from "../components/views/ProjectsView";
 import ProjectDetailView from "../components/views/ProjectDetailView";
 import GalleryView from "../components/views/GalleryView";
 import TeamView from "../components/views/TeamView";
+import RuleBookView from "../components/views/RuleBookView";
 import AchievementsView from "../components/views/AchievementsView";
 import ContactView from "../components/views/ContactView";
 import Error404View from "../components/views/Error404View";
@@ -33,6 +34,33 @@ import {
   initialHeroConfig
 } from "../data/mockData";
 import LogoLoader from "../components/LogoLoader";
+
+const getThemeShades = (hex: string) => {
+  let hover = "#1d4ed8";
+  let light = "#eff6ff";
+  
+  if (hex === "#2563eb") { // Blue
+    hover = "#1d4ed8";
+    light = "#eff6ff";
+  } else if (hex === "#059669") { // Emerald
+    hover = "#047857";
+    light = "#ecfdf5";
+  } else if (hex === "#7c3aed") { // Violet
+    hover = "#6d28d9";
+    light = "#f5f3ff";
+  } else if (hex === "#d97706") { // Amber
+    hover = "#b45309";
+    light = "#fffbeb";
+  } else if (hex === "#e11d48") { // Rose
+    hover = "#be123c";
+    light = "#fff1f2";
+  } else {
+    // Custom hex fallback
+    hover = hex;
+    light = `${hex}10`;
+  }
+  return { hover, light };
+};
 
 export default function Home() {
   // Navigation & Loading State
@@ -50,6 +78,17 @@ export default function Home() {
   const [team, setTeam] = useState<any[]>([]);
   const [achievements, setAchievements] = useState<any[]>([]);
   const [heroConfig, setHeroConfig] = useState<any>(initialHeroConfig);
+
+  // Update theme colors dynamically on the document root when heroConfig changes
+  useEffect(() => {
+    if (typeof window !== "undefined" && heroConfig?.accentColor) {
+      const hex = heroConfig.accentColor;
+      const { hover, light } = getThemeShades(hex);
+      document.documentElement.style.setProperty('--theme-color', hex);
+      document.documentElement.style.setProperty('--theme-color-hover', hover);
+      document.documentElement.style.setProperty('--theme-color-light', light);
+    }
+  }, [heroConfig]);
 
   // Load from localStorage on client mount
   useEffect(() => {
@@ -284,6 +323,10 @@ export default function Home() {
 
             {view === "team" && (
               <TeamView team={team} />
+            )}
+
+            {view === "rulebook" && (
+              <RuleBookView />
             )}
 
             {view === "achievements" && (

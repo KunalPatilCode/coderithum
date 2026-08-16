@@ -13,7 +13,12 @@ import {
   ArrowLeft,
   ChevronRight,
   Compass,
-  Radio
+  Radio,
+  Crown,
+  ShieldCheck,
+  Sparkles,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react"
 import { Github, Linkedin } from "@/components/Icons"
 import { TeamMember, getMemberAvatarStyle, getMemberTierLevel } from "@/types"
@@ -33,8 +38,10 @@ interface NetworkCardProps {
   memberCount?: number
   prefersReducedMotion?: boolean
   compact?: boolean
+  isPremium?: boolean
 }
 
+// Reusable Network Node Card matching exact UI in Photo 2
 // Reusable Network Node Card matching exact UI in Photo 2
 function NetworkNodeCard({
   member,
@@ -45,27 +52,28 @@ function NetworkNodeCard({
   onClick,
   memberCount,
   prefersReducedMotion,
-  compact
+  compact,
+  isPremium
 }: NetworkCardProps) {
-  let themeBorder = "border-cyan-500"
-  let themeShadow = "shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+  let themeBorder = isPremium ? "border-[3px] border-cyan-400" : "border-cyan-500"
+  let themeShadow = isPremium ? "shadow-[0_0_35px_rgba(34,211,238,0.5)]" : "shadow-[0_0_20px_rgba(34,211,238,0.3)]"
   let themeText = "text-cyan-400"
-  let themeBadgeBg = "bg-cyan-950/80 border-cyan-800"
+  let themeBadgeBg = isPremium ? "bg-cyan-950 border-cyan-400 text-cyan-300" : "bg-cyan-950/80 border-cyan-800"
   let themeRotatingBorder = "border-cyan-400/50"
   let themeDot = "bg-cyan-400"
 
   if (themeColor === "emerald") {
-    themeBorder = "border-emerald-500"
-    themeShadow = "shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+    themeBorder = isPremium ? "border-[3px] border-emerald-400" : "border-emerald-500"
+    themeShadow = isPremium ? "shadow-[0_0_35px_rgba(16,185,129,0.5)]" : "shadow-[0_0_20px_rgba(16,185,129,0.3)]"
     themeText = "text-emerald-400"
-    themeBadgeBg = "bg-emerald-950/80 border-emerald-800"
+    themeBadgeBg = isPremium ? "bg-emerald-950 border-emerald-400 text-emerald-300" : "bg-emerald-950/80 border-emerald-800"
     themeRotatingBorder = "border-emerald-400/50"
     themeDot = "bg-emerald-400"
   } else if (themeColor === "amber") {
-    themeBorder = "border-amber-500"
-    themeShadow = "shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+    themeBorder = isPremium ? "border-[3px] border-amber-400" : "border-amber-500"
+    themeShadow = isPremium ? "shadow-[0_0_35px_rgba(245,158,11,0.5)]" : "shadow-[0_0_20px_rgba(245,158,11,0.3)]"
     themeText = "text-amber-400"
-    themeBadgeBg = "bg-amber-950/80 border-amber-800"
+    themeBadgeBg = isPremium ? "bg-amber-950 border-amber-400 text-amber-300" : "bg-amber-950/80 border-amber-800"
     themeRotatingBorder = "border-amber-400/50"
     themeDot = "bg-amber-400"
   }
@@ -74,20 +82,27 @@ function NetworkNodeCard({
   const avatarSizeClass = compact ? "size-12 sm:size-16" : "size-16 sm:size-20"
   const titleSizeClass = compact ? "text-xs sm:text-sm font-extrabold" : "text-sm sm:text-base font-black"
 
+  const renderPremiumIcon = () => {
+    if (!isPremium) return <Radio className={`size-3.5 ${themeText} ${isHub ? "animate-pulse" : ""}`} />
+    if (themeColor === "emerald") return <ShieldCheck className="size-4 text-emerald-400 shrink-0 animate-pulse" />
+    if (themeColor === "amber") return <Crown className="size-4 text-amber-400 shrink-0" />
+    return <Sparkles className="size-4 text-cyan-400 shrink-0" />
+  }
+
+  const renderPremiumLabel = () => {
+    if (!isPremium) return isHub ? "CENTRAL HUB" : compact ? "RING NODE" : "PERMANENT CORE"
+    if (themeColor === "emerald") return "FACULTY ADVISOR"
+    if (themeColor === "amber") return "CHIEF COMMAND"
+    return "EXECUTIVE VP"
+  }
+
   return (
     <div
       onClick={onClick}
-      className={`relative ${cardWidthClass} bg-slate-950 border-2 ${themeBorder} ${themeShadow} font-mono text-xs z-10 flex flex-col justify-between select-none group transition-all duration-200 ${onClick ? "cursor-pointer hover:scale-105" : ""
+      className={`relative ${cardWidthClass} ${isPremium ? "bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border-[3px]" : "bg-slate-950 border-2"} ${themeBorder} ${themeShadow} font-mono text-xs z-10 flex flex-col justify-between select-none group transition-all duration-200 ${onClick ? "cursor-pointer hover:scale-105" : ""
         }`}
     >
-      {/* ROTATING DASHED DIAMOND FRAME */}
-      {!prefersReducedMotion && (
-        <motion.div
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: isSelected ? 18 : 25, ease: "linear" }}
-          className={`absolute -inset-3.5 sm:-inset-4 border-2 border-dashed ${themeRotatingBorder} pointer-events-none`}
-        />
-      )}
+
 
       {/* Pixel Corner Accents */}
       <div className={`absolute -top-1 -left-1 size-2 ${themeDot} border border-slate-900 z-20`} />
@@ -98,17 +113,17 @@ function NetworkNodeCard({
       {/* Top Header Row */}
       <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5 mb-2 text-[10px] sm:text-xs">
         <span className={`${themeText} font-extrabold flex items-center gap-1.5 uppercase tracking-wider`}>
-          <Radio className={`size-3.5 ${themeText} ${isHub ? "animate-pulse" : ""}`} />
-          {isHub ? "CENTRAL HUB" : compact ? "RING NODE" : "PERMANENT CORE"}
+          {renderPremiumIcon()}
+          {renderPremiumLabel()}
         </span>
-        <span className={`${themeText} font-bold uppercase tracking-wider text-[9px] sm:text-[10px] border px-2 py-0.5 ${themeBadgeBg}`}>
+        <span className={`font-bold uppercase tracking-wider text-[9px] sm:text-[10px] border px-2 py-0.5 ${themeBadgeBg}`}>
           {badgeText}
         </span>
       </div>
 
       {/* Middle Body Row */}
       <div className="flex items-center gap-3 my-1.5">
-        <div className={`relative ${avatarSizeClass} shrink-0 border-2 ${themeBorder} bg-slate-900 overflow-hidden shadow-[2px_2px_0px_#000]`}>
+        <div className={`relative ${avatarSizeClass} shrink-0 border-2 ${themeBorder} bg-slate-100 overflow-hidden shadow-[2px_2px_0px_#000] ${isPremium ? `ring-2 ring-offset-1 ring-${themeColor}-400/30` : ""}`}>
           <img
             src={member.avatar}
             alt={member.name}
@@ -161,12 +176,13 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
 
   // Canvas Dimensions
   const containerRef = useRef<HTMLDivElement>(null)
-  const [dimensions, setDimensions] = useState({ width: 1000, height: 560 })
+  const [dimensions, setDimensions] = useState({ width: 1000, height: 500 })
 
   // Active Selection (null = Initial Leader Ring Topology View)
   const [selectedLeader, setSelectedLeader] = useState<TeamMember | null>(null)
   const [hoveredMemberName, setHoveredMemberName] = useState<string | null>(null)
   const [selectedMemberModal, setSelectedMemberModal] = useState<TeamMember | null>(null)
+  const [showLevel2, setShowLevel2] = useState(false)
 
   // Viewport & Filter Controls
   const [zoomLevel, setZoomLevel] = useState(1)
@@ -222,14 +238,14 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
         const { clientWidth, clientHeight } = containerRef.current
         setDimensions({
           width: Math.max(clientWidth, 600),
-          height: Math.max(clientHeight, 520)
+          height: Math.max(clientHeight, 500)
         })
       }
     }
     updateDimensions()
     window.addEventListener("resize", updateDimensions)
     return () => window.removeEventListener("resize", updateDimensions)
-  }, [])
+  }, [selectedLeader])
 
   // =========================================================
   // 1. TOP PERMANENT CORE MEMBERS
@@ -286,65 +302,57 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
       const leaderName = leader.name.toLowerCase()
 
       if (leaderName.includes("ismile")) {
+        const technicalNames = [
+          "aarav sharma",
+          "nisha patel",
+          "rohan verma",
+          "ananya gupta",
+          "yash trivedi",
+          "siddharth mehta",
+          "neha sharma"
+        ]
         return team.filter((m) => {
           if (m.name.toLowerCase().includes("ismile")) return false
-          if (
-            m.name.toLowerCase().includes("shruti") ||
-            m.name.toLowerCase().includes("kunal") ||
-            m.name.toLowerCase().includes("maitri")
-          )
-            return false
-          const r = (m.reportsTo || "").toLowerCase()
-          return (
-            r.includes("ismile") ||
-            m.category === "Technical" ||
-            m.role.toLowerCase().includes("tech") ||
-            m.role.toLowerCase().includes("lead") ||
-            m.role.toLowerCase().includes("dev")
-          )
+          if (m.reportsTo) {
+            return m.reportsTo.toLowerCase().includes("ismile")
+          }
+          return technicalNames.includes(m.name.toLowerCase())
         })
       }
 
       if (leaderName.includes("purnima")) {
+        const incubatorNames = [
+          "karan shah",
+          "rohan das",
+          "neha sharma",
+          "siddharth mehta",
+          "priya joshi",
+          "aarav sharma"
+        ]
         return team.filter((m) => {
           if (m.name.toLowerCase().includes("purnima")) return false
-          if (
-            m.name.toLowerCase().includes("shruti") ||
-            m.name.toLowerCase().includes("kunal") ||
-            m.name.toLowerCase().includes("maitri")
-          )
-            return false
-          const r = (m.reportsTo || "").toLowerCase()
-          return (
-            r.includes("purnima") ||
-            (m.category as string) === "Operations" ||
-            m.role.toLowerCase().includes("product") ||
-            m.role.toLowerCase().includes("treasury") ||
-            m.role.toLowerCase().includes("ops") ||
-            m.role.toLowerCase().includes("incubator")
-          )
+          if (m.reportsTo) {
+            return m.reportsTo.toLowerCase().includes("purnima")
+          }
+          return incubatorNames.includes(m.name.toLowerCase())
         })
       }
 
       if (leaderName.includes("abhishek")) {
+        const marketingNames = [
+          "aaryan patel",
+          "kabir mehta",
+          "riya patel",
+          "sneha iyer",
+          "priya joshi",
+          "maitri patel"
+        ]
         return team.filter((m) => {
           if (m.name.toLowerCase().includes("abhishek")) return false
-          if (
-            m.name.toLowerCase().includes("shruti") ||
-            m.name.toLowerCase().includes("kunal") ||
-            m.name.toLowerCase().includes("maitri")
-          )
-            return false
-          const r = (m.reportsTo || "").toLowerCase()
-          return (
-            r.includes("abhishek") ||
-            r.includes("aaryan") ||
-            m.category === "Marketing" ||
-            m.role.toLowerCase().includes("outreach") ||
-            m.role.toLowerCase().includes("pr") ||
-            m.role.toLowerCase().includes("brand") ||
-            m.role.toLowerCase().includes("sponsorship")
-          )
+          if (m.reportsTo) {
+            return m.reportsTo.toLowerCase().includes("abhishek")
+          }
+          return marketingNames.includes(m.name.toLowerCase())
         })
       }
 
@@ -387,24 +395,23 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
     }
   }
 
-  // Radial Star Topology Coordinates for Subordinate Members (Spread across canvas)
+  // Radial Star Topology Coordinates for Subordinate Members (Spread in a circle around center)
   const getStarMemberPosition = (index: number, total: number) => {
-    const cx = dimensions.width * 0.42
-    const cy = dimensions.height * 0.46
+    const cx = dimensions.width / 2
+    const cy = dimensions.height / 2
 
-    if (total === 0) return { x: cx, y: cy }
+    if (total === 0) return { x: cx, y: cy, angle: 0 }
 
-    let baseRadius = 260
-    if (total > 6) baseRadius = 280
-    if (total > 10) baseRadius = 310
+    // Dynamic radius to fit perfectly in viewport
+    const rx = Math.min(340, dimensions.width * 0.35)
+    const ry = Math.min(170, dimensions.height * 0.34)
 
-    const radius = Math.min(baseRadius, Math.min(dimensions.width * 0.35, dimensions.height * 0.36))
-
+    // Distribute angles evenly starting from top (-PI / 2)
     const angleStep = (2 * Math.PI) / total
     const angle = index * angleStep - Math.PI / 2
 
-    const x = cx + radius * Math.cos(angle)
-    const y = cy + radius * Math.sin(angle)
+    const x = cx + rx * Math.cos(angle)
+    const y = cy + ry * Math.sin(angle)
 
     return { x, y, angle }
   }
@@ -484,18 +491,18 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
       </AnimatePresence>
 
       {/* Controls Bar */}
-      <div className="relative z-20 border-b border-slate-800/60 bg-transparent p-4 sm:p-5 font-mono space-y-4">
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="relative z-20 border-b border-slate-800/60 bg-transparent p-3 sm:p-4 font-mono space-y-2">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
 
           <div>
-            <div className="flex items-center gap-2 font-mono text-xs text-cyan-400 font-bold uppercase tracking-widest">
+            <div className="flex items-center gap-2 font-mono text-[10px] sm:text-xs text-cyan-400 font-bold uppercase tracking-widest">
               <span className="size-2 bg-emerald-400 rounded-full animate-pulse shadow-[0_0_8px_#10b981]" />
               ● {selectedLeader ? `STAR TOPOLOGY HUB :: ${selectedLeader.name.toUpperCase()}` : "LEADERS RING TOPOLOGY ACTIVE"}
             </div>
 
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-white font-mono tracking-tight mt-1 flex items-center gap-3">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-white font-mono tracking-tight mt-0.5 flex items-center gap-3">
               CODERITHUM NETWORK
-              <span className="text-xs font-mono font-normal text-slate-400 bg-slate-800 border border-slate-700 px-2.5 py-1 hidden sm:inline-block">
+              <span className="text-[10px] font-mono font-normal text-slate-400 bg-slate-800 border border-slate-700 px-2 py-0.5 hidden sm:inline-block">
                 {selectedLeader ? `${selectedLeaderMembers.length} CONNECTED NODES` : "3 RING LEADERS"}
               </span>
             </h2>
@@ -507,33 +514,33 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 onClick={handleResetToRing}
-                className="px-3 py-1.5 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border-2 border-cyan-500 text-xs font-bold uppercase flex items-center gap-1.5 shadow-[2px_2px_0px_#000] cursor-pointer transition-all"
+                className="px-2.5 py-1.5 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border-2 border-cyan-500 text-[10px] font-bold uppercase flex items-center gap-1.5 shadow-[2px_2px_0px_#000] cursor-pointer transition-all"
               >
-                <ArrowLeft className="size-4" /> ← BACK TO RING
+                <ArrowLeft className="size-3.5" /> ← BACK TO RING
               </motion.button>
             )}
 
-            <div className="flex border-2 border-slate-800 bg-slate-950 p-1 shadow-[2px_2px_0px_#000]">
+            <div className="flex border-2 border-slate-800 bg-slate-950 p-0.5 shadow-[2px_2px_0px_#000]">
               <button
                 onClick={() => setZoomLevel((prev) => Math.min(prev + 0.15, 1.35))}
-                className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition-colors"
+                className="p-1 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition-colors"
                 title="Zoom In"
               >
-                <ZoomIn className="size-4" />
+                <ZoomIn className="size-3.5" />
               </button>
               <button
                 onClick={() => setZoomLevel((prev) => Math.max(prev - 0.15, 0.75))}
-                className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition-colors border-l border-slate-800"
+                className="p-1 hover:bg-slate-800 text-slate-300 hover:text-cyan-400 transition-colors border-l border-slate-800"
                 title="Zoom Out"
               >
-                <ZoomOut className="size-4" />
+                <ZoomOut className="size-3.5" />
               </button>
               <button
                 onClick={handleResetToRing}
-                className="p-1.5 hover:bg-slate-800 text-slate-300 hover:text-amber-400 transition-colors border-l border-slate-800"
+                className="p-1 hover:bg-slate-800 text-slate-300 hover:text-amber-400 transition-colors border-l border-slate-800"
                 title="Reset View"
               >
-                <RotateCcw className="size-4" />
+                <RotateCcw className="size-3.5" />
               </button>
             </div>
           </div>
@@ -542,19 +549,19 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
 
         {/* Search Bar Input */}
         {selectedLeader && (
-          <div className="relative w-full max-w-md">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
+          <div className="relative w-full max-w-sm">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-slate-400" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={`Search ${selectedLeader.name}'s team members...`}
-              className="w-full h-9 pl-9 pr-4 bg-slate-950 border-2 border-slate-800 text-xs font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all shadow-[2px_2px_0px_#000]"
+              placeholder={`Search ${selectedLeader.name}'s team...`}
+              className="w-full h-8 pl-8 pr-4 bg-slate-950 border-2 border-slate-800 text-[11px] font-mono text-white placeholder-slate-500 focus:outline-none focus:border-cyan-500 transition-all shadow-[2px_2px_0px_#000]"
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-500 hover:text-white cursor-pointer"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[9px] font-mono text-slate-500 hover:text-white cursor-pointer"
               >
                 [CLEAR]
               </button>
@@ -567,319 +574,380 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
       {/* 1. PERMANENT CORE & TEAM LEADERSHIP CARDS (RING VIEW ONLY) */}
       {/* ========================================================= */}
       {!selectedLeader && (
-        <div className="relative z-20 px-4 sm:px-8 py-4 font-mono select-none">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-2 mb-4 max-w-6xl mx-auto">
-            <span className="text-xs font-extrabold text-emerald-400 tracking-wider flex items-center gap-2 uppercase">
-              <GraduationCap className="size-4 text-emerald-400" />
+        <div className="relative z-20 px-3 sm:px-6 py-2.5 font-mono select-none">
+          <div className="flex items-center justify-between border-b border-slate-800 pb-1.5 mb-3 max-w-6xl mx-auto">
+            <span className="text-[11px] font-extrabold text-emerald-400 tracking-wider flex items-center gap-2 uppercase">
+              <GraduationCap className="size-3.5 text-emerald-400" />
               PERMANENT CORE & DOMAIN LEADERSHIP
             </span>
-            <span className="text-[10px] text-slate-400 font-bold bg-slate-800 border border-slate-700 px-2 py-0.5">
+            <span className="text-[9px] text-slate-400 font-bold bg-slate-800 border border-slate-700 px-2 py-0.5">
               ALWAYS VISIBLE
             </span>
           </div>
-
-          <div className="space-y-8 sm:space-y-10 max-w-6xl mx-auto py-2 px-4">
-
-            {/* ROW 1: FACULTY, PRESIDENT, VICE PRESIDENT */}
-            <div className="space-y-3">
-              <div className="text-[10px] text-emerald-400 font-extrabold tracking-widest uppercase text-center">
+          <div className="space-y-5 max-w-6xl mx-auto py-1 px-2">
+            
+            {/* LEVEL 1: PERMANENT CORE EXECUTIVE BOARD */}
+            <div className="space-y-2">
+              <div className="text-[9px] text-emerald-400 font-extrabold tracking-widest uppercase text-center w-full">
                 ▲ LEVEL 1: PERMANENT CORE EXECUTIVE BOARD
               </div>
-              <div className="flex flex-wrap lg:flex-nowrap justify-center items-center gap-10 sm:gap-14 md:gap-20">
+              <div className="flex flex-wrap lg:flex-nowrap justify-center items-center gap-6 sm:gap-10 md:gap-14 w-full">
                 <NetworkNodeCard
                   member={facultyMember}
                   badgeText="FACULTY"
                   themeColor="emerald"
                   prefersReducedMotion={prefersReducedMotion}
+                  compact={false}
+                  isPremium={true}
                 />
                 <NetworkNodeCard
                   member={presidentMember}
                   badgeText="PRESIDENT"
                   themeColor="amber"
                   prefersReducedMotion={prefersReducedMotion}
+                  compact={false}
+                  isPremium={true}
                 />
                 <NetworkNodeCard
                   member={vpMember}
                   badgeText="VICE PRESIDENT"
                   themeColor="cyan"
                   prefersReducedMotion={prefersReducedMotion}
+                  compact={false}
+                  isPremium={true}
                 />
               </div>
             </div>
 
-
-
-            {/* ROW 2: MD ISMILE, PURNIMA, ABHISHEK IN CIRCULAR RING TOPOLOGY FORMATION */}
-            <div className="space-y-4 relative">
-              <div className="text-[10px] text-cyan-400 font-extrabold tracking-widest uppercase text-center flex items-center justify-center gap-2">
-                <span className="size-2 bg-cyan-400 rounded-full animate-ping" />
-                ▼ LEVEL 2: CIRCULAR RING TOPOLOGY DOMAIN LEADS (COMPACT NODE CARDS)
-              </div>
-
-              {/* CIRCULAR RING TOPOLOGY CONTAINER */}
-              <div className="relative w-full h-[520px] bg-transparent overflow-visible flex items-center justify-center my-4">
-
-                {/* SVG CIRCULAR RING TOPOLOGY PATH & ANIMATED ORBITING DATA PULSE */}
-                <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-                  <motion.ellipse
-                    cx="50%"
-                    cy="50%"
-                    rx="32%"
-                    ry="26%"
-                    fill="none"
-                    stroke="#22d3ee"
-                    strokeWidth="2"
-                    strokeDasharray="6 6"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 0.7 }}
-                    transition={{ duration: 0.5 }}
-                  />
-                  {!prefersReducedMotion && (
-                    <motion.circle
-                      r="4.5"
-                      fill="#22d3ee"
-                      animate={{
-                        cx: ["50%", "82%", "50%", "18%", "50%"],
-                        cy: ["24%", "50%", "76%", "50%", "24%"]
-                      }}
-                      transition={{
-                        repeat: Infinity,
-                        duration: 5.5,
-                        ease: "linear"
-                      }}
-                    />
-                  )}
-                </svg>
-
-                {/* THE 3 LEAD CARDS ARRANGED IN A CIRCULAR RING TOPOLOGY */}
-
-                {/* 1. TOP RING NODE: MD ISMILE (CHIEF TECHNICAL LEAD) */}
-                {ismileLeader && (
-                  <div
-                    className="absolute left-[50%] top-[24%] z-10"
-                    style={{ transform: "translate(-50%, -50%)" }}
-                  >
-                    <NetworkNodeCard
-                      member={ismileLeader}
-                      badgeText={ismileLeader.category.toUpperCase()}
-                      themeColor="cyan"
-                      compact={true}
-                      memberCount={getMembersForLeader(ismileLeader).length}
-                      onClick={() => handleLeaderClick(ismileLeader)}
-                      prefersReducedMotion={prefersReducedMotion}
-                    />
-                  </div>
+            {/* INTERACTIVE ARROW TOGGLE FOR LEVEL 2 */}
+            <div className="flex flex-col items-center justify-center pt-2 pb-1 border-t border-slate-900">
+              <motion.button
+                onClick={() => setShowLevel2(prev => !prev)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-4 py-2 border-2 border-slate-900 bg-slate-950 text-cyan-400 font-mono text-[10px] font-black uppercase tracking-wider flex items-center gap-2 shadow-[2px_2px_0px_#000] cursor-pointer hover:bg-slate-900 transition-all z-30"
+              >
+                {showLevel2 ? (
+                  <>
+                    <ChevronUp className="size-3.5 animate-bounce" />
+                    [ COLLAPSE DOMAIN LEADS ]
+                  </>
+                ) : (
+                  <>
+                    <ChevronDown className="size-3.5 animate-bounce" />
+                    [ EXPAND DOMAIN LEADS ]
+                  </>
                 )}
-
-                {/* 2. BOTTOM-LEFT RING NODE: PURNIMA UPADHYAY (INCUBATOR & OPS LEAD) */}
-                {purnimaLeader && (
-                  <div
-                    className="absolute left-[24%] top-[76%] z-10"
-                    style={{ transform: "translate(-50%, -50%)" }}
-                  >
-                    <NetworkNodeCard
-                      member={purnimaLeader}
-                      badgeText={purnimaLeader.category.toUpperCase()}
-                      themeColor="cyan"
-                      compact={true}
-                      memberCount={getMembersForLeader(purnimaLeader).length}
-                      onClick={() => handleLeaderClick(purnimaLeader)}
-                      prefersReducedMotion={prefersReducedMotion}
-                    />
-                  </div>
-                )}
-
-                {/* 3. BOTTOM-RIGHT RING NODE: ABHISHEK KUMAR (BRAND LEAD) */}
-                {abhishekLeader && (
-                  <div
-                    className="absolute left-[76%] top-[76%] z-10"
-                    style={{ transform: "translate(-50%, -50%)" }}
-                  >
-                    <NetworkNodeCard
-                      member={abhishekLeader}
-                      badgeText={abhishekLeader.category.toUpperCase()}
-                      themeColor="cyan"
-                      compact={true}
-                      memberCount={getMembersForLeader(abhishekLeader).length}
-                      onClick={() => handleLeaderClick(abhishekLeader)}
-                      prefersReducedMotion={prefersReducedMotion}
-                    />
-                  </div>
-                )}
-
-              </div>
+              </motion.button>
             </div>
 
+            {/* LEVEL 2: CIRCULAR RING TOPOLOGY CARDS (COLLAPSIBLE) */}
+            <AnimatePresence>
+              {showLevel2 && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: dimensions.width < 768 ? "auto" : 420, opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="relative w-full bg-transparent overflow-hidden flex flex-col md:block items-center justify-center gap-6 md:gap-0 my-2"
+                >
+                  {/* SVG CIRCULAR LOOP ELLIPSE PATH & ANIMATED ORBITING DATA PULSE */}
+                  <svg className="hidden md:block absolute inset-0 w-full h-full pointer-events-none z-0">
+                    <motion.ellipse
+                      cx="50%"
+                      cy="50%"
+                      rx="28%"
+                      ry="22%"
+                      fill="none"
+                      stroke="#22d3ee"
+                      strokeWidth="2"
+                      strokeDasharray="6 6"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 0.7 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                    {!prefersReducedMotion && (
+                      <motion.circle
+                        r="4"
+                        fill="#22d3ee"
+                        animate={{
+                          cx: ["50%", "78%", "50%", "22%", "50%"],
+                          cy: ["28%", "50%", "72%", "50%", "28%"] // Orbit relative to cy = 50%, ry = 22%
+                        }}
+                        transition={{
+                          repeat: Infinity,
+                          duration: 5.5,
+                          ease: "linear"
+                        }}
+                      />
+                    )}
+                  </svg>
+
+                  {/* 1. TOP RING NODE: MD ISMILE (CHIEF TECHNICAL LEAD) */}
+                  {ismileLeader && (
+                    <div className="relative md:absolute md:left-[50%] md:top-[28%] md:-translate-x-1/2 md:-translate-y-1/2 z-10 w-full md:w-auto flex justify-center">
+                      <NetworkNodeCard
+                        member={ismileLeader}
+                        badgeText={ismileLeader.category.toUpperCase()}
+                        themeColor="cyan"
+                        compact={true}
+                        memberCount={getMembersForLeader(ismileLeader).length}
+                        onClick={() => handleLeaderClick(ismileLeader)}
+                        prefersReducedMotion={prefersReducedMotion}
+                      />
+                    </div>
+                  )}
+
+                  {/* 2. BOTTOM-LEFT RING NODE: PURNIMA UPADHYAY (INCUBATOR & OPS LEAD) */}
+                  {purnimaLeader && (
+                    <div className="relative md:absolute md:left-[22%] md:top-[72%] md:-translate-x-1/2 md:-translate-y-1/2 z-10 w-full md:w-auto flex justify-center">
+                      <NetworkNodeCard
+                        member={purnimaLeader}
+                        badgeText={purnimaLeader.category.toUpperCase()}
+                        themeColor="cyan"
+                        compact={true}
+                        memberCount={getMembersForLeader(purnimaLeader).length}
+                        onClick={() => handleLeaderClick(purnimaLeader)}
+                        prefersReducedMotion={prefersReducedMotion}
+                      />
+                    </div>
+                  )}
+
+                  {/* 3. BOTTOM-RIGHT RING NODE: ABHISHEK KUMAR (BRAND LEAD) */}
+                  {abhishekLeader && (
+                    <div className="relative md:absolute md:left-[78%] md:top-[72%] md:-translate-x-1/2 md:-translate-y-1/2 z-10 w-full md:w-auto flex justify-center">
+                      <NetworkNodeCard
+                        member={abhishekLeader}
+                        badgeText={abhishekLeader.category.toUpperCase()}
+                        themeColor="cyan"
+                        compact={true}
+                        memberCount={getMembersForLeader(abhishekLeader).length}
+                        onClick={() => handleLeaderClick(abhishekLeader)}
+                        prefersReducedMotion={prefersReducedMotion}
+                      />
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       )}
 
-      {/* ========================================================= */}
-      {/* 2. STAR TOPOLOGY CANVAS AREA (DISPLAYED WHEN LEADER SELECTED) */}
-      {/* ========================================================= */}
       {selectedLeader && (
-        <div
-          ref={containerRef}
-          className="relative w-full min-h-[640px] h-[680px] overflow-hidden p-4 transition-all duration-300 select-none"
-        >
+        <>
+          {/* Desktop/Tablet interactive SVG Star Topology */}
           <div
-            className="relative w-full h-full transition-transform duration-300 origin-center flex items-center justify-center"
-            style={{ transform: `scale(${zoomLevel})` }}
+            className="hidden md:block relative w-full min-h-[460px] h-[500px] overflow-hidden p-4 transition-all duration-300 select-none"
           >
-            {/* SVG CONNECTIONS FOR SELECTED LEADER STAR TOPOLOGY */}
-            <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
-              <defs>
-                <linearGradient id="cyanLineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.9" />
-                  <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.4" />
-                </linearGradient>
-              </defs>
+            <div
+              ref={containerRef}
+              className="relative w-full h-full transition-transform duration-300 origin-center"
+              style={{ transform: `scale(${zoomLevel})` }}
+            >
+              {/* SVG CONNECTIONS FOR SELECTED LEADER STAR TOPOLOGY */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none z-0">
+                <defs>
+                  <linearGradient id="cyanLineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.4" />
+                  </linearGradient>
+                </defs>
 
-              {selectedLeaderMembers.map((member, idx) => {
-                const centerPos = { x: dimensions.width - 160, y: dimensions.height - 110 }
-                const memberPos = getStarMemberPosition(idx, selectedLeaderMembers.length)
-                const isHovered = hoveredMemberName === member.name
+                {selectedLeaderMembers.map((member, idx) => {
+                  const centerPos = { x: dimensions.width / 2, y: dimensions.height / 2 }
+                  const memberPos = getStarMemberPosition(idx, selectedLeaderMembers.length)
+                  const isHovered = hoveredMemberName === member.name
 
-                // Branch line connecting from bottom-right leader card to team member card
-                const pathD = `M ${centerPos.x} ${centerPos.y} L ${memberPos.x} ${memberPos.y}`
+                  // Branch line connecting from center leader card to team member card
+                  const pathD = `M ${centerPos.x} ${centerPos.y} L ${memberPos.x} ${memberPos.y}`
 
-                return (
-                  <g key={`star-branch-${member.name}`}>
-                    <motion.path
-                      d={pathD}
-                      fill="none"
-                      stroke={isHovered ? "#22d3ee" : "#3b82f6"}
-                      strokeWidth={isHovered ? 2.5 : 1.5}
-                      strokeDasharray={isHovered ? "none" : "4 4"}
-                      initial={{ pathLength: 0, opacity: 0 }}
-                      animate={{ pathLength: 1, opacity: 0.7 }}
-                      transition={{ duration: prefersReducedMotion ? 0.1 : 0.45, delay: idx * 0.05 }}
-                    />
-
-                    {!prefersReducedMotion && (
-                      <motion.circle
-                        r={isHovered ? 3.5 : 2}
-                        fill="#22d3ee"
-                        animate={{ offsetDistance: ["0%", "100%"] }}
-                        transition={{
-                          repeat: Infinity,
-                          duration: 2.0 + (idx % 3) * 0.4,
-                          ease: "linear"
-                        }}
-                        style={{ offsetPath: `path("${pathD}")` }}
+                  return (
+                    <g key={`star-branch-${member.name}`}>
+                      <motion.path
+                        d={pathD}
+                        fill="none"
+                        stroke={isHovered ? "#22d3ee" : "#3b82f6"}
+                        strokeWidth={isHovered ? 2.5 : 1.5}
+                        strokeDasharray={isHovered ? "none" : "4 4"}
+                        initial={{ pathLength: 0, opacity: 0 }}
+                        animate={{ pathLength: 1, opacity: 0.7 }}
+                        transition={{ duration: prefersReducedMotion ? 0.1 : 0.45, delay: idx * 0.05 }}
                       />
-                    )}
-                  </g>
-                )
-              })}
-            </svg>
 
-            {/* SELECTED LEADER DOCKED AT RIGHT BOTTOM POSITION */}
-            <div className="absolute right-6 bottom-6 z-40">
-              <NetworkNodeCard
-                member={selectedLeader}
-                badgeText={selectedLeader.category.toUpperCase()}
-                themeColor="cyan"
-                isSelected={true}
-                isHub={true}
-                memberCount={getMembersForLeader(selectedLeader).length}
-                onClick={() => handleLeaderClick(selectedLeader)}
-                prefersReducedMotion={prefersReducedMotion}
-              />
+                      {!prefersReducedMotion && (
+                        <motion.circle
+                          r={isHovered ? 3.5 : 2}
+                          fill="#22d3ee"
+                          animate={{ offsetDistance: ["0%", "100%"] }}
+                          transition={{
+                            repeat: Infinity,
+                            duration: 2.0 + (idx % 3) * 0.4,
+                            ease: "linear"
+                          }}
+                          style={{ offsetPath: `path("${pathD}")` }}
+                        />
+                      )}
+                    </g>
+                  )
+                })}
+              </svg>
+
+               {/* SELECTED LEADER DOCKED AT CENTER POSITION */}
+              <div 
+                className="absolute -translate-x-1/2 -translate-y-1/2 z-40"
+                style={{ left: dimensions.width / 2, top: dimensions.height / 2 }}
+              >
+                <NetworkNodeCard
+                  member={selectedLeader}
+                  badgeText={selectedLeader.category.toUpperCase()}
+                  themeColor="cyan"
+                  isSelected={true}
+                  isHub={true}
+                  compact={true}
+                  memberCount={getMembersForLeader(selectedLeader).length}
+                  onClick={() => handleLeaderClick(selectedLeader)}
+                  prefersReducedMotion={prefersReducedMotion}
+                />
+              </div>
+
+              {/* ========================================================= */}
+              {/* STAR TOPOLOGY SUBORDINATE MEMBERS                         */}
+              {/* ========================================================= */}
+              <AnimatePresence>
+                {selectedLeader && (
+                  <motion.div
+                    key={`star-network-${selectedLeader.name}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 w-full h-full pointer-events-auto"
+                  >
+                    {selectedLeaderMembers.map((member, idx) => {
+                      const pos = getStarMemberPosition(idx, selectedLeaderMembers.length)
+                      const isHovered = hoveredMemberName === member.name
+                      const tier = getMemberTierLevel(member)
+
+                      return (
+                        <motion.div
+                          key={member.name}
+                          initial={{
+                            opacity: 0,
+                            scale: 0.5,
+                            x: dimensions.width / 2 - 90,
+                            y: dimensions.height / 2 - 50
+                          }}
+                          animate={{
+                            opacity: 1,
+                            scale: isHovered ? 1.08 : 1,
+                            x: pos.x - 90,
+                            y: pos.y - 50
+                          }}
+                          transition={{
+                            type: "spring",
+                            stiffness: 120,
+                            damping: 14,
+                            delay: prefersReducedMotion ? 0 : idx * 0.05
+                          }}
+                          onMouseEnter={() => setHoveredMemberName(member.name)}
+                          onMouseLeave={() => setHoveredMemberName(null)}
+                          onClick={() => {
+                            setSelectedMemberModal(member)
+                            if (onSelectMember) onSelectMember(member)
+                          }}
+                          className={`absolute w-44 sm:w-48 p-2.5 bg-slate-950 border-2 cursor-pointer select-none group transition-all duration-200 ${isHovered
+                            ? "border-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.4)] z-30"
+                            : "border-slate-800 bg-slate-950/90 z-20"
+                            }`}
+                        >
+                          {/* Pixel Corners */}
+                          <div className="absolute -top-1 -left-1 size-1.5 bg-cyan-400 border border-slate-900" />
+                          <div className="absolute -top-1 -right-1 size-1.5 bg-cyan-400 border border-slate-900" />
+                          <div className="absolute -bottom-1 -left-1 size-1.5 bg-cyan-400 border border-slate-900" />
+                          <div className="absolute -bottom-1 -right-1 size-1.5 bg-cyan-400 border border-slate-900" />
+
+                          <div className="flex items-center gap-2.5 font-mono">
+                            <div className="relative size-10 shrink-0 border border-slate-700 bg-slate-100 overflow-hidden shadow-[1px_1px_0px_#000]">
+                              <img
+                                src={member.avatar}
+                                alt={member.name}
+                                style={getMemberAvatarStyle(member)}
+                                className="w-full h-full object-cover"
+                                onError={(e: any) => {
+                                  e.target.src =
+                                    "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80"
+                                }}
+                              />
+                            </div>
+
+                            <div className="min-w-0 flex-1">
+                              <h4 className="text-[11px] font-bold text-white truncate group-hover:text-cyan-400 transition-colors">
+                                {member.name}
+                              </h4>
+                              <p className="text-[8px] text-slate-400 line-clamp-2 leading-tight mt-0.5">{member.role}</p>
+                            </div>
+                          </div>
+
+                          <div className="mt-2 pt-1 border-t border-slate-800/80 flex items-center justify-between font-mono text-[8px]">
+                            <span className={`px-1 py-0.5 border text-[7px] uppercase font-bold ${getTierBadgeStyle(tier)}`}>
+                              Tier {tier}
+                            </span>
+                            <span className="text-slate-500 uppercase font-mono">{member.category}</span>
+                          </div>
+                        </motion.div>
+                      )
+                    })}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+            </div>
+          </div>
+
+          {/* Mobile responsive grid layout */}
+          <div className="block md:hidden px-4 py-4 space-y-4 font-mono select-none">
+            <div className="flex flex-col items-center p-4 bg-slate-900/60 border border-slate-800 rounded-none mb-2">
+              <span className="text-[10px] text-cyan-400 font-bold uppercase tracking-wider">TEAM HUB</span>
+              <div className="text-white font-extrabold text-sm mt-1">{selectedLeader.name}'s Division</div>
+              <p className="text-[10px] text-slate-400 mt-1 font-mono text-center">
+                Managing {selectedLeaderMembers.length} active node integrations
+              </p>
             </div>
 
-            {/* ========================================================= */}
-            {/* STAR TOPOLOGY SUBORDINATE MEMBERS                         */}
-            {/* ========================================================= */}
-            <AnimatePresence>
-              {selectedLeader && (
-                <motion.div
-                  key={`star-network-${selectedLeader.name}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  className="absolute inset-0 w-full h-full pointer-events-auto"
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {selectedLeaderMembers.map((member) => (
+                <div
+                  key={member.name}
+                  onClick={() => {
+                    setSelectedMemberModal(member)
+                    if (onSelectMember) onSelectMember(member)
+                  }}
+                  className="flex items-center gap-3 p-3 bg-slate-950 border border-slate-800 hover:border-cyan-500 transition-colors cursor-pointer"
                 >
-                  {selectedLeaderMembers.map((member, idx) => {
-                    const pos = getStarMemberPosition(idx, selectedLeaderMembers.length)
-                    const isHovered = hoveredMemberName === member.name
-                    const tier = getMemberTierLevel(member)
-
-                    return (
-                      <motion.div
-                        key={member.name}
-                        initial={{
-                          opacity: 0,
-                          scale: 0.5,
-                          x: dimensions.width / 2 - 90,
-                          y: dimensions.height / 2 - 50
-                        }}
-                        animate={{
-                          opacity: 1,
-                          scale: isHovered ? 1.08 : 1,
-                          x: pos.x - 90,
-                          y: pos.y - 50
-                        }}
-                        transition={{
-                          type: "spring",
-                          stiffness: 120,
-                          damping: 14,
-                          delay: prefersReducedMotion ? 0 : idx * 0.05
-                        }}
-                        onMouseEnter={() => setHoveredMemberName(member.name)}
-                        onMouseLeave={() => setHoveredMemberName(null)}
-                        onClick={() => {
-                          setSelectedMemberModal(member)
-                          if (onSelectMember) onSelectMember(member)
-                        }}
-                        className={`absolute w-44 sm:w-48 p-2.5 bg-slate-950 border-2 cursor-pointer select-none group transition-all duration-200 ${isHovered
-                          ? "border-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.4)] z-30"
-                          : "border-slate-800 bg-slate-950/90 z-20"
-                          }`}
-                      >
-                        {/* Pixel Corners */}
-                        <div className="absolute -top-1 -left-1 size-1.5 bg-cyan-400 border border-slate-900" />
-                        <div className="absolute -top-1 -right-1 size-1.5 bg-cyan-400 border border-slate-900" />
-                        <div className="absolute -bottom-1 -left-1 size-1.5 bg-cyan-400 border border-slate-900" />
-                        <div className="absolute -bottom-1 -right-1 size-1.5 bg-cyan-400 border border-slate-900" />
-
-                        <div className="flex items-center gap-2.5 font-mono">
-                          <div className="relative size-10 shrink-0 border border-slate-700 bg-slate-900 overflow-hidden shadow-[1px_1px_0px_#000]">
-                            <img
-                              src={member.avatar}
-                              alt={member.name}
-                              style={getMemberAvatarStyle(member)}
-                              className="w-full h-full object-cover"
-                              onError={(e: any) => {
-                                e.target.src =
-                                  "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80"
-                              }}
-                            />
-                          </div>
-
-                          <div className="min-w-0 flex-1">
-                            <h4 className="text-[11px] font-bold text-white truncate group-hover:text-cyan-400 transition-colors">
-                              {member.name}
-                            </h4>
-                            <p className="text-[8px] text-slate-400 line-clamp-2 leading-tight mt-0.5">{member.role}</p>
-                          </div>
-                        </div>
-
-                        <div className="mt-2 pt-1 border-t border-slate-800/80 flex items-center justify-between font-mono text-[8px]">
-                          <span className={`px-1 py-0.5 border text-[7px] uppercase font-bold ${getTierBadgeStyle(tier)}`}>
-                            Tier {tier}
-                          </span>
-                          <span className="text-slate-500 uppercase font-mono">{member.category}</span>
-                        </div>
-                      </motion.div>
-                    )
-                  })}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
+                  <div className="relative size-12 shrink-0 border border-slate-700 bg-slate-100 overflow-hidden shadow-[1px_1px_0px_#000]">
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      style={getMemberAvatarStyle(member)}
+                      className="w-full h-full object-cover"
+                      onError={(e: any) => {
+                        e.target.src =
+                          "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80"
+                      }}
+                    />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="text-xs font-bold text-white truncate">{member.name}</h4>
+                    <p className="text-[10px] text-slate-400 truncate leading-tight">{member.role}</p>
+                    <span className="inline-block text-[8px] uppercase font-bold text-cyan-400 border border-cyan-950 bg-cyan-950/40 px-1.5 py-0.5 mt-1">
+                      Tier {getMemberTierLevel(member)}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
 
       {/* Floating Info Drawer on Hover */}

@@ -242,9 +242,9 @@ export default function SuperAdminDashboardPage() {
       </div>
 
       {/* Main Grid Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow min-h-0">
-        {/* Quick Operations (2 cols) */}
-        <Card className="lg:col-span-2 p-6 flex flex-col justify-between">
+      <div className="grid grid-cols-1 gap-6 flex-grow min-h-0">
+        {/* Quick Operations */}
+        <Card className="p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-3 border-b-2 border-slate-900 pb-3 mb-4">
               <div className="p-1.5 rounded bg-emerald-50 text-emerald-600 border-2 border-emerald-600 shadow-[1.5px_1.5px_0px_#000]">
@@ -257,16 +257,6 @@ export default function SuperAdminDashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link href="/superadmin/hero" className="group p-4 bg-white border-2 border-slate-900 hover:border-blue-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
-                <div>
-                  <Sparkles className="size-5 text-blue-600 mb-2" />
-                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-blue-600 transition-colors">Hero Theme Manager</h3>
-                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Customize hero banner presets, canvas background styles, text titles, and CTAs.</p>
-                </div>
-                <div className="flex items-center gap-1.5 text-[9px] font-bold text-blue-600 font-mono uppercase tracking-wider pt-2">
-                  Launch Manager <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
-                </div>
-              </Link>
 
               <Link href="/superadmin/announcements" className="group p-4 bg-white border-2 border-slate-900 hover:border-emerald-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
                 <div>
@@ -312,91 +302,7 @@ export default function SuperAdminDashboardPage() {
           </div>
         </Card>
 
-        {/* Theme & Hero Manager Panel (1 col) */}
-        <Card className="p-6 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center gap-3 border-b-2 border-slate-900 pb-3 mb-4">
-              <div className="p-1.5 rounded bg-blue-50 text-blue-600 border-2 border-blue-600 shadow-[1.5px_1.5px_0px_#000]">
-                <Palette className="size-4" />
-              </div>
-              <div>
-                <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">Theme & Hero</h2>
-                <p className="text-[9px] text-slate-500 font-mono">Select theme preset directly.</p>
-              </div>
-            </div>
 
-            <div className="space-y-4">
-              {/* Preset Selector */}
-              <div>
-                <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1.5 block font-mono">Theme Presets</label>
-                <select
-                  value={heroConfig.presetId}
-                  onChange={(e) => handleApplyPreset(e.target.value)}
-                  className="w-full h-10 px-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono cursor-pointer"
-                >
-                  <option value="ice-canvas">🧊 Default Ice Canvas</option>
-                  <option value="makarsankranti">🪁 Makar Sankranti</option>
-                  <option value="dussehra">🏹 Dussehra</option>
-                  <option value="christmas">🎄 Christmas</option>
-                  <option value="holi">🎨 Holi</option>
-                  <option value="diwali">🪔 Diwali</option>
-                </select>
-              </div>
-
-              {/* Text Fields to customize Hero Details */}
-              <div className="space-y-3 pt-2 border-t border-dashed border-slate-200">
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 block font-mono">Hero Badge</label>
-                  <input
-                    type="text"
-                    value={heroConfig.badgeText}
-                    onChange={(e) => setHeroConfig({ ...heroConfig, badgeText: e.target.value, presetId: "custom" })}
-                    className="w-full h-9 px-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 block font-mono">Main Title</label>
-                  <input
-                    type="text"
-                    value={heroConfig.title}
-                    onChange={(e) => setHeroConfig({ ...heroConfig, title: e.target.value, presetId: "custom" })}
-                    className="w-full h-9 px-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 block font-mono">Highlight Title</label>
-                  <input
-                    type="text"
-                    value={heroConfig.highlightTitle}
-                    onChange={(e) => setHeroConfig({ ...heroConfig, highlightTitle: e.target.value, presetId: "custom" })}
-                    className="w-full h-9 px-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-[9px] font-bold uppercase tracking-widest text-slate-500 mb-1 block font-mono">Hero Subtitle</label>
-                  <textarea
-                    rows={2}
-                    value={heroConfig.subtitle}
-                    onChange={(e) => setHeroConfig({ ...heroConfig, subtitle: e.target.value, presetId: "custom" })}
-                    className="w-full p-2 rounded-none bg-white border-2 border-slate-900 text-[11px] font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-4">
-            <Button
-              onClick={handleSaveHero}
-              className="w-full flex items-center justify-center gap-2 rounded-none bg-blue-600 border-2 border-slate-900 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-white shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0px_#000] cursor-pointer"
-            >
-              <Save className="size-3.5" /> Save Theme & Hero
-            </Button>
-          </div>
-        </Card>
       </div>
     </div>
   )

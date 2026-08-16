@@ -20,6 +20,19 @@ function interpolateColor(color1: string, color2: string, factor: number): strin
   return `#${rHex}${gHex}${bHex}`;
 }
 
+interface DussehraParticle {
+  startX: number;
+  startY: number;
+  targetX: number;
+  targetY: number;
+  color: string;
+  group: string;
+  delay: number;
+  pulseOffset: number;
+}
+
+
+
 export default function InteractivePixelArt({ 
   presetId, 
   bannerImage 
@@ -30,6 +43,66 @@ export default function InteractivePixelArt({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const trailRef = useRef<{ c: number; r: number; alpha: number }[]>([]);
+
+  // Image caching and transitions for the pixel animation
+  const imageCacheRef = useRef<Record<string, HTMLCanvasElement>>({});
+  const activeImageRef = useRef<string | null>(null);
+  const lastLoadTimeRef = useRef<number>(0);
+
+  // Scroll tracking and Dussehra particles system
+  const scrollYRef = useRef(0);
+  const dussehraParticlesRef = useRef<DussehraParticle[]>([]);
+  const lastPresetIdRef = useRef<string | null>(null);
+  const activeFireworksRef = useRef<{ x: number; y: number; maxRadius: number; radius: number; color: string; alpha: number }[]>([]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      scrollYRef.current = window.scrollY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  useEffect(() => {
+    let resolvedBanner = bannerImage;
+    if (presetId === "dussehra" || (bannerImage && bannerImage.includes("dussehra"))) {
+      resolvedBanner = "/theme_dussehra.jpg";
+    }
+
+    if (!resolvedBanner) {
+      activeImageRef.current = null;
+      return;
+    }
+    
+    if (activeImageRef.current === resolvedBanner) return;
+    
+    activeImageRef.current = resolvedBanner;
+    lastLoadTimeRef.current = performance.now();
+    
+    if (imageCacheRef.current[resolvedBanner]) return;
+    
+    const img = new Image();
+    img.src = resolvedBanner;
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const offscreen = document.createElement("canvas");
+      offscreen.width = img.width || 1200;
+      offscreen.height = img.height || 600;
+      const offCtx = offscreen.getContext("2d");
+      if (offCtx) {
+        // Disable image smoothing for sharp pixel borders
+        offCtx.imageSmoothingEnabled = false;
+        (offCtx as any).mozImageSmoothingEnabled = false;
+        (offCtx as any).webkitImageSmoothingEnabled = false;
+        (offCtx as any).msImageSmoothingEnabled = false;
+        
+        offCtx.drawImage(img, 0, 0, offscreen.width, offscreen.height);
+        imageCacheRef.current[resolvedBanner] = offscreen;
+      }
+    };
+  }, [bannerImage, presetId]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -134,10 +207,13 @@ export default function InteractivePixelArt({
       canvas.style.height = `${height}px`;
       ctx.scale(dpr, dpr);
 
-      // Determine cell size dynamically based on width to fit "CODERITHUM" (needs at least 55 cells)
-      cellSize = Math.max(6, Math.min(10, Math.floor(width / 60)));
+      // Determine cell size dynamically to match high-fidelity pixel art detail grid sizes
+      cellSize = Math.max(5, Math.min(7, Math.floor(width / 150)));
       cols = Math.ceil(width / cellSize);
       rows = Math.ceil(height / cellSize);
+      
+      // Reset particles list so it regenerates centered for new grid bounds
+      dussehraParticlesRef.current = [];
     };
 
     resize();
@@ -184,11 +260,56 @@ export default function InteractivePixelArt({
         else if (bannerImage.includes("diwali")) activeTheme = "diwali";
       }
 
+      // Load and sample pixel colors from cached image if loaded
+      let pixelColors: string[][] = [];
+      let imgBgColor = "";
+      const currentBanner = activeImageRef.current;
+      if (currentBanner && imageCacheRef.current[currentBanner]) {
+        const cachedCanvas = imageCacheRef.current[currentBanner];
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = cols;
+        tempCanvas.height = rows;
+        const tempCtx = tempCanvas.getContext("2d");
+        if (tempCtx) {
+          // Disable image smoothing for sharp nearest-neighbor downscaling
+          tempCtx.imageSmoothingEnabled = false;
+          (tempCtx as any).mozImageSmoothingEnabled = false;
+          (tempCtx as any).webkitImageSmoothingEnabled = false;
+          (tempCtx as any).msImageSmoothingEnabled = false;
+          
+          tempCtx.drawImage(cachedCanvas, 0, 0, cols, rows);
+          const imgData = tempCtx.getImageData(0, 0, cols, rows).data;
+          
+          for (let r = 0; r < rows; r++) {
+            pixelColors[r] = [];
+            for (let c = 0; c < cols; c++) {
+              const idx = (r * cols + c) * 4;
+              const rVal = imgData[idx];
+              const gVal = imgData[idx + 1];
+              const bVal = imgData[idx + 2];
+              const aVal = imgData[idx + 3];
+              
+              if (aVal > 50) {
+                pixelColors[r][c] = `#${rVal.toString(16).padStart(2, "0")}${gVal.toString(16).padStart(2, "0")}${bVal.toString(16).padStart(2, "0")}`;
+              } else {
+                pixelColors[r][c] = "";
+              }
+            }
+          }
+          
+          // Sample corner for background color matching
+          imgBgColor = `#${imgData[0].toString(16).padStart(2, "0")}${imgData[1].toString(16).padStart(2, "0")}${imgData[2].toString(16).padStart(2, "0")}`;
+        }
+      }
+
       // Clear canvas with white or holiday background
       let bgColor = "#FFFFFF";
       let gridColor = "#CBD5E1";
 
-      if (activeTheme === "diwali") {
+      if (imgBgColor) {
+        bgColor = imgBgColor;
+        gridColor = activeTheme === "christmas" || activeTheme === "diwali" || activeTheme === "dussehra" ? "#1E293B" : "#E2E8F0";
+      } else if (activeTheme === "diwali") {
         bgColor = "#0B0F19";
         gridColor = "#1E293B";
       } else if (activeTheme === "makarsankranti") {
@@ -370,7 +491,61 @@ export default function InteractivePixelArt({
         drawPixelShape(bird3C, bird3R, birdShape, birdColor);
       };
 
-      if (activeTheme === "christmas") {
+      if (pixelColors.length > 0 && activeTheme !== "dussehra") {
+        const timeSinceLoad = time - lastLoadTimeRef.current;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const color = pixelColors[r][c];
+            if (!color) continue;
+            
+            const sweepDelay = (c / cols) * 1200;
+            const noise = (Math.sin(c * 12.9898 + r * 78.233) * 43758.5453) % 150;
+            const activeTime = timeSinceLoad - (sweepDelay + Math.abs(noise));
+            
+            if (activeTime < 0) continue;
+            
+            let offsetR = 0;
+            let scale = 1.0;
+            if (activeTime < 350) {
+              const progress = activeTime / 350;
+              offsetR = -5 * (1 - progress) * (1 - progress); 
+              scale = progress;
+            }
+            
+            const dx = (c * cellSize + cellSize / 2) - mouseX;
+            const dy = (r * cellSize + cellSize / 2) - mouseY;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            
+            let drawColor = color;
+            if (mouseInCanvas && dist < 70) {
+              const factor = (1 - dist / 70);
+              offsetR += factor * 2.0;
+              scale *= (1 - factor * 0.15);
+              drawColor = interpolateColor(color, "#FFFFFF", factor * 0.35);
+            }
+            
+            ctx.fillStyle = drawColor;
+            const size = (cellSize - 1) * scale;
+            const pad = (cellSize - size) / 2;
+            ctx.fillRect(c * cellSize + pad, (r + offsetR) * cellSize + pad, size, size);
+          }
+        }
+      } else if (currentBanner && activeTheme !== "dussehra") {
+        // Show pixel loading spinner if currentBanner is set but image is still loading
+        ctx.fillStyle = activeTheme === "christmas" || activeTheme === "diwali" || activeTheme === "dussehra" ? "#94A3B8" : "#475569";
+        const centerC = Math.floor(cols / 2);
+        const centerR = Math.floor(rows / 2);
+        const offset = Math.floor(time / 150) % 8;
+        const points = [
+          [-1, -1], [0, -1], [1, -1],
+          [1, 0], [1, 1], [0, 1],
+          [-1, 1], [-1, 0]
+        ];
+        for (let i = 0; i < points.length; i++) {
+          const p = points[(i + offset) % points.length];
+          ctx.fillRect((centerC + p[0]) * cellSize, (centerR + p[1]) * cellSize, cellSize - 2, cellSize - 2);
+        }
+      } else if (activeTheme === "christmas") {
         // 1. Clear with gradient from dark slate blue to deep navy (Christmas night)
         const grad = ctx.createLinearGradient(0, 0, 0, height);
         grad.addColorStop(0, "#050816"); // Deep black-blue top
@@ -989,28 +1164,232 @@ export default function InteractivePixelArt({
         }
       } 
       else if (activeTheme === "dussehra") {
-        drawSkylineSilhouette();
+        // Initialize particle system if empty or preset changed, once cached image is loaded
+        const currentBanner = activeImageRef.current;
+        if (currentBanner && imageCacheRef.current[currentBanner] && 
+            (dussehraParticlesRef.current.length === 0 || lastPresetIdRef.current !== presetId)) {
+          
+          lastPresetIdRef.current = presetId || "dussehra";
+          const cachedCanvas = imageCacheRef.current[currentBanner];
+          
+          // Determine 2:1 aspect ratio centered bounds
+          const imageRows = rows;
+          const imageCols = imageRows * 2;
+          const colOffset = Math.floor((cols - imageCols) / 2);
+          
+          // Downsample using a temporary canvas with nearest-neighbor scaling
+          const tempCanvas = document.createElement("canvas");
+          tempCanvas.width = imageCols;
+          tempCanvas.height = imageRows;
+          const tempCtx = tempCanvas.getContext("2d");
+          if (tempCtx) {
+            tempCtx.imageSmoothingEnabled = false;
+            (tempCtx as any).mozImageSmoothingEnabled = false;
+            (tempCtx as any).webkitImageSmoothingEnabled = false;
+            (tempCtx as any).msImageSmoothingEnabled = false;
+            
+            tempCtx.drawImage(cachedCanvas, 0, 0, imageCols, imageRows);
+            const imgData = tempCtx.getImageData(0, 0, imageCols, imageRows).data;
+            
+            // Helper to classify pixel groups dynamically to apply selective animations & parallax
+            const classifyPixelGroup = (c: number, r: number, color: string) => {
+              // Diyas at the very bottom
+              if (r >= imageRows * 0.86) {
+                const isFireColor = color.toLowerCase() === "#f59e0b" || 
+                                    color.toLowerCase() === "#ef4444" || 
+                                    color.toLowerCase() === "#ea580c" || 
+                                    color.toLowerCase() === "#f97316" || 
+                                    color.toLowerCase() === "#fde047" || 
+                                    color.toLowerCase() === "#ffb703" ||
+                                    color.toLowerCase() === "#fcbf49" ||
+                                    color.toLowerCase() === "#d62828";
+                if (isFireColor) return "diyas_flame";
+                return "diyas";
+              }
+              // Hanging flower garlands / bells (top corners of the image)
+              if (r < imageRows * 0.40 && (c < imageCols * 0.22 || c > imageCols * 0.78)) {
+                return "garlands";
+              }
+              // Lord Rama (left)
+              if (c < imageCols * 0.35 && r >= imageRows * 0.35) {
+                return "rama";
+              }
+              // Ravana (right)
+              if (c > imageCols * 0.65 && r >= imageRows * 0.35) {
+                return "ravana";
+              }
+              // Fireworks (top sky center)
+              if (r < imageRows * 0.38 && (c >= imageCols * 0.22 && c <= imageCols * 0.78)) {
+                return "fireworks";
+              }
+              // HAPPY DUSSEHRA text
+              if (r >= imageRows * 0.18 && r < imageRows * 0.55 && c >= imageCols * 0.25 && c <= imageCols * 0.75) {
+                return "text";
+              }
+              // Sunset Sun & Temples & borders (mid-ground skyline layers)
+              return "skyline";
+            };
 
-        // Rama (Left)
-        const ramaC = Math.max(3, Math.floor(cols * 0.12));
-        const ramaR = Math.floor(rows * 0.68);
-        const ramaShape = ["0100", "1110", "0100", "1010"];
-        drawPixelShape(ramaC, ramaR, ramaShape, "#2563EB");
-
-        // Ravana (Right)
-        const ravC = Math.min(cols - 12, Math.floor(cols * 0.82));
-        const ravR = Math.floor(rows * 0.65);
-        const ravShape = ["10101", "11111", "01110", "01010"];
-        drawPixelShape(ravC, ravR, ravShape, "#DC2626");
-
-        // Flying golden arrows
-        const arrowCycle = time % 3000;
-        const arrowDuration = 1800;
-        if (arrowCycle < arrowDuration) {
-          const p = arrowCycle / arrowDuration;
-          const arrowC = ramaC + 4 + p * (ravC - ramaC - 4);
-          drawPixel(Math.round(arrowC), Math.round(ramaR + 1), "#F59E0B");
+            const newParticles: DussehraParticle[] = [];
+            for (let r = 0; r < imageRows; r++) {
+              for (let c = 0; c < imageCols; c++) {
+                const idx = (r * imageCols + c) * 4;
+                const rVal = imgData[idx];
+                const gVal = imgData[idx + 1];
+                const bVal = imgData[idx + 2];
+                const aVal = imgData[idx + 3];
+                
+                if (aVal > 50) {
+                  const color = `#${rVal.toString(16).padStart(2, "0")}${gVal.toString(16).padStart(2, "0")}${bVal.toString(16).padStart(2, "0")}`;
+                  
+                  newParticles.push({
+                    startX: Math.random() * cols,
+                    startY: Math.random() * rows,
+                    targetX: c + colOffset,
+                    targetY: r,
+                    color,
+                    group: classifyPixelGroup(c, r, color),
+                    delay: Math.random() * 850 + ((c + colOffset) / cols) * 1150,
+                    pulseOffset: Math.random() * Math.PI * 2
+                  });
+                }
+              }
+            }
+            dussehraParticlesRef.current = newParticles;
+            lastLoadTimeRef.current = performance.now();
+          }
         }
+
+        // Clear with dark navy theme background
+        ctx.fillStyle = "#080712";
+        ctx.fillRect(0, 0, width, height);
+
+        // Subtly lit dark navy grid lines
+        ctx.strokeStyle = "#121024";
+        ctx.lineWidth = 1;
+        for (let c = 0; c <= cols; c++) {
+          ctx.beginPath();
+          ctx.moveTo(c * cellSize, 0);
+          ctx.lineTo(c * cellSize, height);
+          ctx.stroke();
+        }
+        for (let r = 0; r <= rows; r++) {
+          ctx.beginPath();
+          ctx.moveTo(0, r * cellSize);
+          ctx.lineTo(width, r * cellSize);
+          ctx.stroke();
+        }
+
+        const elapsed = time - lastLoadTimeRef.current;
+        const reducedMotion = typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        
+        // Easing function inline helper
+        const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
+        
+        // Scroll offset mapping
+        const scrollY = scrollYRef.current / cellSize;
+
+        // Render each particle in the assembly/idle system
+        dussehraParticlesRef.current.forEach(p => {
+          let progress = Math.max(0, Math.min(1, (elapsed - p.delay) / 2000)); // 2s duration
+          if (reducedMotion) progress = 1.0;
+          
+          const ease = easeOutCubic(progress);
+          
+          // Interpolate position
+          let drawC = p.startX + (p.targetX - p.startX) * ease;
+          let drawR = p.startY + (p.targetY - p.startY) * ease;
+          
+          let drawColor = p.color;
+          let sizeScale = 1.0;
+
+          if (progress >= 1.0) {
+            // Apply parallax scroll offsets based on layering
+            if (p.group === "skyline" || p.group === "diyas" || p.group === "diyas_flame") {
+              drawR += scrollY * 0.16;
+            } else if (p.group === "rama" || p.group === "rama_bow" || p.group === "rama_bowstring") {
+              drawR += scrollY * 0.08;
+            } else if (p.group === "ravana" || p.group === "ravana_sword" || p.group === "ravana_shield") {
+              drawR += scrollY * 0.08;
+            } else if (p.group === "text" || p.group === "text_border") {
+              drawR += scrollY * 0.03;
+            } else if (p.group === "fireworks") {
+              drawR += scrollY * 0.12;
+            }
+
+            // Idle flickering and pulse animations
+            if (p.group === "diyas_flame") {
+              // Flicker flame colors
+              const rand = Math.random();
+              drawColor = rand < 0.25 ? "#FCBF49" : (rand < 0.6 ? "#F77F00" : "#E63946");
+            } else if (p.group === "text" && p.color === "#F97316") {
+              // Text glowing shimmer
+              const glow = Math.sin(time * 0.003 + p.pulseOffset) * 0.12 + 0.88;
+              drawColor = interpolateColor("#EA580C", "#FF9F1C", glow);
+            } else if (p.group === "rama" || p.group === "ravana") {
+              // Gentle body pulsing
+              const pulse = Math.sin(time * 0.002 + p.pulseOffset) * 0.05;
+              sizeScale = 1.0 + pulse;
+            }
+          }
+
+          // Cursor displacement push physics
+          const dx = (drawC * cellSize + cellSize / 2) - mouseX;
+          const dy = (drawR * cellSize + cellSize / 2) - mouseY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (mouseInCanvas && dist < 60) {
+            const factor = 1.0 - dist / 60;
+            // Push away
+            drawC += (dx / dist) * factor * 1.5;
+            drawR += (dy / dist) * factor * 1.5;
+            // Highlight
+            drawColor = interpolateColor(drawColor, "#FFFFFF", factor * 0.35);
+          }
+
+          // Draw the animated cell block
+          ctx.fillStyle = drawColor;
+          const size = (cellSize - 1) * sizeScale;
+          const pad = (cellSize - size) / 2;
+          ctx.fillRect(drawC * cellSize + pad, drawR * cellSize + pad, size, size);
+        });
+
+        // 6. Draw dynamic firework bursts in the background (idle phase)
+        if (Math.random() < 0.007 && elapsed > 2800) {
+          activeFireworksRef.current.push({
+            x: Math.random() * width,
+            y: Math.random() * height * 0.4,
+            radius: 0,
+            maxRadius: 20 + Math.random() * 30,
+            color: ["#F97316", "#FCBF49", "#EF4444"][Math.floor(Math.random() * 3)],
+            alpha: 1.0
+          });
+        }
+
+        activeFireworksRef.current.forEach(fw => {
+          fw.radius += 0.8;
+          fw.alpha = Math.max(0, 1.0 - (fw.radius / fw.maxRadius));
+        });
+        activeFireworksRef.current = activeFireworksRef.current.filter(fw => fw.radius < fw.maxRadius && fw.alpha > 0);
+
+        activeFireworksRef.current.forEach(fw => {
+          ctx.fillStyle = fw.color;
+          const oldAlpha = ctx.globalAlpha;
+          ctx.globalAlpha = fw.alpha;
+          const rays = 8;
+          for (let i = 0; i < rays; i++) {
+            const angle = (i * Math.PI * 2) / rays;
+            const fx = fw.x + Math.cos(angle) * fw.radius;
+            const fy = fw.y + Math.sin(angle) * fw.radius;
+            ctx.fillRect(
+              Math.floor(fx / cellSize) * cellSize + 0.5,
+              Math.floor(fy / cellSize) * cellSize + 0.5,
+              cellSize - 1,
+              cellSize - 1
+            );
+          }
+          ctx.globalAlpha = oldAlpha;
+        });
       } 
       else if (activeTheme === "holi") {
         // Splashes of paint

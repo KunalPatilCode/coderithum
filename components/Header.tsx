@@ -25,6 +25,7 @@ export default function Header({
     { id: "projects", label: "Projects" },
     { id: "gallery", label: "Gallery" },
     { id: "team", label: "Team" },
+    { id: "rulebook", label: "Rule Book" },
     { id: "achievements", label: "Achievements" },
     { id: "contact", label: "Contact" }
   ];

@@ -53,7 +53,7 @@ function StackCard({ item, idx, N, scrollYProgress }: StackCardProps) {
       className="absolute w-full max-w-xl h-[420px] bg-white border-2 border-slate-900 p-4 shadow-[4px_4px_0px_#000] flex flex-col gap-3 rounded-none select-none"
     >
       <div className="flex items-center justify-between border-b border-slate-200 pb-1.5">
-        <span className="text-[9px] font-mono font-bold uppercase text-blue-600">Image {idx + 1} of {N}</span>
+        <span className="text-[9px] font-mono font-bold uppercase text-theme">Image {idx + 1} of {N}</span>
         <span className="text-[9px] font-mono text-slate-400 uppercase tracking-widest font-bold">Retro Stack</span>
       </div>
       <div className="w-full flex-grow border-2 border-slate-900 overflow-hidden relative">
@@ -117,7 +117,7 @@ export default function GalleryView({ albums, activeAlbumId, setActiveAlbumId, c
         className="space-y-12"
       >
         <div className="text-center max-w-2xl mx-auto space-y-3">
-          <InteractiveHeading text="Visual History" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+          <InteractiveHeading text="Visual History" as="h2" className="text-xs font-mono tracking-widest text-theme uppercase" />
           <div>
             <InteractiveHeading text="Club Gallery" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
           </div>
@@ -134,7 +134,7 @@ export default function GalleryView({ albums, activeAlbumId, setActiveAlbumId, c
               className="group cursor-pointer relative"
             >
               {/* Folder Tab Effect */}
-              <div className="absolute top-0 left-4 h-6 w-28 bg-slate-900 rounded-t-sm border-2 border-b-0 border-slate-900 -translate-y-[22px] flex items-center justify-center font-mono text-[9px] font-bold text-white uppercase tracking-wider group-hover:bg-blue-600 group-hover:border-blue-600 transition-colors">
+              <div className="absolute top-0 left-4 h-6 w-28 bg-slate-900 rounded-t-sm border-2 border-b-0 border-slate-900 -translate-y-[22px] flex items-center justify-center font-mono text-[9px] font-bold text-white uppercase tracking-wider group-hover:bg-theme group-hover:border-theme transition-colors">
                 📂 {album.media.length} items
               </div>
               
@@ -153,7 +153,7 @@ export default function GalleryView({ albums, activeAlbumId, setActiveAlbumId, c
                 {/* Folder Text Details */}
                 <div className="flex-1 flex flex-col justify-between">
                   <div>
-                    <h3 className="font-black text-slate-900 text-base leading-tight group-hover:text-blue-600 transition-colors line-clamp-2">
+                    <h3 className="font-black text-slate-900 text-base leading-tight group-hover:text-theme transition-colors line-clamp-2">
                       {album.name}
                     </h3>
                     <p className="text-[10px] text-slate-400 font-mono mt-1 uppercase tracking-wider">
@@ -163,7 +163,7 @@ export default function GalleryView({ albums, activeAlbumId, setActiveAlbumId, c
                   
                   <div className="mt-4 pt-3 border-t border-dashed border-slate-200 flex items-center justify-between text-xs font-mono font-bold text-slate-700">
                     <span>View Album</span>
-                    <span className="text-blue-600 group-hover:translate-x-1 transition-transform">→</span>
+                    <span className="text-theme group-hover:translate-x-1 transition-transform">→</span>
                   </div>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export default function GalleryView({ albums, activeAlbumId, setActiveAlbumId, c
           </h1>
           <p className="text-xs text-slate-500 mt-1 font-mono flex flex-wrap items-center gap-2">
             Displaying {currentAlbum?.media.length || 0} items.
-            <span className="text-blue-600 font-bold animate-pulse">↓ Scroll down to stack and review pictures</span>
+            <span className="text-theme font-bold animate-pulse">↓ Scroll down to stack and review pictures</span>
           </p>
         </div>
       </div>

@@ -275,7 +275,7 @@ export default function TeamManagerPage() {
           } else {
             ctx.clearRect(0, 0, width, height)
           }
-          
+
           // Draw complete original photo without clipping top or bottom
           ctx.drawImage(img, 0, 0, width, height)
           finalUrl = isPng ? canvas.toDataURL("image/png") : canvas.toDataURL("image/jpeg", 0.9)
@@ -296,8 +296,8 @@ export default function TeamManagerPage() {
 
         // 3. Direct replacement for specific member index
         if (targetMemberIndex !== undefined && targetMemberIndex !== null && targetMemberIndex >= 0) {
-          const updated = team.map((m, idx) => (idx === targetMemberIndex ? { 
-            ...m, 
+          const updated = team.map((m, idx) => (idx === targetMemberIndex ? {
+            ...m,
             avatar: finalUrl,
             photoPosition: { scale: 1.0, offsetX: 0, offsetY: 0, objectPosition: "center center", objectFit: "contain" as const },
             avatarStyle: { objectFit: "contain" as const, objectPosition: "center center", transform: "scale(1.0) translate(0%, 0%)", transformOrigin: "center center" }
@@ -474,7 +474,7 @@ export default function TeamManagerPage() {
       {/* Search Member & Dropdown Filter Control Bar */}
       {view === "list" && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-slate-50 border-2 border-slate-900 shadow-[2.5px_2.5px_0px_#000] shrink-0 font-mono">
-          
+
           {/* Search Bar */}
           <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
@@ -498,7 +498,7 @@ export default function TeamManagerPage() {
 
           {/* Dropdown Filters: Track & Role Designation */}
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto shrink-0">
-            
+
             {/* Track Filter */}
             <select
               value={categoryFilter}
@@ -590,11 +590,11 @@ export default function TeamManagerPage() {
                             <TableRow key={m.name + targetIdx}>
                               <TableCell className="font-semibold">
                                 <div className="flex items-center gap-3">
-                                  <div className="relative size-9 overflow-hidden rounded-none bg-slate-100 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#000] shrink-0">
-                                    <img 
-                                      src={m.avatar} 
-                                      alt={m.name} 
-                                      className="w-full h-full object-cover" 
+                                  <div className="relative size-10 overflow-hidden rounded-none bg-slate-100 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#000] shrink-0">
+                                    <img
+                                      src={m.avatar}
+                                      alt={m.name}
+                                      className="w-full h-full object-cover"
                                       style={photoStyle}
                                       onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" }}
                                     />
@@ -609,7 +609,7 @@ export default function TeamManagerPage() {
                                 <span className="text-[11px] text-slate-600 font-mono font-bold">{m.role}</span>
                               </TableCell>
                               <TableCell>
-                                <Badge variant={m.category === "Faculty" ? "default" : "secondary"}>
+                                <Badge variant={getMemberTierLevel(m) === 1 ? "default" : "secondary"}>
                                   Tier {getMemberTierLevel(m)}
                                 </Badge>
                               </TableCell>
@@ -740,51 +740,51 @@ export default function TeamManagerPage() {
                               onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" }}
                             />
                           </div>
-                        <div className="min-w-0 flex-1">
-                          <h4 className="text-xs font-bold text-slate-900 font-mono truncate">{m.name}</h4>
-                          <p className="text-[10px] text-slate-500 font-mono truncate">{m.role}</p>
-                          <Badge variant="outline" className="text-[8px] font-mono mt-1">
-                            {m.category}
-                          </Badge>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-xs font-bold text-slate-900 font-mono truncate">{m.name}</h4>
+                            <p className="text-[10px] text-slate-500 font-mono truncate">{m.role}</p>
+                            <Badge variant="outline" className="text-[8px] font-mono mt-1">
+                              {m.category}
+                            </Badge>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-1.5 pt-1">
-                        <Button
-                          variant="outline"
-                          onClick={() => handleOpenPhotoAdjuster(targetIdx)}
-                          className="flex-1 text-[9.5px] font-mono font-bold flex items-center justify-center gap-1 py-1 h-8"
-                          title="Adjust Zoom & Position"
-                        >
-                          <Crop className="size-3 text-purple-600" /> Crop
-                        </Button>
+                        <div className="flex items-center gap-1.5 pt-1">
+                          <Button
+                            variant="outline"
+                            onClick={() => handleOpenPhotoAdjuster(targetIdx)}
+                            className="flex-1 text-[9.5px] font-mono font-bold flex items-center justify-center gap-1 py-1 h-8"
+                            title="Adjust Zoom & Position"
+                          >
+                            <Crop className="size-3 text-purple-600" /> Crop
+                          </Button>
 
-                        <label
-                          className="flex-1 text-[9.5px] font-mono font-bold text-blue-600 cursor-pointer border-2 border-slate-900 bg-blue-50 hover:bg-blue-600 hover:text-white transition-colors shadow-[1px_1px_0px_#000] flex items-center justify-center gap-1 py-1 h-8 px-2"
-                          title="Upload Replacement Image File"
-                        >
-                          <Upload className="size-3" /> Upload
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleFileUpload(e, targetIdx)}
-                            className="hidden"
-                          />
-                        </label>
+                          <label
+                            className="flex-1 text-[9.5px] font-mono font-bold text-blue-600 cursor-pointer border-2 border-slate-900 bg-blue-50 hover:bg-blue-600 hover:text-white transition-colors shadow-[1px_1px_0px_#000] flex items-center justify-center gap-1 py-1 h-8 px-2"
+                            title="Upload Replacement Image File"
+                          >
+                            <Upload className="size-3" /> Upload
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleFileUpload(e, targetIdx)}
+                              className="hidden"
+                            />
+                          </label>
 
-                        <Button
-                          variant="destructive"
-                          onClick={() => handleDeletePhoto(targetIdx)}
-                          className="size-8 p-0 shrink-0"
-                          title="Reset Photo to Default"
-                        >
-                          <Trash2 className="size-3" />
-                        </Button>
-                      </div>
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleDeletePhoto(targetIdx)}
+                            className="size-8 p-0 shrink-0"
+                            title="Reset Photo to Default"
+                          >
+                            <Trash2 className="size-3" />
+                          </Button>
+                        </div>
 
-                    </Card>
-                  );
-                })}
+                      </Card>
+                    );
+                  })}
                 </div>
               )}
             </div>

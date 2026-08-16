@@ -2,16 +2,16 @@
 
 import React, { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { 
-  Users, 
-  Crown, 
-  Code, 
-  Palette, 
-  Megaphone, 
-  ChevronDown, 
-  ChevronRight, 
-  Search, 
-  GraduationCap, 
+import {
+  Users,
+  Crown,
+  Code,
+  Palette,
+  Megaphone,
+  ChevronDown,
+  ChevronRight,
+  Search,
+  GraduationCap,
   Sparkles,
   ExternalLink,
   Layers
@@ -132,10 +132,10 @@ export default function TeamHierarchyGraph({
 
   return (
     <div className="w-full space-y-6 select-none">
-      
+
       {/* Hierarchy Controls Bar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 bg-white border-2 border-slate-900 p-4 shadow-[3px_3px_0px_#000]">
-        
+
         {/* Year Selector Tabs */}
         <div className="flex items-center gap-2">
           <span className="text-[10px] font-mono font-bold uppercase text-slate-500 flex items-center gap-1">
@@ -146,9 +146,8 @@ export default function TeamHierarchyGraph({
               <button
                 key={year}
                 onClick={() => setSelectedYear(year)}
-                className={`px-3 py-1 font-mono text-xs font-bold transition-all cursor-pointer ${
-                  selectedYear === year ? "bg-blue-600 text-white shadow-[1.5px_1.5px_0px_#000]" : "text-slate-700 hover:bg-slate-200"
-                }`}
+                className={`px-3 py-1 font-mono text-xs font-bold transition-all cursor-pointer ${selectedYear === year ? "bg-blue-600 text-white shadow-[1.5px_1.5px_0px_#000]" : "text-slate-700 hover:bg-slate-200"
+                  }`}
               >
                 {year}
               </button>
@@ -172,7 +171,7 @@ export default function TeamHierarchyGraph({
 
       {/* Visual Hierarchy Graph Viewport */}
       <div className="w-full overflow-x-auto p-6 bg-slate-50 border-2 border-slate-900 shadow-[4px_4px_0px_#000] relative space-y-8 min-h-[450px]">
-        
+
         {/* Tier 1: Faculty Mentors & Advisors */}
         <div className="space-y-3">
           <button

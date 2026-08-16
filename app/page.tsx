@@ -123,27 +123,10 @@ export default function Home() {
       const storedTeam = localStorage.getItem("coderithum_team");
       if (storedTeam) {
         const parsed = JSON.parse(storedTeam);
-        const hasAaryan = parsed.some((t: any) => t.name === "Aaryan Patel");
-        if (!hasAaryan) {
-          const updated = [...parsed, {
-            name: "Aaryan Patel",
-            role: "Marketing & Outreach (Outreach Lead)",
-            category: "Marketing",
-            avatar: "/aaryan-patel.png",
-            photoPosition: {
-              scale: 1.2,
-              offsetX: 0,
-              offsetY: 5,
-              objectPosition: "center 10%",
-            },
-            avatarStyle: {
-              objectPosition: "center 10%",
-              transform: "scale(1.2) translate(0%, 5%)",
-            },
-            linkedin: "https://linkedin.com",
-          }];
-          localStorage.setItem("coderithum_team", JSON.stringify(updated));
-          setTeam(updated);
+        const hasShruti = parsed.some((t: any) => t.name.includes("Shruti"));
+        if (!hasShruti) {
+          localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));
+          setTeam(initialTeam);
         } else {
           setTeam(parsed);
         }
@@ -224,117 +207,117 @@ export default function Home() {
       {showLoader && <LogoLoader onComplete={() => setShowLoader(false)} />}
       <div className="min-h-screen bg-transparent text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-blue-900">
 
-      {/* Decorative Glow Elements */}
-      <div className="absolute top-[800px] left-[10%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[400px] right-[10%] w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
+        {/* Decorative Glow Elements */}
+        <div className="absolute top-[800px] left-[10%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[400px] right-[10%] w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Navigation Header */}
-      <Header
-        view={view}
-        setView={setView}
-        setSelectedId={setSelectedId}
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-      />
+        {/* Navigation Header */}
+        <Header
+          view={view}
+          setView={setView}
+          setSelectedId={setSelectedId}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
 
-      {/* Main Body Content Views */}
-      <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 min-h-[75vh]">
-        <AnimatePresence mode="wait">
+        {/* Main Body Content Views */}
+        <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 min-h-[75vh]">
+          <AnimatePresence mode="wait">
 
-          {view === "home" && (
-            <HomeView
-              events={events}
-              projects={projects}
-              achievements={achievements}
-              totalEventsCount={totalEventsCount}
-              totalProjectsCount={totalProjectsCount}
-              totalMembersCount={totalMembersCount}
-              totalAwardsCount={totalAwardsCount}
-              setView={setView}
-              setSelectedId={setSelectedId}
-              heroConfig={heroConfig}
-            />
-          )}
+            {view === "home" && (
+              <HomeView
+                events={events}
+                projects={projects}
+                achievements={achievements}
+                totalEventsCount={totalEventsCount}
+                totalProjectsCount={totalProjectsCount}
+                totalMembersCount={totalMembersCount}
+                totalAwardsCount={totalAwardsCount}
+                setView={setView}
+                setSelectedId={setSelectedId}
+                heroConfig={heroConfig}
+              />
+            )}
 
-          {view === "about" && (
-            <AboutView team={team} setView={setView} />
-          )}
+            {view === "about" && (
+              <AboutView team={team} setView={setView} />
+            )}
 
-          {view === "events" && (
-            <EventsView
-              events={events}
-              setView={setView}
-              setSelectedId={setSelectedId}
-            />
-          )}
+            {view === "events" && (
+              <EventsView
+                events={events}
+                setView={setView}
+                setSelectedId={setSelectedId}
+              />
+            )}
 
-          {view === "event-detail" && (
-            <EventDetailView
-              currentEvent={currentEvent}
-              setView={setView}
-            />
-          )}
+            {view === "event-detail" && (
+              <EventDetailView
+                currentEvent={currentEvent}
+                setView={setView}
+              />
+            )}
 
-          {view === "projects" && (
-            <ProjectsView
-              projects={projects}
-              setView={setView}
-              setSelectedId={setSelectedId}
-            />
-          )}
+            {view === "projects" && (
+              <ProjectsView
+                projects={projects}
+                setView={setView}
+                setSelectedId={setSelectedId}
+              />
+            )}
 
-          {view === "project-detail" && (
-            <ProjectDetailView
-              currentProject={currentProject}
-              setView={setView}
-            />
-          )}
+            {view === "project-detail" && (
+              <ProjectDetailView
+                currentProject={currentProject}
+                setView={setView}
+              />
+            )}
 
-          {view === "gallery" && (
-            <GalleryView
-              albums={albums}
-              activeAlbumId={activeAlbumId}
-              setActiveAlbumId={setActiveAlbumId}
-              currentAlbum={currentAlbum}
-            />
-          )}
+            {view === "gallery" && (
+              <GalleryView
+                albums={albums}
+                activeAlbumId={activeAlbumId}
+                setActiveAlbumId={setActiveAlbumId}
+                currentAlbum={currentAlbum}
+              />
+            )}
 
-          {view === "team" && (
-            <TeamView team={team} />
-          )}
+            {view === "team" && (
+              <TeamView team={team} />
+            )}
 
-          {view === "achievements" && (
-            <AchievementsView achievements={achievements} />
-          )}
+            {view === "achievements" && (
+              <AchievementsView achievements={achievements} />
+            )}
 
-          {view === "contact" && (
-            <ContactView
-              contactSuccess={contactSuccess}
-              setContactSuccess={setContactSuccess}
-            />
-          )}
+            {view === "contact" && (
+              <ContactView
+                contactSuccess={contactSuccess}
+                setContactSuccess={setContactSuccess}
+              />
+            )}
 
-          {view === "404-test" && (
-            <Error404View setView={setView} />
-          )}
+            {view === "404-test" && (
+              <Error404View setView={setView} />
+            )}
 
-          {view === "500-test" && (
-            <Error500View setView={setView} />
-          )}
+            {view === "500-test" && (
+              <Error500View setView={setView} />
+            )}
 
-        </AnimatePresence>
-      </main>
+          </AnimatePresence>
+        </main>
 
-      {/* Text Marquee Animation */}
-      <TextMarqueeAnimation />
+        {/* Text Marquee Animation */}
+        <TextMarqueeAnimation />
 
-      {/* General Footer */}
-      <Footer setView={setView} setSelectedId={setSelectedId} />
+        {/* General Footer */}
+        <Footer setView={setView} setSelectedId={setSelectedId} />
 
-      {/* Custom Rocket Cursor */}
-      <GlobalRocketCursor />
+        {/* Custom Rocket Cursor */}
+        <GlobalRocketCursor />
 
-    </div>
+      </div>
     </>
   );
 }

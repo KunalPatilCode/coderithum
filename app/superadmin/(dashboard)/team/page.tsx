@@ -5,24 +5,24 @@ import { useToast } from "@/components/ui/use-toast"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableRow, 
-  TableHead, 
-  TableCell 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell
 } from "@/components/ui/table"
-import { 
-  Users2, 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  ArrowLeft, 
-  Image as ImageIcon, 
-  Layers, 
-  Sliders, 
-  Upload, 
+import {
+  Users2,
+  Plus,
+  Edit2,
+  Trash2,
+  ArrowLeft,
+  Image as ImageIcon,
+  Layers,
+  Sliders,
+  Upload,
   RotateCcw,
   Crop,
   Eye,
@@ -275,7 +275,7 @@ export default function TeamManagerPage() {
           } else {
             ctx.clearRect(0, 0, width, height)
           }
-          
+
           // Draw complete original photo without clipping top or bottom
           ctx.drawImage(img, 0, 0, width, height)
           finalUrl = isPng ? canvas.toDataURL("image/png") : canvas.toDataURL("image/jpeg", 0.9)
@@ -296,8 +296,8 @@ export default function TeamManagerPage() {
 
         // 3. Direct replacement for specific member index
         if (targetMemberIndex !== undefined && targetMemberIndex !== null && targetMemberIndex >= 0) {
-          const updated = team.map((m, idx) => (idx === targetMemberIndex ? { 
-            ...m, 
+          const updated = team.map((m, idx) => (idx === targetMemberIndex ? {
+            ...m,
             avatar: finalUrl,
             photoPosition: { scale: 1.0, offsetX: 0, offsetY: 0, objectPosition: "center center", objectFit: "contain" as const },
             avatarStyle: { objectFit: "contain" as const, objectPosition: "center center", transform: "scale(1.0) translate(0%, 0%)", transformOrigin: "center center" }
@@ -421,7 +421,7 @@ export default function TeamManagerPage() {
 
   return (
     <div className="h-full flex flex-col gap-6 text-slate-900 min-h-0">
-      
+
       {/* Title & Navigation Header */}
       <div className="flex items-center justify-between shrink-0">
         <div>
@@ -449,25 +449,22 @@ export default function TeamManagerPage() {
         <div className="flex border-2 border-slate-900 bg-white shadow-[2px_2px_0px_#000] shrink-0">
           <button
             onClick={() => setActiveTab("roster")}
-            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer ${
-              activeTab === "roster" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-            }`}
+            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition-colors cursor-pointer ${activeTab === "roster" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
           >
             <Users2 className="size-3.5" /> Roster Table ({team.length})
           </button>
           <button
             onClick={() => setActiveTab("hierarchy")}
-            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${
-              activeTab === "hierarchy" ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-            }`}
+            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${activeTab === "hierarchy" ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
           >
             <Layers className="size-3.5" /> Visual Hierarchy Graph
           </button>
           <button
             onClick={() => setActiveTab("photos")}
-            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${
-              activeTab === "photos" ? "bg-purple-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
-            }`}
+            className={`flex-1 py-2.5 px-4 font-mono text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${activeTab === "photos" ? "bg-purple-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              }`}
           >
             <ImageIcon className="size-3.5" /> Photo Deck & Crop Manager
           </button>
@@ -477,7 +474,7 @@ export default function TeamManagerPage() {
       {/* Search Member & Dropdown Filter Control Bar */}
       {view === "list" && (
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 bg-slate-50 border-2 border-slate-900 shadow-[2.5px_2.5px_0px_#000] shrink-0 font-mono">
-          
+
           {/* Search Bar */}
           <div className="relative flex-1 w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400" />
@@ -501,7 +498,7 @@ export default function TeamManagerPage() {
 
           {/* Dropdown Filters: Track & Role Designation */}
           <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto shrink-0">
-            
+
             {/* Track Filter */}
             <select
               value={categoryFilter}
@@ -594,10 +591,10 @@ export default function TeamManagerPage() {
                               <TableCell className="font-semibold">
                                 <div className="flex items-center gap-3">
                                   <div className="relative size-10 overflow-hidden rounded-none bg-slate-100 border-2 border-slate-900 shadow-[1.5px_1.5px_0px_#000] shrink-0">
-                                    <img 
-                                      src={m.avatar} 
-                                      alt={m.name} 
-                                      className="w-full h-full object-cover" 
+                                    <img
+                                      src={m.avatar}
+                                      alt={m.name}
+                                      className="w-full h-full object-cover"
                                       style={photoStyle}
                                       onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" }}
                                     />
@@ -608,50 +605,50 @@ export default function TeamManagerPage() {
                                   </div>
                                 </div>
                               </TableCell>
-                            <TableCell>
-                              <span className="text-[11px] text-slate-600 font-mono font-bold">{m.role}</span>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant={getMemberTierLevel(m) === 1 ? "default" : "secondary"}>
-                                Tier {getMemberTierLevel(m)}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              <span className="text-xs font-mono font-bold text-slate-700">{m.academicYear || "2026-2027"}</span>
-                            </TableCell>
-                            <TableCell className="text-center py-3">
-                              <div className="flex items-center justify-center gap-2">
-                                <button 
-                                  type="button"
-                                  className="w-9 h-9 rounded-lg bg-white border border-slate-200 shadow-xs hover:border-blue-400 hover:bg-blue-50/60 transition-all flex items-center justify-center group cursor-pointer"
-                                  onClick={() => handleOpenPhotoAdjuster(targetIdx)}
-                                  title="Crop & Adjust Photo"
-                                >
-                                  <Camera className="size-4 text-blue-600 group-hover:scale-110 transition-transform" />
-                                </button>
-                                <button 
-                                  type="button"
-                                  className="w-9 h-9 rounded-lg bg-white border border-slate-200 shadow-xs hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-center group cursor-pointer"
-                                  onClick={() => handleOpenEdit(m, targetIdx)}
-                                  title="Edit Member Profile"
-                                >
-                                  <Pencil className="size-4 text-slate-700 group-hover:scale-110 transition-transform" />
-                                </button>
-                                <button 
-                                  type="button"
-                                  className="w-9 h-9 rounded-lg bg-white border border-red-200/80 shadow-xs hover:border-red-400 hover:bg-red-50/60 transition-all flex items-center justify-center group cursor-pointer"
-                                  onClick={() => handleDelete(targetIdx)}
-                                  title="Remove Member Profile"
-                                >
-                                  <Trash2 className="size-4 text-red-500 group-hover:scale-110 transition-transform" />
-                                </button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })
-                    })()
-                  )}
+                              <TableCell>
+                                <span className="text-[11px] text-slate-600 font-mono font-bold">{m.role}</span>
+                              </TableCell>
+                              <TableCell>
+                                <Badge variant={getMemberTierLevel(m) === 1 ? "default" : "secondary"}>
+                                  Tier {getMemberTierLevel(m)}
+                                </Badge>
+                              </TableCell>
+                              <TableCell>
+                                <span className="text-xs font-mono font-bold text-slate-700">{m.academicYear || "2026-2027"}</span>
+                              </TableCell>
+                              <TableCell className="text-center py-3">
+                                <div className="flex items-center justify-center gap-2">
+                                  <button
+                                    type="button"
+                                    className="w-9 h-9 rounded-lg bg-white border border-slate-200 shadow-xs hover:border-blue-400 hover:bg-blue-50/60 transition-all flex items-center justify-center group cursor-pointer"
+                                    onClick={() => handleOpenPhotoAdjuster(targetIdx)}
+                                    title="Crop & Adjust Photo"
+                                  >
+                                    <Camera className="size-4 text-blue-600 group-hover:scale-110 transition-transform" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="w-9 h-9 rounded-lg bg-white border border-slate-200 shadow-xs hover:border-slate-400 hover:bg-slate-50 transition-all flex items-center justify-center group cursor-pointer"
+                                    onClick={() => handleOpenEdit(m, targetIdx)}
+                                    title="Edit Member Profile"
+                                  >
+                                    <Pencil className="size-4 text-slate-700 group-hover:scale-110 transition-transform" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    className="w-9 h-9 rounded-lg bg-white border border-red-200/80 shadow-xs hover:border-red-400 hover:bg-red-50/60 transition-all flex items-center justify-center group cursor-pointer"
+                                    onClick={() => handleDelete(targetIdx)}
+                                    title="Remove Member Profile"
+                                  >
+                                    <Trash2 className="size-4 text-red-500 group-hover:scale-110 transition-transform" />
+                                  </button>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })
+                      })()
+                    )}
                   </TableBody>
                 </Table>
               )}
@@ -743,51 +740,51 @@ export default function TeamManagerPage() {
                               onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&h=150&q=80" }}
                             />
                           </div>
-                        <div className="min-w-0 flex-1">
-                          <h4 className="text-xs font-bold text-slate-900 font-mono truncate">{m.name}</h4>
-                          <p className="text-[10px] text-slate-500 font-mono truncate">{m.role}</p>
-                          <Badge variant="outline" className="text-[8px] font-mono mt-1">
-                            {m.category}
-                          </Badge>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-xs font-bold text-slate-900 font-mono truncate">{m.name}</h4>
+                            <p className="text-[10px] text-slate-500 font-mono truncate">{m.role}</p>
+                            <Badge variant="outline" className="text-[8px] font-mono mt-1">
+                              {m.category}
+                            </Badge>
+                          </div>
                         </div>
-                      </div>
 
-                      <div className="flex items-center gap-1.5 pt-1">
-                        <Button
-                          variant="outline"
-                          onClick={() => handleOpenPhotoAdjuster(targetIdx)}
-                          className="flex-1 text-[9.5px] font-mono font-bold flex items-center justify-center gap-1 py-1 h-8"
-                          title="Adjust Zoom & Position"
-                        >
-                          <Crop className="size-3 text-purple-600" /> Crop
-                        </Button>
+                        <div className="flex items-center gap-1.5 pt-1">
+                          <Button
+                            variant="outline"
+                            onClick={() => handleOpenPhotoAdjuster(targetIdx)}
+                            className="flex-1 text-[9.5px] font-mono font-bold flex items-center justify-center gap-1 py-1 h-8"
+                            title="Adjust Zoom & Position"
+                          >
+                            <Crop className="size-3 text-purple-600" /> Crop
+                          </Button>
 
-                        <label
-                          className="flex-1 text-[9.5px] font-mono font-bold text-blue-600 cursor-pointer border-2 border-slate-900 bg-blue-50 hover:bg-blue-600 hover:text-white transition-colors shadow-[1px_1px_0px_#000] flex items-center justify-center gap-1 py-1 h-8 px-2"
-                          title="Upload Replacement Image File"
-                        >
-                          <Upload className="size-3" /> Upload
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => handleFileUpload(e, targetIdx)}
-                            className="hidden"
-                          />
-                        </label>
+                          <label
+                            className="flex-1 text-[9.5px] font-mono font-bold text-blue-600 cursor-pointer border-2 border-slate-900 bg-blue-50 hover:bg-blue-600 hover:text-white transition-colors shadow-[1px_1px_0px_#000] flex items-center justify-center gap-1 py-1 h-8 px-2"
+                            title="Upload Replacement Image File"
+                          >
+                            <Upload className="size-3" /> Upload
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => handleFileUpload(e, targetIdx)}
+                              className="hidden"
+                            />
+                          </label>
 
-                        <Button
-                          variant="destructive"
-                          onClick={() => handleDeletePhoto(targetIdx)}
-                          className="size-8 p-0 shrink-0"
-                          title="Reset Photo to Default"
-                        >
-                          <Trash2 className="size-3" />
-                        </Button>
-                      </div>
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleDeletePhoto(targetIdx)}
+                            className="size-8 p-0 shrink-0"
+                            title="Reset Photo to Default"
+                          >
+                            <Trash2 className="size-3" />
+                          </Button>
+                        </div>
 
-                    </Card>
-                  );
-                })}
+                      </Card>
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -970,7 +967,7 @@ export default function TeamManagerPage() {
       {photoModalMemberIndex !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
           <div className="relative w-full max-w-lg bg-white border-2 border-slate-900 p-6 shadow-[8px_8px_0px_#000] space-y-5 animate-in zoom-in-95 duration-150">
-            
+
             <div className="flex items-center justify-between border-b-2 border-slate-900 pb-3">
               <div className="flex items-center gap-2">
                 <Crop className="size-4 text-purple-600" />
@@ -987,7 +984,7 @@ export default function TeamManagerPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-              
+
               {/* Live Preview Card */}
               <div className="flex flex-col items-center justify-center space-y-2 p-4 bg-slate-50 border-2 border-slate-900 shadow-[2px_2px_0px_#000]">
                 <span className="text-[9px] font-mono font-bold uppercase text-slate-500">Live Frame Preview</span>

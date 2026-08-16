@@ -4,14 +4,15 @@ import { Github, Linkedin } from "../Icons";
 import { TeamMember, getMemberAvatarStyle } from "../../types";
 import InteractiveHeading from "../InteractiveHeading";
 import TeamHierarchyGraph from "../TeamHierarchyGraph";
-import { Layers, LayoutGrid } from "lucide-react";
+import CoderithumNetwork from "../CoderithumNetwork";
+import { Layers, LayoutGrid, Cpu } from "lucide-react";
 
 interface TeamViewProps {
   team: TeamMember[];
 }
 
 export default function TeamView({ team }: TeamViewProps) {
-  const [viewMode, setViewMode] = useState<"org" | "graph">("org");
+  const [viewMode, setViewMode] = useState<"network" | "org" | "graph">("network");
 
   const domains = [
     { id: "ai", title: "AI & GenAI", icon: "🤖", key: "ai_lead", desc: "LLMs, Neural Networks, Vision AI & Prompt Engineering" },
@@ -148,7 +149,7 @@ export default function TeamView({ team }: TeamViewProps) {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}
-      className="space-y-16"
+      className="space-y-12"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
         <InteractiveHeading text="Ecosystem Core" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
@@ -161,8 +162,15 @@ export default function TeamView({ team }: TeamViewProps) {
         <div className="pt-2 flex justify-center">
           <div className="inline-flex border-2 border-slate-900 bg-white shadow-[3px_3px_0px_#000]">
             <button
+              onClick={() => setViewMode("network")}
+              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${viewMode === "network" ? "bg-cyan-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+                }`}
+            >
+              <Cpu className="size-3.5" /> Digital Network
+            </button>
+            <button
               onClick={() => setViewMode("org")}
-              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 transition-colors cursor-pointer ${viewMode === "org" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
+              className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${viewMode === "org" ? "bg-slate-900 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
                 }`}
             >
               <LayoutGrid className="size-3.5" /> Org Chart View
@@ -172,15 +180,21 @@ export default function TeamView({ team }: TeamViewProps) {
               className={`px-4 py-2 font-mono text-xs font-bold uppercase tracking-wider flex items-center gap-2 border-l-2 border-slate-900 transition-colors cursor-pointer ${viewMode === "graph" ? "bg-blue-600 text-white" : "bg-white text-slate-700 hover:bg-slate-50"
                 }`}
             >
-              <Layers className="size-3.5" /> Visual Hierarchy Graph
+              <Layers className="size-3.5" /> Hierarchy Graph
             </button>
           </div>
         </div>
       </div>
 
-      {viewMode === "graph" ? (
+      {viewMode === "network" && (
+        <CoderithumNetwork team={team} />
+      )}
+
+      {viewMode === "graph" && (
         <TeamHierarchyGraph team={team} />
-      ) : (
+      )}
+
+      {viewMode === "org" && (
         /* Main Organizational Tree */
         <div className="w-full max-w-6xl mx-auto p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] space-y-8 overflow-x-auto">
 

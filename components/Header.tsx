@@ -48,47 +48,65 @@ export default function Header({
     <>
       <header className="sticky top-4 z-50 px-4 md:px-6 w-full max-w-7xl mx-auto pointer-events-none">
         <div className="w-full backdrop-blur-md bg-white/90 border border-slate-400/80 px-5 md:px-7 h-14 rounded-full flex items-center justify-between shadow-md pointer-events-auto">
-          <button
-            onClick={() => handleTabClick("home")}
-            className="flex items-center gap-2.5 group cursor-pointer bg-transparent border-none p-0 flex-row shrink-0"
-          >
-            <CoderithumLogoSvg className="w-6 h-6 object-contain group-hover:scale-110 transition-transform duration-200 drop-shadow-xs" />
-            <span className="font-bold text-base md:text-lg tracking-tight text-slate-900 flex items-center gap-1.5">
-              Coderithum
-              <span className="px-2 py-0.5 text-[11px] font-mono font-normal rounded-full bg-blue-50 border border-blue-200 text-blue-600">
-                Tech Club
+          {/* LEFT: Branding */}
+          <div className="flex-1 flex justify-start shrink-0">
+            <button
+              onClick={() => handleTabClick("home")}
+              className="flex items-center gap-2 group cursor-pointer bg-transparent border-none p-0 flex-row"
+            >
+              <CoderithumLogoSvg className="w-8 h-8 object-contain group-hover:scale-110 transition-transform duration-200 drop-shadow-xs" />
+              <span className="font-bold text-base md:text-lg tracking-tight text-slate-900 flex items-center gap-1.5">
+                Coderithum
+                <span className="px-2 py-0.5 text-[11px] font-mono font-normal rounded-full bg-blue-50 border border-blue-200 text-blue-600 hidden xs:inline-block">
+                  Tech Club
+                </span>
               </span>
-            </span>
-          </button>
+            </button>
+          </div>
 
-          {/* Desktop Nav Links */}
-          <nav className="hidden md:flex items-center gap-5 lg:gap-7 text-sm md:text-base font-medium text-slate-700">
-            {tabs.map(tab => (
-              <button
-                key={tab.id}
-                onClick={() => handleTabClick(tab.id)}
-                className={`hover:text-black transition-colors cursor-pointer relative py-1 bg-transparent border-none ${
-                  isActive(tab.id) ? "text-slate-900 font-bold" : "text-slate-600"
-                }`}
-              >
-                {tab.label}
-                {isActive(tab.id) && (
-                  <motion.span
-                    layoutId="activeHeaderTab"
-                    className="absolute -bottom-0.5 left-0 right-0 h-[2.5px] bg-blue-600 rounded-full"
-                  />
-                )}
-              </button>
-            ))}
-          </nav>
+          {/* CENTER: Navigation Links */}
+          <div className="hidden md:flex justify-center items-center">
+            <nav className="flex items-center gap-5 lg:gap-7 text-sm md:text-base font-medium text-slate-700">
+              {tabs.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleTabClick(tab.id)}
+                  className={`hover:text-black transition-colors cursor-pointer relative py-1 bg-transparent border-none ${
+                    isActive(tab.id) ? "text-slate-900 font-bold" : "text-slate-600"
+                  }`}
+                >
+                  {tab.label}
+                  {isActive(tab.id) && (
+                    <motion.span
+                      layoutId="activeHeaderTab"
+                      className="absolute -bottom-0.5 left-0 right-0 h-[2.5px] bg-blue-600 rounded-full"
+                    />
+                  )}
+                </button>
+              ))}
+            </nav>
+          </div>
 
-          {/* Mobile Menu Toggle */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-1.5 text-slate-600 hover:text-black transition-colors bg-transparent border-none cursor-pointer"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* RIGHT: College Logo / Mobile Menu Toggle */}
+          <div className="flex-1 flex justify-end items-center gap-4">
+            {/* College Logo (Desktop Only) */}
+            <div className="hidden md:block shrink-0">
+              <img
+                src="/gec-logo.png"
+                alt="GEC Daman Logo"
+                className="w-10 h-10 object-contain transition-transform duration-200 hover:scale-105"
+              />
+            </div>
+
+            {/* Mobile Menu Toggle (Mobile Only) */}
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-1.5 text-slate-600 hover:text-black transition-colors bg-transparent border-none cursor-pointer"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </header>
 

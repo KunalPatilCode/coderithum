@@ -172,14 +172,14 @@ export default function TeamHierarchyGraph({
       {/* Visual Hierarchy Graph Viewport */}
       <div className="w-full overflow-x-auto p-6 bg-slate-50 border-2 border-slate-900 shadow-[4px_4px_0px_#000] relative space-y-8 min-h-[450px]">
 
-        {/* Tier 1: Faculty Mentors & Advisors */}
+        {/* Tier 1: Institutional Leadership (Principal) */}
         <div className="space-y-3">
           <button
             onClick={() => toggleTier(1)}
             className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-emerald-800 bg-emerald-50 px-3 py-1 border-2 border-emerald-800 shadow-[2px_2px_0px_#000] cursor-pointer"
           >
             <GraduationCap className="size-4" />
-            <span>Tier 1: Faculty Advisory Board ({tier1Faculty.length})</span>
+            <span>Tier 1: Institutional Leadership ({tier1Faculty.length})</span>
             {collapsedTiers[1] ? <ChevronRight className="size-3.5" /> : <ChevronDown className="size-3.5" />}
           </button>
 
@@ -201,14 +201,14 @@ export default function TeamHierarchyGraph({
           </div>
         </div>
 
-        {/* Tier 2: Executive Leadership Committee */}
+        {/* Tier 2: Permanent Core & Executive Committee */}
         <div className="space-y-3">
           <button
             onClick={() => toggleTier(2)}
             className="flex items-center gap-2 font-mono text-xs font-bold uppercase text-amber-800 bg-amber-50 px-3 py-1 border-2 border-amber-800 shadow-[2px_2px_0px_#000] cursor-pointer"
           >
             <Crown className="size-4" />
-            <span>Tier 2: Student Leadership Committee ({tier2Execs.length})</span>
+            <span>Tier 2: Permanent Core & Executive Board ({tier2Execs.length})</span>
             {collapsedTiers[2] ? <ChevronRight className="size-3.5" /> : <ChevronDown className="size-3.5" />}
           </button>
 

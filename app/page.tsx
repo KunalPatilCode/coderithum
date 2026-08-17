@@ -111,7 +111,15 @@ export default function Home() {
 
       const storedProjects = localStorage.getItem("coderithum_projects");
       if (storedProjects) {
-        setProjects(JSON.parse(storedProjects));
+        const parsed = JSON.parse(storedProjects);
+        const hasZebra = parsed.some((p: any) => p.id.includes("zebra"));
+        const hasZebraThumbV2 = parsed.some((p: any) => p.banner && p.banner.includes("zebra-thumbnail-v2"));
+        if (!hasZebra || !hasZebraThumbV2) {
+          localStorage.setItem("coderithum_projects", JSON.stringify(initialProjects));
+          setProjects(initialProjects);
+        } else {
+          setProjects(parsed);
+        }
       } else {
         localStorage.setItem("coderithum_projects", JSON.stringify(initialProjects));
         setProjects(initialProjects);
@@ -162,8 +170,9 @@ export default function Home() {
       const storedTeam = localStorage.getItem("coderithum_team");
       if (storedTeam) {
         const parsed = JSON.parse(storedTeam);
-        const hasShruti = parsed.some((t: any) => t.name.includes("Shruti"));
-        if (!hasShruti) {
+        const hasShruty = parsed.some((t: any) => t.name.includes("Shruty"));
+        const hasAvinash = parsed.some((t: any) => t.name.includes("Avinash"));
+        if (!hasShruty || !hasAvinash) {
           localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));
           setTeam(initialTeam);
         } else {

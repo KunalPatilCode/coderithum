@@ -79,6 +79,7 @@ function NetworkNodeCard({
   }
 
   const cardWidthClass = compact ? "w-52 sm:w-56 md:w-60 p-2.5 sm:p-3" : "w-60 sm:w-68 md:w-72 p-3.5 sm:p-4"
+  const cardHeightClass = compact ? "h-[140px]" : "h-[180px]"
   const avatarSizeClass = compact ? "size-12 sm:size-16" : "size-16 sm:size-20"
   const titleSizeClass = compact ? "text-xs sm:text-sm font-extrabold" : "text-sm sm:text-base font-black"
 
@@ -99,7 +100,7 @@ function NetworkNodeCard({
   return (
     <div
       onClick={onClick}
-      className={`relative ${cardWidthClass} ${isPremium ? "bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border-[3px]" : "bg-slate-950 border-2"} ${themeBorder} ${themeShadow} font-mono text-xs z-10 flex flex-col justify-between select-none group transition-all duration-200 ${onClick ? "cursor-pointer hover:scale-105" : ""
+      className={`relative ${cardWidthClass} ${cardHeightClass} ${isPremium ? "bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 border-[3px]" : "bg-slate-950 border-2"} ${themeBorder} ${themeShadow} font-mono text-xs z-10 flex flex-col justify-between select-none group transition-all duration-200 ${onClick ? "cursor-pointer hover:scale-105" : ""
         }`}
     >
 
@@ -137,7 +138,7 @@ function NetworkNodeCard({
         </div>
 
         <div className="min-w-0 flex-1">
-          <h4 className={`${titleSizeClass} text-white truncate group-hover:text-cyan-400 transition-colors`}>
+          <h4 className={`${titleSizeClass} text-white line-clamp-2 leading-tight group-hover:text-cyan-400 transition-colors`}>
             {member.name}
           </h4>
           <p className="text-[10px] sm:text-xs text-slate-400 mt-0.5 line-clamp-2 leading-tight">
@@ -203,7 +204,7 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
 
   // Boot logs
   const bootLogs = [
-    "> MOUNTING PERMANENT CORE: PROF. SHRUTI TOMAR, KUNAL PATIL, MAITRI PATEL...",
+    "> MOUNTING PERMANENT CORE: DR. AVINASH R. CHAUDHARI, MS. SHRUTY TOMAR, KUNAL PATIL, MAITRI PATEL...",
     "> ROTATING DIAMOND RECTANGLE ENCLOSURES ONLINE",
     "> SYNCHRONIZING LEADERS RING TOPOLOGY: MDISMILE <-> PURNIMA <-> ABHISHEK...",
     "> CODERITHUM NETWORK ONLINE"
@@ -250,8 +251,17 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
   // =========================================================
   // 1. TOP PERMANENT CORE MEMBERS
   // =========================================================
+  const principalMember = useMemo(() => {
+    return (
+      team.find((m) => m.role.toLowerCase().includes("principal")) ||
+      team.find((m) => m.name.toLowerCase().includes("avinash")) ||
+      team.find((m) => m.name.toLowerCase().includes("chaudhari"))
+    )
+  }, [team])
+
   const facultyMember = useMemo(() => {
     return (
+      team.find((m) => m.name.toLowerCase().includes("shruty")) ||
       team.find((m) => m.name.toLowerCase().includes("shruti")) ||
       team.find((m) => m.category === "Faculty" || getMemberTierLevel(m) === 1) ||
       team[0]
@@ -586,12 +596,31 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
           </div>
           <div className="space-y-5 max-w-6xl mx-auto py-1 px-2">
             
-            {/* LEVEL 1: PERMANENT CORE EXECUTIVE BOARD */}
+            {/* LEVEL 1: PRINCIPAL & CHIEF PATRON */}
             <div className="space-y-2">
               <div className="text-[9px] text-emerald-400 font-extrabold tracking-widest uppercase text-center w-full">
-                ▲ LEVEL 1: PERMANENT CORE EXECUTIVE BOARD
+                ▲ LEVEL 1: PRINCIPAL & CHIEF PATRON
               </div>
-              <div className="flex flex-wrap lg:flex-nowrap justify-center items-center gap-6 sm:gap-10 md:gap-14 w-full">
+              <div className="flex justify-center items-center w-full">
+                {principalMember && (
+                  <NetworkNodeCard
+                    member={principalMember}
+                    badgeText="PRINCIPAL"
+                    themeColor="emerald"
+                    prefersReducedMotion={prefersReducedMotion}
+                    compact={false}
+                    isPremium={true}
+                  />
+                )}
+              </div>
+            </div>
+
+            {/* LEVEL 2: PERMANENT CORE EXECUTIVE BOARD */}
+            <div className="space-y-2 pt-4 border-t border-slate-900/60">
+              <div className="text-[9px] text-emerald-400 font-extrabold tracking-widest uppercase text-center w-full">
+                ▲ LEVEL 2: PERMANENT CORE EXECUTIVE BOARD
+              </div>
+              <div className="flex flex-wrap lg:flex-nowrap justify-center items-stretch gap-6 sm:gap-10 md:gap-14 w-full">
                 <NetworkNodeCard
                   member={facultyMember}
                   badgeText="FACULTY"

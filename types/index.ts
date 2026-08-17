@@ -115,8 +115,9 @@ export function getMemberTierLevel(member?: Partial<TeamMember> | null): 1 | 2 |
   if (member.tierLevel && [1, 2, 3, 4].includes(member.tierLevel)) {
     return member.tierLevel;
   }
-  if (member.category === "Faculty") return 1;
   const roleLower = (member.role || "").toLowerCase();
+  if (roleLower.includes("principal")) return 1;
+  if (member.category === "Faculty") return 2;
   if (member.category === "Leadership" || roleLower.includes("president") || roleLower.includes("chair")) {
     return 2;
   }

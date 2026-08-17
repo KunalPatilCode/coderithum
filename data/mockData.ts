@@ -1364,61 +1364,33 @@ export const initialEvents: ClubEvent[] = [
 
 export const initialProjects: ClubProject[] = [
   {
-    id: "gecdaman-redesign",
-    title: "GEC Daman Portal Upgrade Initiative",
-    banner:
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    id: "zebra-certificate-admin",
+    title: "Zebra Certificate Admin",
+    banner: "/zebra-thumbnail-v2.png",
     shortDesc:
-      "A modern, lightning-fast static portal redesign concept for GEC Daman utilizing Next.js.",
+      "Coderithum's custom certificate generation, distribution, and verification system.",
     description:
-      "Built by Coderithum members to conceptualize a faster, highly responsive official college portal. Features sub-second page loads, clean neobrutalist design parameters, integrated notice structures, and a mobile-friendly menu system for students to access syllabus, circulars, and departmental metrics.",
+      "Zebra is Coderithum's official certificate-generation system. Designed to create, verify, and manage certificates issued by the club, it utilizes a secure role-based access control framework. Faculty Coordinators hold highest administrative control to approve major changes, certificate data, and verification registries, while the President and Vice President manage operations. The system ensures absolute integrity of issued credentials and student participation records.",
     techStack: [
-      "Next.js 16",
-      "Tailwind CSS v4",
+      "Next.js",
+      "React",
       "TypeScript",
-      "Framer Motion",
-      "Lucide Icons",
+      "Tailwind CSS",
+      "Node.js",
+      "Canvas API",
+      "Role-based Access Control (RBAC)",
     ],
-    github: "https://github.com/Coderithum/gec-daman-concept",
-    demo: "https://coderithum.github.io/gec-daman-concept/",
-    mentor: "Mrs. Hemali J. Damania",
+    github: "https://github.com/Coderithum/zebra-certificate-admin",
+    demo: "https://coderithum.github.io/zebra/",
+    mentor: "Ms. Shruty Tomar",
     team: [
-      "Kunal Patil (Lead)",
-      "Maitri Patel (Frontend)",
-      "Kunal Damania (UI/UX)",
+      "Kunal Patil (Ideation & Development)",
+      "Maitri Patel (Development)",
+      "Md Ismile (Development)",
     ],
     gallery: [
       "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-    ],
-  },
-  {
-    id: "solar-telemetry",
-    title: "Smart Solar Grid Telemetry System",
-    banner:
-      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
-    shortDesc:
-      "An IoT dashboard tracking campus solar panel generation efficiency in real-time.",
-    description:
-      "An interdisciplinary project combining Electrical and Computer engineering domains. Captures real-time telemetry from GEC Daman campus solar cells using sensor arrays, parses data parameters locally, and projects generation efficiency onto a dashboard, sending anomaly warnings to administrative portals.",
-    techStack: [
-      "React",
-      "Python",
-      "Raspberry Pi",
-      "MQTT",
-      "Chart.js",
-      "Tailwind CSS",
-    ],
-    github: "https://github.com/Coderithum/solar-grid-telemetry",
-    demo: "https://coderithum.github.io/solar-grid-telemetry/",
-    mentor: "Ms. Dipika Ganpat Damania (Electrical Dept)",
-    team: [
-      "Hardik Solanki (IoT Lead)",
-      "Nisha Patel (Frontend Dev)",
-      "Amit Halpati (Firmware)",
-    ],
-    gallery: [
-      "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80",
     ],
   },
 ];
@@ -1471,10 +1443,10 @@ export const initialAlbums: GalleryAlbum[] = [
 
 export const initialTeam: TeamMember[] = [
   {
-    name: "Prof. Shruti Tomar",
+    name: "Ms. Shruty Tomar",
     role: "Faculty Advisor & Coordinator",
     category: "Faculty",
-    tierLevel: 1,
+    tierLevel: 2,
     avatar:
       "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&h=150&q=80",
     linkedin: "https://linkedin.com",

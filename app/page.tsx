@@ -18,6 +18,7 @@ import ProjectsView from "../components/views/ProjectsView";
 import ProjectDetailView from "../components/views/ProjectDetailView";
 import GalleryView from "../components/views/GalleryView";
 import TeamView from "../components/views/TeamView";
+import RuleBookView from "../components/views/RuleBookView";
 import AchievementsView from "../components/views/AchievementsView";
 import ContactView from "../components/views/ContactView";
 import Error404View from "../components/views/Error404View";
@@ -29,9 +30,37 @@ import {
   initialProjects,
   initialAlbums,
   initialTeam,
-  initialAchievements
+  initialAchievements,
+  initialHeroConfig
 } from "../data/mockData";
 import LogoLoader from "../components/LogoLoader";
+
+const getThemeShades = (hex: string) => {
+  let hover = "#1d4ed8";
+  let light = "#eff6ff";
+  
+  if (hex === "#2563eb") { // Blue
+    hover = "#1d4ed8";
+    light = "#eff6ff";
+  } else if (hex === "#059669") { // Emerald
+    hover = "#047857";
+    light = "#ecfdf5";
+  } else if (hex === "#7c3aed") { // Violet
+    hover = "#6d28d9";
+    light = "#f5f3ff";
+  } else if (hex === "#d97706") { // Amber
+    hover = "#b45309";
+    light = "#fffbeb";
+  } else if (hex === "#e11d48") { // Rose
+    hover = "#be123c";
+    light = "#fff1f2";
+  } else {
+    // Custom hex fallback
+    hover = hex;
+    light = `${hex}10`;
+  }
+  return { hover, light };
+};
 
 export default function Home() {
   // Navigation & Loading State
@@ -48,10 +77,30 @@ export default function Home() {
   const [albums, setAlbums] = useState<any[]>([]);
   const [team, setTeam] = useState<any[]>([]);
   const [achievements, setAchievements] = useState<any[]>([]);
+  const [heroConfig, setHeroConfig] = useState<any>(initialHeroConfig);
+
+  // Update theme colors dynamically on the document root when heroConfig changes
+  useEffect(() => {
+    if (typeof window !== "undefined" && heroConfig?.accentColor) {
+      const hex = heroConfig.accentColor;
+      const { hover, light } = getThemeShades(hex);
+      document.documentElement.style.setProperty('--theme-color', hex);
+      document.documentElement.style.setProperty('--theme-color-hover', hover);
+      document.documentElement.style.setProperty('--theme-color-light', light);
+    }
+  }, [heroConfig]);
 
   // Load from localStorage on client mount
   useEffect(() => {
     if (typeof window !== "undefined") {
+      const storedHero = localStorage.getItem("coderithum_hero_config");
+      if (storedHero) {
+        setHeroConfig(JSON.parse(storedHero));
+      } else {
+        localStorage.setItem("coderithum_hero_config", JSON.stringify(initialHeroConfig));
+        setHeroConfig(initialHeroConfig);
+      }
+
       const storedEvents = localStorage.getItem("coderithum_events");
       if (storedEvents) {
         setEvents(JSON.parse(storedEvents));
@@ -62,7 +111,15 @@ export default function Home() {
 
       const storedProjects = localStorage.getItem("coderithum_projects");
       if (storedProjects) {
-        setProjects(JSON.parse(storedProjects));
+        const parsed = JSON.parse(storedProjects);
+        const hasZebra = parsed.some((p: any) => p.id.includes("zebra"));
+        const hasZebraThumbV2 = parsed.some((p: any) => p.banner && p.banner.includes("zebra-thumbnail-v2"));
+        if (!hasZebra || !hasZebraThumbV2) {
+          localStorage.setItem("coderithum_projects", JSON.stringify(initialProjects));
+          setProjects(initialProjects);
+        } else {
+          setProjects(parsed);
+        }
       } else {
         localStorage.setItem("coderithum_projects", JSON.stringify(initialProjects));
         setProjects(initialProjects);
@@ -136,37 +193,13 @@ export default function Home() {
       const storedTeam = localStorage.getItem("coderithum_team");
       if (storedTeam) {
         const parsed = JSON.parse(storedTeam);
-        const hasAaryan = parsed.some((t: any) => t.name === "Aaryan Patel");
-        if (!hasAaryan) {
-          const updated = [...parsed, {
-            name: "Aaryan Patel",
-            role: "Marketing & Outreach (Outreach Lead)",
-            category: "Marketing",
-            avatar: "/aaryan-patel.png",
-            avatarStyle: {
-              objectPosition: "center 10%",
-              transform: "translateY(18px) scale(1.25)",
-            },
-            linkedin: "https://linkedin.com",
-          }];
-          localStorage.setItem("coderithum_team", JSON.stringify(updated));
-          setTeam(updated);
+        const hasShruty = parsed.some((t: any) => t.name.includes("Shruty"));
+        const hasAvinash = parsed.some((t: any) => t.name.includes("Avinash"));
+        if (!hasShruty || !hasAvinash) {
+          localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));
+          setTeam(initialTeam);
         } else {
-          const updated = parsed.map((t: any) => {
-            if (t.name === "Aaryan Patel") {
-              return {
-                ...t,
-                avatar: "/aaryan-patel.png",
-                avatarStyle: {
-                  objectPosition: "center 10%",
-                  transform: "translateY(18px) scale(1.25)",
-                }
-              };
-            }
-            return t;
-          });
-          localStorage.setItem("coderithum_team", JSON.stringify(updated));
-          setTeam(updated);
+          setTeam(parsed);
         }
       } else {
         localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));
@@ -181,6 +214,47 @@ export default function Home() {
         setAchievements(initialAchievements);
       }
     }
+
+    const syncAllPublicData = () => {
+      if (typeof window === "undefined") return;
+      try {
+        const storedHero = localStorage.getItem("coderithum_hero_config");
+        if (storedHero) setHeroConfig(JSON.parse(storedHero));
+
+        const storedEvents = localStorage.getItem("coderithum_events");
+        if (storedEvents) setEvents(JSON.parse(storedEvents));
+
+        const storedProjects = localStorage.getItem("coderithum_projects");
+        if (storedProjects) setProjects(JSON.parse(storedProjects));
+
+        const storedAlbums = localStorage.getItem("coderithum_albums");
+        if (storedAlbums) setAlbums(JSON.parse(storedAlbums));
+
+        const storedTeam = localStorage.getItem("coderithum_team");
+        if (storedTeam) setTeam(JSON.parse(storedTeam));
+
+        const storedAchievements = localStorage.getItem("coderithum_achievements");
+        if (storedAchievements) setAchievements(JSON.parse(storedAchievements));
+      } catch (err) {
+        console.error("Error synchronizing public data:", err);
+      }
+    };
+
+    window.addEventListener("storage", syncAllPublicData);
+    window.addEventListener("coderithum_data_sync", syncAllPublicData);
+    window.addEventListener("team_updated", syncAllPublicData);
+    window.addEventListener("events_updated", syncAllPublicData);
+    window.addEventListener("projects_updated", syncAllPublicData);
+    window.addEventListener("albums_updated", syncAllPublicData);
+
+    return () => {
+      window.removeEventListener("storage", syncAllPublicData);
+      window.removeEventListener("coderithum_data_sync", syncAllPublicData);
+      window.removeEventListener("team_updated", syncAllPublicData);
+      window.removeEventListener("events_updated", syncAllPublicData);
+      window.removeEventListener("projects_updated", syncAllPublicData);
+      window.removeEventListener("albums_updated", syncAllPublicData);
+    };
   }, []);
 
   // Scroll to top on view changes
@@ -204,116 +278,121 @@ export default function Home() {
       {showLoader && <LogoLoader onComplete={() => setShowLoader(false)} />}
       <div className="min-h-screen bg-transparent text-slate-900 font-sans antialiased selection:bg-blue-200 selection:text-blue-900">
 
-      {/* Decorative Glow Elements */}
-      <div className="absolute top-[800px] left-[10%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[400px] right-[10%] w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
+        {/* Decorative Glow Elements */}
+        <div className="absolute top-[800px] left-[10%] w-[300px] h-[300px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-[400px] right-[10%] w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[140px] pointer-events-none" />
 
-      {/* Navigation Header */}
-      <Header
-        view={view}
-        setView={setView}
-        setSelectedId={setSelectedId}
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-      />
+        {/* Navigation Header */}
+        <Header
+          view={view}
+          setView={setView}
+          setSelectedId={setSelectedId}
+          mobileMenuOpen={mobileMenuOpen}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
 
-      {/* Main Body Content Views */}
-      <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 min-h-[75vh]">
-        <AnimatePresence mode="wait">
+        {/* Main Body Content Views */}
+        <main className="max-w-7xl mx-auto px-6 py-12 relative z-10 min-h-[75vh]">
+          <AnimatePresence mode="wait">
 
-          {view === "home" && (
-            <HomeView
-              events={events}
-              projects={projects}
-              achievements={achievements}
-              totalEventsCount={totalEventsCount}
-              totalProjectsCount={totalProjectsCount}
-              totalMembersCount={totalMembersCount}
-              totalAwardsCount={totalAwardsCount}
-              setView={setView}
-              setSelectedId={setSelectedId}
-            />
-          )}
+            {view === "home" && (
+              <HomeView
+                events={events}
+                projects={projects}
+                achievements={achievements}
+                totalEventsCount={totalEventsCount}
+                totalProjectsCount={totalProjectsCount}
+                totalMembersCount={totalMembersCount}
+                totalAwardsCount={totalAwardsCount}
+                setView={setView}
+                setSelectedId={setSelectedId}
+                heroConfig={heroConfig}
+              />
+            )}
 
-          {view === "about" && (
-            <AboutView team={team} setView={setView} />
-          )}
+            {view === "about" && (
+              <AboutView team={team} setView={setView} />
+            )}
 
-          {view === "events" && (
-            <EventsView
-              events={events}
-              setView={setView}
-              setSelectedId={setSelectedId}
-            />
-          )}
+            {view === "events" && (
+              <EventsView
+                events={events}
+                setView={setView}
+                setSelectedId={setSelectedId}
+              />
+            )}
 
-          {view === "event-detail" && (
-            <EventDetailView
-              currentEvent={currentEvent}
-              setView={setView}
-            />
-          )}
+            {view === "event-detail" && (
+              <EventDetailView
+                currentEvent={currentEvent}
+                setView={setView}
+              />
+            )}
 
-          {view === "projects" && (
-            <ProjectsView
-              projects={projects}
-              setView={setView}
-              setSelectedId={setSelectedId}
-            />
-          )}
+            {view === "projects" && (
+              <ProjectsView
+                projects={projects}
+                setView={setView}
+                setSelectedId={setSelectedId}
+              />
+            )}
 
-          {view === "project-detail" && (
-            <ProjectDetailView
-              currentProject={currentProject}
-              setView={setView}
-            />
-          )}
+            {view === "project-detail" && (
+              <ProjectDetailView
+                currentProject={currentProject}
+                setView={setView}
+              />
+            )}
 
-          {view === "gallery" && (
-            <GalleryView
-              albums={albums}
-              activeAlbumId={activeAlbumId}
-              setActiveAlbumId={setActiveAlbumId}
-              currentAlbum={currentAlbum}
-            />
-          )}
+            {view === "gallery" && (
+              <GalleryView
+                albums={albums}
+                activeAlbumId={activeAlbumId}
+                setActiveAlbumId={setActiveAlbumId}
+                currentAlbum={currentAlbum}
+              />
+            )}
 
-          {view === "team" && (
-            <TeamView team={team} />
-          )}
+            {view === "team" && (
+              <TeamView team={team} />
+            )}
 
-          {view === "achievements" && (
-            <AchievementsView achievements={achievements} />
-          )}
+            {view === "rulebook" && (
+              <RuleBookView />
+            )}
 
-          {view === "contact" && (
-            <ContactView
-              contactSuccess={contactSuccess}
-              setContactSuccess={setContactSuccess}
-            />
-          )}
+            {view === "achievements" && (
+              <AchievementsView achievements={achievements} />
+            )}
 
-          {view === "404-test" && (
-            <Error404View setView={setView} />
-          )}
+            {view === "contact" && (
+              <ContactView
+                contactSuccess={contactSuccess}
+                setContactSuccess={setContactSuccess}
+              />
+            )}
 
-          {view === "500-test" && (
-            <Error500View setView={setView} />
-          )}
+            {view === "404-test" && (
+              <Error404View setView={setView} />
+            )}
 
-        </AnimatePresence>
-      </main>
+            {view === "500-test" && (
+              <Error500View setView={setView} />
+            )}
 
-      {/* Text Marquee Animation */}
-      <TextMarqueeAnimation />
+          </AnimatePresence>
+        </main>
 
-      {/* General Footer */}
-      <Footer setView={setView} setSelectedId={setSelectedId} />
+        {/* Text Marquee Animation */}
+        <TextMarqueeAnimation />
 
-      {/* Custom Rocket Cursor */}
-      <GlobalRocketCursor />
+        {/* General Footer */}
+        <Footer setView={setView} setSelectedId={setSelectedId} />
 
-    </div>
+        {/* Custom Rocket Cursor */}
+        <GlobalRocketCursor />
+
+      </div>
     </>
   );
 }

@@ -7,15 +7,16 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableRow, 
-  TableHead, 
-  TableCell 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell
 } from "@/components/ui/table"
 import { Code2, Plus, Edit2, Trash2, ArrowLeft } from "lucide-react"
+import { broadcastDataChange } from "@/types"
 
 export default function ProjectsManagerPage() {
   const { toast } = useToast()
@@ -54,8 +55,8 @@ export default function ProjectsManagerPage() {
   }, [searchParams])
 
   const saveToStorage = (updatedList: any[]) => {
-    localStorage.setItem("coderithum_projects", JSON.stringify(updatedList))
     setProjects(updatedList)
+    broadcastDataChange("coderithum_projects", updatedList)
   }
 
   const handleOpenAdd = () => {
@@ -157,7 +158,7 @@ export default function ProjectsManagerPage() {
 
   return (
     <div className="h-full flex flex-col gap-6 text-slate-900 min-h-0">
-      
+
       {/* Title Header */}
       <div className="flex items-center justify-between shrink-0">
         <div>
@@ -165,8 +166,8 @@ export default function ProjectsManagerPage() {
             {view === "list" ? "Projects Manager" : editId ? "Edit Project" : "Showcase Project"}
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            {view === "list" 
-              ? "List, verify, and publish developer achievements and student-led software models." 
+            {view === "list"
+              ? "List, verify, and publish developer achievements and student-led software models."
               : "Provide technical specs, code links, and core developers to add to showcase."}
           </p>
         </div>
@@ -232,17 +233,17 @@ export default function ProjectsManagerPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1.5">
-                          <Button 
-                            variant="secondary" 
-                            className="size-8 p-0" 
+                          <Button
+                            variant="secondary"
+                            className="size-8 p-0"
                             onClick={() => handleOpenEdit(proj)}
                             title="Edit Project"
                           >
                             <Edit2 className="size-3.5" />
                           </Button>
-                          <Button 
-                            variant="destructive" 
-                            className="size-8 p-0" 
+                          <Button
+                            variant="destructive"
+                            className="size-8 p-0"
                             onClick={() => handleDelete(proj.id)}
                             title="Delete Project"
                           >

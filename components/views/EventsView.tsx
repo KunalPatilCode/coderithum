@@ -25,7 +25,7 @@ export default function EventsView({ events, setView, setSelectedId }: EventsVie
       className="space-y-16"
     >
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <InteractiveHeading text="Interactive Timeline" as="h2" className="text-xs font-mono tracking-widest text-blue-600 uppercase" />
+        <InteractiveHeading text="Interactive Timeline" as="h2" className="text-xs font-mono tracking-widest text-theme uppercase" />
         <div>
           <InteractiveHeading text="Workshops & Hackathons" as="h1" className="text-4xl font-extrabold text-slate-900 tracking-tight" />
         </div>
@@ -67,14 +67,14 @@ export default function EventsView({ events, setView, setSelectedId }: EventsVie
                   </div>
                 </div>
                 <div className="text-xs text-slate-500 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</div>
-                <h4 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{event.title}</h4>
+                <h4 className="text-lg font-bold text-slate-900 group-hover:text-theme transition-colors">{event.title}</h4>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">{event.shortDesc}</p>
               </div>
               <div className="flex items-center justify-between border-t-2 border-slate-200 pt-4">
                 <div className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{event.venue}</div>
                 <button
                   onClick={() => handleEventClick(event.id)}
-                  className="px-4 py-2 bg-blue-50 border-2 border-blue-600 rounded-none text-xs font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
+                  className="px-4 py-2 bg-theme-light border-2 border-theme rounded-none text-xs font-bold text-theme hover:bg-theme hover:text-white transition-all shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                 >
                   Details & Reg
                 </button>
@@ -115,14 +115,14 @@ export default function EventsView({ events, setView, setSelectedId }: EventsVie
                   </div>
                 </div>
                 <div className="text-xs text-slate-500 flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{event.date}</div>
-                <h4 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{event.title}</h4>
+                <h4 className="text-lg font-bold text-slate-900 group-hover:text-theme transition-colors">{event.title}</h4>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed line-clamp-3">{event.shortDesc}</p>
               </div>
               <div className="flex items-center justify-between border-t-2 border-slate-200 pt-4">
                 <div className="text-xs text-slate-500 flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{event.venue}</div>
                 <button
                   onClick={() => handleEventClick(event.id)}
-                  className="px-4 py-2 bg-blue-50 border-2 border-blue-600 rounded-none text-xs font-bold text-blue-600 hover:bg-blue-600 hover:text-white transition-all shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
+                  className="px-4 py-2 bg-theme-light border-2 border-theme rounded-none text-xs font-bold text-theme hover:bg-theme hover:text-white transition-all shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                 >
                   View Agenda
                 </button>

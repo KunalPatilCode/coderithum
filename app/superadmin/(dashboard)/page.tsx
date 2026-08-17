@@ -2,21 +2,28 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { 
-  Calendar, 
-  Code2, 
-  Users2, 
-  Trophy, 
-  ArrowRight, 
-  Plus, 
-  Activity, 
+import {
+  Calendar,
+  Code2,
+  Users2,
+  Trophy,
+  ArrowRight,
+  Plus,
+  Activity,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  Sparkles,
+  Bell
 } from "lucide-react"
+
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { useToast } from "@/components/ui/use-toast"
+import { initialHeroConfig } from "@/data/mockData"
+import { Palette, Save } from "lucide-react"
 
 export default function SuperAdminDashboardPage() {
+  const { toast } = useToast()
   const [stats, setStats] = useState({
     eventsCount: 0,
     projectsCount: 0,
@@ -24,6 +31,82 @@ export default function SuperAdminDashboardPage() {
     achievementsCount: 0,
   })
   const [loading, setLoading] = useState(true)
+  const [heroConfig, setHeroConfig] = useState<any>(initialHeroConfig)
+
+  const presets: Record<string, any> = {
+    "ice-canvas": {
+      presetId: "ice-canvas",
+      badgeText: "GEC Daman CodeRhythm",
+      title: "Empowering Developers & Tech Innovators",
+      highlightTitle: "CodeRhythm 2026-2027",
+      subtitle: "Registrations are now open for the CodeRhythm Academic Year 2026-2027! Join workshops, hackathons, and open-source project sprints.",
+      backgroundStyle: "pixel-art",
+      accentColor: "#2563eb",
+      layoutStyle: "full-bleed",
+      bannerImage: "",
+      showUpcomingList: true
+    },
+    "makarsankranti": {
+      presetId: "makarsankranti",
+      badgeText: "Festival Theme",
+      title: "Happy Makar Sankranti",
+      highlightTitle: "Makar Sankranti",
+      subtitle: "Wishing you a sky full of kites and a heart full of happiness!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#d97706",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_makarsankranti.jpg",
+      showUpcomingList: true
+    },
+    "dussehra": {
+      presetId: "dussehra",
+      badgeText: "Festival Theme",
+      title: "Happy Dussehra",
+      highlightTitle: "Dussehra",
+      subtitle: "May this festive season bring you good health, prosperity, and success!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#e11d48",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_dussehra.jpg",
+      showUpcomingList: true
+    },
+    "christmas": {
+      presetId: "christmas",
+      badgeText: "Festival Theme",
+      title: "Merry Christmas",
+      highlightTitle: "Christmas",
+      subtitle: "Wishing you peace, joy, and a very Merry Christmas!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#2563eb",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_christmas.jpg",
+      showUpcomingList: true
+    },
+    "holi": {
+      presetId: "holi",
+      badgeText: "Festival Theme",
+      title: "Happy Holi",
+      highlightTitle: "Holi",
+      subtitle: "Celebrate the festival of colors with joy, love, and vibrant energy!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#7c3aed",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_holi.jpg",
+      showUpcomingList: true
+    },
+    "diwali": {
+      presetId: "diwali",
+      badgeText: "Festival Theme",
+      title: "Happy Diwali",
+      highlightTitle: "Diwali",
+      subtitle: "May the festival of lights bring brightness, warmth, and joy to your life!",
+      backgroundStyle: "pixel-art",
+      accentColor: "#d97706",
+      layoutStyle: "full-bleed",
+      bannerImage: "/theme_diwali.jpg",
+      showUpcomingList: true
+    }
+  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -43,9 +126,42 @@ export default function SuperAdminDashboardPage() {
         teamCount: getCount("coderithum_team"),
         achievementsCount: getCount("coderithum_achievements"),
       })
+
+      const storedHero = localStorage.getItem("coderithum_hero_config")
+      if (storedHero) {
+        try {
+          setHeroConfig(JSON.parse(storedHero))
+        } catch {
+          setHeroConfig(initialHeroConfig)
+        }
+      }
+
       setLoading(false)
     }
   }, [])
+
+  const handleApplyPreset = (presetId: string) => {
+    const selectedPreset = presets[presetId]
+    if (selectedPreset) {
+      setHeroConfig(selectedPreset)
+      toast({
+        title: "Preset Selected",
+        description: `Theme preset applied. Click 'Save Config' to publish changes.`,
+        variant: "success",
+      })
+    }
+  }
+
+  const handleSaveHero = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("coderithum_hero_config", JSON.stringify(heroConfig))
+      toast({
+        title: "Hero Config Saved!",
+        description: "Homepage theme and hero configuration updated successfully.",
+        variant: "success",
+      })
+    }
+  }
 
   if (loading) {
     return (
@@ -126,9 +242,9 @@ export default function SuperAdminDashboardPage() {
       </div>
 
       {/* Main Grid Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow min-h-0">
-        {/* Quick Operations (2 cols) */}
-        <Card className="lg:col-span-2 p-6 flex flex-col justify-between">
+      <div className="grid grid-cols-1 gap-6 flex-grow min-h-0">
+        {/* Quick Operations */}
+        <Card className="p-6 flex flex-col justify-between">
           <div>
             <div className="flex items-center gap-3 border-b-2 border-slate-900 pb-3 mb-4">
               <div className="p-1.5 rounded bg-emerald-50 text-emerald-600 border-2 border-emerald-600 shadow-[1.5px_1.5px_0px_#000]">
@@ -141,28 +257,41 @@ export default function SuperAdminDashboardPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link href="/superadmin/events?add=true" className="group p-4 bg-white border-2 border-slate-900 hover:border-blue-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
+
+              <Link href="/superadmin/announcements" className="group p-4 bg-white border-2 border-slate-900 hover:border-emerald-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
                 <div>
-                  <Calendar className="size-5 text-blue-600 mb-2" />
-                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-blue-600 transition-colors">Publish Event</h3>
-                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Schedule workshops, hackathons, or orientations for the tech club calendar.</p>
+                  <Bell className="size-5 text-emerald-600 mb-2" />
+                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-emerald-600 transition-colors">Calendar & Announcements</h3>
+                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Link active announcements directly with calendar events and priority flags.</p>
                 </div>
-                <div className="flex items-center gap-1.5 text-[9px] font-bold text-blue-600 font-mono uppercase tracking-wider pt-2">
-                  Launch Form <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                <div className="flex items-center gap-1.5 text-[9px] font-bold text-emerald-600 font-mono uppercase tracking-wider pt-2">
+                  Manage Announcements <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                 </div>
               </Link>
 
-              <Link href="/superadmin/projects?add=true" className="group p-4 bg-white border-2 border-slate-900 hover:border-purple-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
+              <Link href="/superadmin/events?add=true" className="group p-4 bg-white border-2 border-slate-900 hover:border-purple-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
                 <div>
-                  <Code2 className="size-5 text-purple-600 mb-2" />
-                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-purple-600 transition-colors">Showcase Project</h3>
-                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Add student hackathon prototypes or collaborative team project repositories.</p>
+                  <Calendar className="size-5 text-purple-600 mb-2" />
+                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-purple-600 transition-colors">Publish Event</h3>
+                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Schedule workshops, hackathons, or orientations for the tech club calendar.</p>
                 </div>
                 <div className="flex items-center gap-1.5 text-[9px] font-bold text-purple-600 font-mono uppercase tracking-wider pt-2">
                   Launch Form <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
                 </div>
               </Link>
+
+              <Link href="/superadmin/team" className="group p-4 bg-white border-2 border-slate-900 hover:border-amber-600 rounded-none shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] transition-all flex flex-col justify-between h-36">
+                <div>
+                  <Users2 className="size-5 text-amber-600 mb-2" />
+                  <h3 className="text-xs font-bold text-slate-900 font-mono uppercase group-hover:text-amber-600 transition-colors">Team Hierarchy & Photos</h3>
+                  <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">Manage yearly team tree graphs, hierarchy tiers, and member photo cropping.</p>
+                </div>
+                <div className="flex items-center gap-1.5 text-[9px] font-bold text-amber-600 font-mono uppercase tracking-wider pt-2">
+                  Open Team Deck <ArrowRight className="size-3 transition-transform group-hover:translate-x-0.5" />
+                </div>
+              </Link>
             </div>
+
           </div>
 
           <div className="mt-6 p-4 bg-blue-50 border-2 border-blue-600 rounded-none flex items-center gap-3 text-slate-800 shadow-[2px_2px_0px_#000]">
@@ -173,43 +302,7 @@ export default function SuperAdminDashboardPage() {
           </div>
         </Card>
 
-        {/* System Logs / Overview Tips (1 col) */}
-        <Card className="p-6 flex flex-col justify-between">
-          <div>
-            <div className="flex items-center gap-3 border-b-2 border-slate-900 pb-3 mb-4">
-              <div className="p-1.5 rounded bg-amber-50 text-amber-600 border-2 border-amber-600 shadow-[1.5px_1.5px_0px_#000]">
-                <AlertCircle className="size-4" />
-              </div>
-              <div>
-                <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">Console Guidance</h2>
-                <p className="text-[9px] text-slate-500 font-mono">Quick operator instructions.</p>
-              </div>
-            </div>
 
-            <div className="space-y-4">
-              <div className="p-3 bg-slate-50 border-2 border-slate-900 rounded-none shadow-[2px_2px_0px_#000]">
-                <p className="text-[9px] font-bold text-slate-700 font-mono uppercase">Local Storage Persistence</p>
-                <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                  Data is saved inside your browser cache. Clear browser cookies/site data to reset to standard mock files.
-                </p>
-              </div>
-
-              <div className="p-3 bg-slate-50 border-2 border-slate-900 rounded-none shadow-[2px_2px_0px_#000]">
-                <p className="text-[9px] font-bold text-slate-700 font-mono uppercase">Image Assets</p>
-                <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                  Provide Unsplash URLs or base64 paths for event and project banner images to render properly.
-                </p>
-              </div>
-
-              <div className="p-3 bg-slate-50 border-2 border-slate-900 rounded-none shadow-[2px_2px_0px_#000]">
-                <p className="text-[9px] font-bold text-slate-700 font-mono uppercase">GitHub Pages Deploy</p>
-                <p className="text-[10px] text-slate-500 mt-1 leading-relaxed">
-                  To publish updates permanently to GitHub Pages, commit the modified `data/mockData.ts` or add a JSON loader if necessary.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Card>
       </div>
     </div>
   )

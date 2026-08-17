@@ -15,7 +15,7 @@ export default function ProjectDetailView({ currentProject, setView }: ProjectDe
     return (
       <div className="text-center py-20">
         <h2 className="text-xl font-bold">Project not found</h2>
-        <button onClick={() => setView("projects")} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-none">
+        <button onClick={() => setView("projects")} className="mt-4 px-4 py-2 bg-theme text-white rounded-none">
           Back to Projects
         </button>
       </div>
@@ -63,7 +63,7 @@ export default function ProjectDetailView({ currentProject, setView }: ProjectDe
             <div className="flex flex-wrap gap-2">
               {currentProject.team.map((member, idx) => (
                 <span key={idx} className="px-3 py-1.5 rounded-none bg-slate-50 text-xs font-semibold text-slate-700 border-2 border-slate-200 flex items-center gap-2">
-                  <User className="w-3.5 h-3.5 text-blue-600" />
+                  <User className="w-3.5 h-3.5 text-theme" />
                   {member}
                 </span>
               ))}
@@ -96,7 +96,7 @@ export default function ProjectDetailView({ currentProject, setView }: ProjectDe
                 href={currentProject.demo}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all"
+                className="w-full py-2.5 bg-theme hover:bg-theme-hover text-white rounded-none border-2 border-theme-hover text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all"
               >
                 Live Demonstration <ExternalLink className="w-3.5 h-3.5" />
               </a>

@@ -25,7 +25,7 @@ export default function SettingsPage() {
 
   const handleSaveCredentials = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (typeof window === "undefined") return
 
     const actualPassword = localStorage.getItem("coderithum_admin_password") || "admin"
@@ -71,7 +71,7 @@ export default function SettingsPage() {
 
   return (
     <div className="h-full flex flex-col gap-6 overflow-hidden text-slate-900 select-none min-h-0">
-      
+
       {/* Title */}
       <div className="shrink-0">
         <h1 className="text-xl font-black text-slate-900 tracking-wide font-mono uppercase">SYSTEM SETTINGS</h1>
@@ -91,17 +91,17 @@ export default function SettingsPage() {
                 <p className="text-[9px] text-slate-500 font-mono">Change console credentials for security.</p>
               </div>
             </div>
-            
+
             <div className="space-y-4">
               <div>
                 <label className={labelClass}>Admin Email Address</label>
-                <input 
-                  type="email" 
-                  className={inputClass} 
-                  value={adminEmail} 
-                  onChange={(e) => setAdminEmail(e.target.value)} 
+                <input
+                  type="email"
+                  className={inputClass}
+                  value={adminEmail}
+                  onChange={(e) => setAdminEmail(e.target.value)}
                   required
-                  placeholder="admin@coderithum.com" 
+                  placeholder="admin@coderithum.com"
                 />
               </div>
 
@@ -110,15 +110,15 @@ export default function SettingsPage() {
               <div>
                 <label className={labelClass}>Current Password (Required to authorize changes)</label>
                 <div className="relative">
-                  <input 
-                    type={showPassword ? "text" : "password"} 
-                    className={inputClass} 
-                    value={currentPassword} 
-                    onChange={(e) => setCurrentPassword(e.target.value)} 
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className={inputClass}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
                     required
-                    placeholder="••••••••" 
+                    placeholder="••••••••"
                   />
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-4 top-3.5 text-slate-400 hover:text-black cursor-pointer"
@@ -131,22 +131,22 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className={labelClass}>New Password (Leave blank to keep current)</label>
-                  <input 
-                    type={showPassword ? "text" : "password"} 
-                    className={inputClass} 
-                    value={newPassword} 
-                    onChange={(e) => setNewPassword(e.target.value)} 
-                    placeholder="••••••••" 
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className={inputClass}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="••••••••"
                   />
                 </div>
                 <div>
                   <label className={labelClass}>Confirm New Password</label>
-                  <input 
-                    type={showPassword ? "text" : "password"} 
-                    className={inputClass} 
-                    value={confirmPassword} 
-                    onChange={(e) => setConfirmPassword(e.target.value)} 
-                    placeholder="••••••••" 
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    className={inputClass}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••"
                   />
                 </div>
               </div>

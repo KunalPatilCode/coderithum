@@ -4,7 +4,10 @@ import {
   GalleryAlbum,
   TeamMember,
   ClubAchievement,
+  HeroThemeConfig,
+  AnnouncementItem,
 } from "../types";
+
 
 const withBasePath = (path: string) => {
   if (!path || path.startsWith("http") || path.startsWith("data:")) {
@@ -1361,61 +1364,33 @@ export const initialEvents: ClubEvent[] = [
 
 export const initialProjects: ClubProject[] = [
   {
-    id: "gecdaman-redesign",
-    title: "GEC Daman Portal Upgrade Initiative",
-    banner:
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80",
+    id: "zebra-certificate-admin",
+    title: "Zebra Certificate Admin",
+    banner: "/zebra-thumbnail-v2.png",
     shortDesc:
-      "A modern, lightning-fast static portal redesign concept for GEC Daman utilizing Next.js.",
+      "Coderithum's custom certificate generation, distribution, and verification system.",
     description:
-      "Built by Coderithum members to conceptualize a faster, highly responsive official college portal. Features sub-second page loads, clean neobrutalist design parameters, integrated notice structures, and a mobile-friendly menu system for students to access syllabus, circulars, and departmental metrics.",
+      "Zebra is Coderithum's official certificate-generation system. Designed to create, verify, and manage certificates issued by the club, it utilizes a secure role-based access control framework. Faculty Coordinators hold highest administrative control to approve major changes, certificate data, and verification registries, while the President and Vice President manage operations. The system ensures absolute integrity of issued credentials and student participation records.",
     techStack: [
-      "Next.js 16",
-      "Tailwind CSS v4",
+      "Next.js",
+      "React",
       "TypeScript",
-      "Framer Motion",
-      "Lucide Icons",
+      "Tailwind CSS",
+      "Node.js",
+      "Canvas API",
+      "Role-based Access Control (RBAC)",
     ],
-    github: "https://github.com/Coderithum/gec-daman-concept",
-    demo: "https://coderithum.github.io/gec-daman-concept/",
-    mentor: "Mrs. Hemali J. Damania",
+    github: "https://github.com/Coderithum/zebra-certificate-admin",
+    demo: "https://coderithum.github.io/zebra/",
+    mentor: "Ms. Shruty Tomar",
     team: [
-      "Kunal Patil (Lead)",
-      "Maitri Patel (Frontend)",
-      "Kunal Damania (UI/UX)",
+      "Kunal Patil (Ideation & Development)",
+      "Maitri Patel (Development)",
+      "Md Ismile (Development)",
     ],
     gallery: [
       "https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=600&q=80",
-      "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=600&q=80",
-    ],
-  },
-  {
-    id: "solar-telemetry",
-    title: "Smart Solar Grid Telemetry System",
-    banner:
-      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1200&q=80",
-    shortDesc:
-      "An IoT dashboard tracking campus solar panel generation efficiency in real-time.",
-    description:
-      "An interdisciplinary project combining Electrical and Computer engineering domains. Captures real-time telemetry from GEC Daman campus solar cells using sensor arrays, parses data parameters locally, and projects generation efficiency onto a dashboard, sending anomaly warnings to administrative portals.",
-    techStack: [
-      "React",
-      "Python",
-      "Raspberry Pi",
-      "MQTT",
-      "Chart.js",
-      "Tailwind CSS",
-    ],
-    github: "https://github.com/Coderithum/solar-grid-telemetry",
-    demo: "https://coderithum.github.io/solar-grid-telemetry/",
-    mentor: "Ms. Dipika Ganpat Damania (Electrical Dept)",
-    team: [
-      "Hardik Solanki (IoT Lead)",
-      "Nisha Patel (Frontend Dev)",
-      "Amit Halpati (Firmware)",
-    ],
-    gallery: [
-      "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=600&q=80",
     ],
   },
 ];
@@ -1491,9 +1466,19 @@ export const initialAlbums: GalleryAlbum[] = [
 
 export const initialTeam: TeamMember[] = [
   {
+    name: "Ms. Shruty Tomar",
+    role: "Faculty Advisor & Coordinator",
+    category: "Faculty",
+    tierLevel: 2,
+    avatar:
+      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=150&h=150&q=80",
+    linkedin: "https://linkedin.com",
+  },
+  {
     name: "Dr. Avinash R. Chaudhari",
     role: "Principal & Chief Patron",
     category: "Faculty",
+    tierLevel: 1,
     avatar:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
     linkedin: "https://linkedin.com",
@@ -1519,7 +1504,16 @@ export const initialTeam: TeamMember[] = [
     role: "Club President",
     category: "Leadership",
     avatar: withBasePath("/kunalp.png?v=13"),
-    avatarStyle: { transform: "translate(6px, -46px) scale(2.0)" },
+    photoPosition: {
+      scale: 1.25,
+      offsetX: 0,
+      offsetY: 0,
+      objectPosition: "center 10%",
+    },
+    avatarStyle: {
+      objectPosition: "center 10%",
+      transform: "scale(1.25) translate(0%, 0%)",
+    },
     github: "https://github.com/KunalPatilCode",
     linkedin:
       "https://www.linkedin.com/in/kunal-patil29?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
@@ -1529,9 +1523,15 @@ export const initialTeam: TeamMember[] = [
     role: "Vice President & UI/UX Head",
     category: "Leadership",
     avatar: withBasePath("/maitri.png?v=11"),
+    photoPosition: {
+      scale: 1.2,
+      offsetX: 0,
+      offsetY: 5,
+      objectPosition: "center 18%",
+    },
     avatarStyle: {
       objectPosition: "center 18%",
-      transform: "translateY(18px) scale(1.3)",
+      transform: "scale(1.2) translate(0%, 5%)",
     },
     github: "https://github.com/Maitrify",
     linkedin:
@@ -1542,9 +1542,15 @@ export const initialTeam: TeamMember[] = [
     role: "Chief Technical Lead",
     category: "Technical",
     avatar: withBasePath("/ismile.png?v=12"),
+    photoPosition: {
+      scale: 1.2,
+      offsetX: 0,
+      offsetY: 5,
+      objectPosition: "center 16%",
+    },
     avatarStyle: {
       objectPosition: "center 16%",
-      transform: "translate(-6px, 16px) scale(1.25)",
+      transform: "scale(1.2) translate(0%, 5%)",
     },
     github: "https://github.com",
     linkedin: "https://linkedin.com",
@@ -1729,3 +1735,57 @@ export const initialAchievements: ClubAchievement[] = [
     iconType: "star",
   },
 ];
+
+export const initialHeroConfig: HeroThemeConfig = {
+  presetId: "ice-canvas",
+  badgeText: "GEC Daman CodeRhythm",
+  title: "Empowering Developers & Tech Innovators",
+  highlightTitle: "CodeRhythm 2026-2027",
+  subtitle: "Registrations are now open for the CodeRhythm Academic Year 2026-2027! Join workshops, hackathons, and open-source project sprints.",
+  primaryCtaText: "Register Now",
+  primaryCtaLink: "registration-orientation-2026",
+  secondaryCtaText: "Explore Events",
+  secondaryCtaLink: "events",
+  backgroundStyle: "pixel-art",
+  accentColor: "#2563eb",
+  layoutStyle: "full-bleed",
+  bannerImage: "",
+  showUpcomingList: true,
+};
+
+export const initialAnnouncements: AnnouncementItem[] = [
+  {
+    id: "ann-1",
+    title: "CodeRhythm Academic Year 2026-2027 Onboarding Open!",
+    message: "Registrations are now open for the CodeRhythm Academic Year 2026-2027! Secure your spots for Orientation and Git & GitHub basics.",
+    badge: "Orientation Special",
+    date: "August 15, 2026",
+    linkedEventId: "registration-orientation-2026",
+    status: "active",
+    isPinned: true,
+    priority: "high"
+  },
+  {
+    id: "ann-2",
+    title: "Git & GitHub Basics + Team Formation Sprint",
+    message: "Master version control, hands-on repository creation, and team formation for semester projects.",
+    badge: "Technical Workshop",
+    date: "August 29, 2026",
+    linkedEventId: "git-github-basics-2026",
+    status: "active",
+    isPinned: false,
+    priority: "normal"
+  },
+  {
+    id: "ann-3",
+    title: "Internal SIH Hackathon & Idea Pitching",
+    message: "Prepare your problem statement solutions and prototype pitches for the SIH selection round.",
+    badge: "Hackathon Alert",
+    date: "September 19, 2026",
+    linkedEventId: "internal-sih-pitching-2026",
+    status: "active",
+    isPinned: false,
+    priority: "high"
+  }
+];
+

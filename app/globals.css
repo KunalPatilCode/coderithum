@@ -4,6 +4,9 @@
 :root {
   --background: #FFFFFF;
   --foreground: #0F172A;
+  --theme-color: #2563eb;
+  --theme-color-hover: #1d4ed8;
+  --theme-color-light: #eff6ff;
 }
 
 @theme inline {
@@ -12,6 +15,10 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --font-pixel: "Share Tech Mono", var(--font-geist-mono), monospace;
+  
+  --color-theme: var(--theme-color);
+  --color-theme-hover: var(--theme-color-hover);
+  --color-theme-light: var(--theme-color-light);
 }
 
 * {
@@ -47,7 +54,7 @@ html {
 
 body {
   background-color: #FFFFFF;
-  background-image: 
+  background-image:
     linear-gradient(to right, #CBD5E1 1px, transparent 1px),
     linear-gradient(to bottom, #CBD5E1 1px, transparent 1px);
   background-size: 32px 32px;
@@ -60,13 +67,16 @@ body {
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: #F8FAFC;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #CBD5E1;
   border-radius: 4px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: #94A3B8;
 }
@@ -74,7 +84,7 @@ body {
 /* Grid background pattern */
 .bg-grid-pattern {
   background-size: 32px 32px;
-  background-image: 
+  background-image:
     linear-gradient(to right, #CBD5E1 1px, transparent 1px),
     linear-gradient(to bottom, #CBD5E1 1px, transparent 1px);
 }
@@ -85,8 +95,17 @@ body {
 }
 
 @keyframes pulseGlow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.05); }
+
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.7;
+    transform: scale(1.05);
+  }
 }
 
 .animate-pulse-glow {
@@ -94,18 +113,56 @@ body {
 }
 
 @keyframes glitch-strip-1 {
-  0%, 100% { clip-path: inset(12% 0 82% 0); transform: translate(-4px, -1px) skew(-2deg); }
-  20% { clip-path: inset(55% 0 32% 0); transform: translate(4px, 2px) skew(1deg); }
-  40% { clip-path: inset(28% 0 58% 0); transform: translate(-2px, 1px) skew(0deg); }
-  60% { clip-path: inset(78% 0 6% 0); transform: translate(3px, -2px) skew(2deg); }
-  80% { clip-path: inset(42% 0 48% 0); transform: translate(-1px, 2px) skew(-1deg); }
+
+  0%,
+  100% {
+    clip-path: inset(12% 0 82% 0);
+    transform: translate(-4px, -1px) skew(-2deg);
+  }
+
+  20% {
+    clip-path: inset(55% 0 32% 0);
+    transform: translate(4px, 2px) skew(1deg);
+  }
+
+  40% {
+    clip-path: inset(28% 0 58% 0);
+    transform: translate(-2px, 1px) skew(0deg);
+  }
+
+  60% {
+    clip-path: inset(78% 0 6% 0);
+    transform: translate(3px, -2px) skew(2deg);
+  }
+
+  80% {
+    clip-path: inset(42% 0 48% 0);
+    transform: translate(-1px, 2px) skew(-1deg);
+  }
 }
 
 @keyframes glitch-strip-2 {
-  0%, 100% { clip-path: inset(68% 0 12% 0); transform: translate(4px, 1px) skew(2deg); }
-  25% { clip-path: inset(18% 0 72% 0); transform: translate(-3px, -2px) skew(-1deg); }
-  50% { clip-path: inset(48% 0 38% 0); transform: translate(2px, -1px) skew(0deg); }
-  75% { clip-path: inset(8% 0 82% 0); transform: translate(-2px, 2px) skew(-2deg); }
+
+  0%,
+  100% {
+    clip-path: inset(68% 0 12% 0);
+    transform: translate(4px, 1px) skew(2deg);
+  }
+
+  25% {
+    clip-path: inset(18% 0 72% 0);
+    transform: translate(-3px, -2px) skew(-1deg);
+  }
+
+  50% {
+    clip-path: inset(48% 0 38% 0);
+    transform: translate(2px, -1px) skew(0deg);
+  }
+
+  75% {
+    clip-path: inset(8% 0 82% 0);
+    transform: translate(-2px, 2px) skew(-2deg);
+  }
 }
 
 .animate-glitch-1 {
@@ -121,6 +178,7 @@ body {
   0% {
     transform: translate3d(0, 0, 0);
   }
+
   100% {
     transform: translate3d(-50%, 0, 0);
   }
@@ -130,6 +188,7 @@ body {
   0% {
     transform: translate3d(-50%, 0, 0);
   }
+
   100% {
     transform: translate3d(0, 0, 0);
   }
@@ -164,4 +223,3 @@ body {
     -webkit-text-stroke: 2px rgba(15, 23, 42, 0.25);
   }
 }
-

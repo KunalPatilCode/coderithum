@@ -14,7 +14,7 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
     return (
       <div className="text-center py-20">
         <h2 className="text-xl font-bold">Event not found</h2>
-        <button onClick={() => setView("events")} className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-none">
+        <button onClick={() => setView("events")} className="mt-4 px-4 py-2 bg-theme text-white rounded-none">
           Back to Events
         </button>
       </div>
@@ -50,7 +50,7 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
             <div className="space-y-3 border-l-2 border-slate-200 pl-4 ml-2">
               {currentEvent.agenda.map((agendaItem, idx) => (
                 <div key={idx} className="relative">
-                  <div className="absolute -left-[21px] top-1.5 w-1.5 h-1.5 rounded-none bg-blue-600" />
+                  <div className="absolute -left-[21px] top-1.5 w-1.5 h-1.5 rounded-none bg-theme" />
                   <p className="text-xs sm:text-sm text-slate-600 font-mono">{agendaItem}</p>
                 </div>
               ))}
@@ -67,7 +67,7 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
                   <div>
                     <div className="text-sm font-semibold text-slate-900">{spk.name}</div>
                     <div className="text-xs text-slate-600 mt-0.5">{spk.role}</div>
-                    <div className="text-[10px] text-blue-600 font-mono mt-0.5">{spk.company}</div>
+                    <div className="text-[10px] text-theme font-mono mt-0.5">{spk.company}</div>
                   </div>
                 </div>
               ))}
@@ -82,21 +82,21 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
 
             <div className="space-y-4">
               <div className="flex items-start gap-2.5">
-                <Calendar className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                <Calendar className="w-4 h-4 text-theme shrink-0 mt-0.5" />
                 <div>
                   <div className="text-xs font-semibold text-slate-900">Date</div>
                   <div className="text-xs text-slate-600 mt-0.5">{currentEvent.date}</div>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
-                <Clock className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                <Clock className="w-4 h-4 text-theme shrink-0 mt-0.5" />
                 <div>
                   <div className="text-xs font-semibold text-slate-900">Time</div>
                   <div className="text-xs text-slate-600 mt-0.5">{currentEvent.time}</div>
                 </div>
               </div>
               <div className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-theme shrink-0 mt-0.5" />
                 <div>
                   <div className="text-xs font-semibold text-slate-900">Venue</div>
                   <div className="text-xs text-slate-600 mt-0.5">{currentEvent.venue}</div>
@@ -108,7 +108,7 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
               {currentEvent.type === "upcoming" ? (
                 <button
                   onClick={() => alert("Coming Soon")}
-                  className="w-full py-2.5 bg-blue-600 hover:bg-black text-white rounded-none border-2 border-blue-700 text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
+                  className="w-full py-2.5 bg-theme hover:bg-theme-hover text-white rounded-none border-2 border-theme-hover text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                 >
                   Register for Event <ArrowUpRight className="w-3.5 h-3.5" />
                 </button>

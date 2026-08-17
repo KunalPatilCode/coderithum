@@ -6,15 +6,16 @@ import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import { 
-  Table, 
-  TableHeader, 
-  TableBody, 
-  TableRow, 
-  TableHead, 
-  TableCell 
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell
 } from "@/components/ui/table"
 import { Image, Plus, Edit2, Trash2, ArrowLeft, ArrowUpRight } from "lucide-react"
+import { broadcastDataChange } from "@/types"
 
 export default function GalleryManagerPage() {
   const { toast } = useToast()
@@ -22,7 +23,7 @@ export default function GalleryManagerPage() {
   const [loading, setLoading] = useState(true)
   const [view, setView] = useState<"list" | "form" | "photos">("list")
   const [editId, setEditId] = useState<string | null>(null)
-  
+
   // Current active album for media additions
   const [selectedAlbumId, setSelectedAlbumId] = useState<string | null>(null)
 
@@ -94,7 +95,7 @@ export default function GalleryManagerPage() {
           }
           return album
         })
-        localStorage.setItem("coderithum_albums", JSON.stringify(updated))
+        broadcastDataChange("coderithum_albums", updated)
         setAlbums(updated)
       }
       setLoading(false)
@@ -102,8 +103,8 @@ export default function GalleryManagerPage() {
   }, [])
 
   const saveToStorage = (updatedList: any[]) => {
-    localStorage.setItem("coderithum_albums", JSON.stringify(updatedList))
     setAlbums(updatedList)
+    broadcastDataChange("coderithum_albums", updatedList)
   }
 
   const handleOpenAddAlbum = () => {
@@ -178,7 +179,7 @@ export default function GalleryManagerPage() {
 
   const handleAddPhoto = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     if (!selectedAlbumId) return
 
     const updated = albums.map((album) => {
@@ -236,23 +237,23 @@ export default function GalleryManagerPage() {
 
   return (
     <div className="h-full flex flex-col gap-6 text-slate-900 min-h-0">
-      
+
       {/* Title Header */}
       <div className="flex items-center justify-between shrink-0">
         <div>
           <h1 className="text-xl font-black text-slate-900 tracking-wide uppercase font-mono">
-            {view === "list" 
-              ? "Gallery Manager" 
-              : view === "form" 
-              ? (editId ? "Edit Album Settings" : "Create Album")
-              : `Manage Album: ${activeAlbum?.name || ""}`}
+            {view === "list"
+              ? "Gallery Manager"
+              : view === "form"
+                ? (editId ? "Edit Album Settings" : "Create Album")
+                : `Manage Album: ${activeAlbum?.name || ""}`}
           </h1>
           <p className="text-xs text-slate-500 mt-0.5">
-            {view === "list" 
-              ? "Organize student event photograph scrolls and hackathon project mock snaps." 
+            {view === "list"
+              ? "Organize student event photograph scrolls and hackathon project mock snaps."
               : view === "form"
-              ? "Change the album name and select a cover image."
-              : "Review uploaded photo snap collections and add new ones below."}
+                ? "Change the album name and select a cover image."
+                : "Review uploaded photo snap collections and add new ones below."}
           </p>
         </div>
 
@@ -293,10 +294,10 @@ export default function GalleryManagerPage() {
                         <div className="text-[10px] text-slate-500 font-mono mt-0.5">ID: {album.id}</div>
                       </TableCell>
                       <TableCell>
-                        <img 
-                          src={album.cover} 
-                          alt={album.name} 
-                          className="w-12 h-8 rounded-none border-2 border-slate-900 object-cover shrink-0" 
+                        <img
+                          src={album.cover}
+                          alt={album.name}
+                          className="w-12 h-8 rounded-none border-2 border-slate-900 object-cover shrink-0"
                           onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=120&q=80" }}
                         />
                       </TableCell>
@@ -307,26 +308,26 @@ export default function GalleryManagerPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-1.5">
-                          <Button 
-                            variant="secondary" 
-                            className="flex items-center gap-1.5 h-8 text-[10px]" 
+                          <Button
+                            variant="secondary"
+                            className="flex items-center gap-1.5 h-8 text-[10px]"
                             onClick={() => handleOpenPhotos(album.id)}
                             title="Manage Photos"
                           >
                             Add/Edit Photos
                             <ArrowUpRight className="size-3" />
                           </Button>
-                          <Button 
-                            variant="secondary" 
-                            className="size-8 p-0" 
+                          <Button
+                            variant="secondary"
+                            className="size-8 p-0"
                             onClick={() => handleOpenEditAlbum(album)}
                             title="Edit Album Settings"
                           >
                             <Edit2 className="size-3.5" />
                           </Button>
-                          <Button 
-                            variant="destructive" 
-                            className="size-8 p-0" 
+                          <Button
+                            variant="destructive"
+                            className="size-8 p-0"
                             onClick={() => handleDeleteAlbum(album.id)}
                             title="Delete Album"
                           >
@@ -405,25 +406,25 @@ export default function GalleryManagerPage() {
 
                 <div>
                   <label className={labelClass}>Image URL</label>
-                  <input 
-                    type="url" 
-                    className={formInputClass} 
-                    value={photoUrl} 
-                    onChange={(e) => setPhotoUrl(e.target.value)} 
+                  <input
+                    type="url"
+                    className={formInputClass}
+                    value={photoUrl}
+                    onChange={(e) => setPhotoUrl(e.target.value)}
                     required
-                    placeholder="https://images.unsplash.com/..." 
+                    placeholder="https://images.unsplash.com/..."
                   />
                 </div>
 
                 <div>
                   <label className={labelClass}>Caption (A short title or description)</label>
-                  <input 
-                    type="text" 
-                    className={formInputClass} 
-                    value={photoCaption} 
-                    onChange={(e) => setPhotoCaption(e.target.value)} 
+                  <input
+                    type="text"
+                    className={formInputClass}
+                    value={photoCaption}
+                    onChange={(e) => setPhotoCaption(e.target.value)}
                     required
-                    placeholder="e.g. Teams brainstorming during SIH Round 1" 
+                    placeholder="e.g. Teams brainstorming during SIH Round 1"
                   />
                 </div>
 
@@ -450,10 +451,10 @@ export default function GalleryManagerPage() {
                   {activeAlbum?.media.map((mediaItem: any, idx: number) => (
                     <div key={idx} className="relative group rounded-none overflow-hidden border-2 border-slate-900 bg-white flex flex-col justify-between shadow-[2px_2px_0px_#000]">
                       <div className="aspect-[4/3] w-full overflow-hidden bg-black relative">
-                        <img 
-                          src={mediaItem.url} 
-                          alt={mediaItem.caption} 
-                          className="w-full h-full object-cover" 
+                        <img
+                          src={mediaItem.url}
+                          alt={mediaItem.caption}
+                          className="w-full h-full object-cover"
                           onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=120&q=80" }}
                         />
                         <button

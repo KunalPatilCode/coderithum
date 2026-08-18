@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Linkedin, Github } from "../Icons";
+import React, { useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
   Terminal,
   Cpu,
@@ -25,319 +24,516 @@ import {
   Check,
   Rocket,
   Server,
-  Trophy
+  Trophy,
+  Brain,
+  Smartphone,
+  CloudLightning,
+  Lock,
+  Brush,
+  BarChart,
+  Lightbulb,
+  Compass,
+  ArrowUpRight
 } from "lucide-react";
 import { TeamMember, getMemberAvatarStyle } from "../../types";
 import InteractiveHeading from "../InteractiveHeading";
-import AnimatedCounter from "../AnimatedCounter";
+import { Github, Linkedin } from "../Icons";
 
 interface AboutViewProps {
   team: TeamMember[];
   setView?: (view: string) => void;
 }
 
-// ----------------------------------------------------------------------
-// CLI Terminal Simulation Commands & Data
-// ----------------------------------------------------------------------
-interface CommandTab {
+// ============================================================================
+// EDITABLE DATA STRUCTURES
+// ============================================================================
+
+// Section 2: Why Coderithum Stages
+interface WhyStage {
   id: string;
-  filename: string;
-  command: string;
+  label: string;
+  title: string;
+  desc: string;
+  color: string;
 }
 
-const terminalCommands: CommandTab[] = [
-  { id: "about", filename: "about.sh", command: "./about.sh --verbose" },
-  { id: "stats", filename: "stats.json", command: "cat stats.json" },
-  { id: "stack", filename: "stack.config", command: "npx coderithum info --stack" },
-  { id: "mission", filename: "mission.log", command: "tail -n 20 mission.log" },
-  { id: "manifesto", filename: "manifesto.md", command: "cat manifesto.md" },
+const whyStages: WhyStage[] = [
+  {
+    id: "learn",
+    label: "LEARN",
+    title: "Strengthen Technical Foundations",
+    desc: "Strengthen technical foundations through workshops, sessions and peer learning.",
+    color: "bg-blue-100 border-blue-600 text-blue-900"
+  },
+  {
+    id: "explore",
+    label: "EXPLORE",
+    title: "Discover New Technologies",
+    desc: "Discover new technologies and identify areas of interest.",
+    color: "bg-emerald-100 border-emerald-600 text-emerald-900"
+  },
+  {
+    id: "build",
+    label: "BUILD",
+    title: "Practical Solutions",
+    desc: "Turn knowledge into projects and practical solutions.",
+    color: "bg-purple-100 border-purple-600 text-purple-900"
+  },
+  {
+    id: "collaborate",
+    label: "COLLABORATE",
+    title: "Cross-Domain Peer Teams",
+    desc: "Work with students across domains and academic years.",
+    color: "bg-amber-100 border-amber-600 text-amber-900"
+  },
+  {
+    id: "innovate",
+    label: "INNOVATE",
+    title: "Real-World Impact",
+    desc: "Transform ideas into meaningful solutions and opportunities.",
+    color: "bg-rose-100 border-rose-600 text-rose-900"
+  }
 ];
 
-// ----------------------------------------------------------------------
-// Technical Ecosystem Matrix Data (8 Domains)
-// ----------------------------------------------------------------------
-interface DomainTrack {
-  id: string;
+// Section 3: What We Do Cards
+interface WhatWeDoItem {
+  icon: React.ReactNode;
   title: string;
-  icon: string;
-  badge: string;
-  motto: string;
   desc: string;
-  tech: string[];
-  projects: string[];
-  pathway: string[];
-  leadRole: string;
 }
 
-const domainTracks: DomainTrack[] = [
+const whatWeDoItems: WhatWeDoItem[] = [
+  {
+    icon: <Terminal className="w-6 h-6 text-blue-600" />,
+    title: "Technical Workshops",
+    desc: "Hands-on labs and bootcamps covering modern programming frameworks, libraries, and dev tools."
+  },
+  {
+    icon: <Rocket className="w-6 h-6 text-emerald-600" />,
+    title: "Real-World Projects",
+    desc: "Building open-source tools, campus utilities, and software packages to solve local community issues."
+  },
+  {
+    icon: <Trophy className="w-6 h-6 text-amber-500" />,
+    title: "Hackathons & Competitions",
+    desc: "Preparing team submissions and building functional prototypes for regional and national hackathons."
+  },
+  {
+    icon: <Users className="w-6 h-6 text-purple-600" />,
+    title: "Peer Learning & Mentorship",
+    desc: "Seniors guiding juniors through pair programming, peer code reviews, and roadmap orientation."
+  },
+  {
+    icon: <Brain className="w-6 h-6 text-rose-500" />,
+    title: "Innovation & Research",
+    desc: "Exploring emerging technologies, drafting architectures, and investigating theoretical computer science."
+  },
+  {
+    icon: <Globe className="w-6 h-6 text-cyan-600" />,
+    title: "Open Source & Collaboration",
+    desc: "Publishing and contributing to shared repositories to learn standard engineering workflows."
+  }
+];
+
+// Section 4: Technical Ecosystem Domains
+interface EcosystemDomain {
+  id: string;
+  title: string;
+  icon: React.ReactNode;
+  shortDesc: string;
+  longDesc: string;
+  color: string;
+  tech: string[];
+  explore: string[];
+  learningPath: string[];
+  applications: string[];
+}
+
+const ecosystemDomains: EcosystemDomain[] = [
   {
     id: "ai",
     title: "AI & GenAI",
-    icon: "🤖",
-    badge: "DEEP LEARNING",
-    motto: "Autonomous Edge Intelligence & Generative AI Systems",
-    desc: "Focuses on deep learning architectures, fine-tuning open LLMs, computer vision algorithms, and deploying low-latency inference models on edge compute.",
-    tech: ["PyTorch", "Hugging Face", "LangChain", "OpenCV", "TensorFlow", "Ollama", "Python"],
-    projects: ["Campus AI Assist", "Solar Grid Defect Inspector", "Automated Attendance AI"],
-    pathway: ["Tensor Math & Python Fundamentals", "Neural Network Architectures", "LLM Fine-Tuning & Quantization", "Production Edge Deployment"],
-    leadRole: "AI Research Lead"
+    icon: <Brain className="w-5 h-5" />,
+    shortDesc: "Building intelligent systems with AI, machine learning and generative technologies.",
+    longDesc: "Develop smart models, deploy neural networks, and leverage deep learning frameworks to solve predictive and creative tasks.",
+    color: "border-purple-500 text-purple-600 bg-purple-50 hover:bg-purple-50/50 shadow-[0_0_15px_rgba(139,92,246,0.1)]",
+    tech: ["Python", "NumPy", "Pandas", "Scikit-learn", "PyTorch", "TensorFlow", "Hugging Face", "LangChain", "LLMs"],
+    explore: [
+      "Machine Learning",
+      "Deep Learning",
+      "Generative AI",
+      "Large Language Models",
+      "Computer Vision",
+      "AI application development"
+    ],
+    learningPath: ["Python", "Mathematics", "Machine Learning", "Deep Learning", "LLMs", "Generative AI", "AI Applications"],
+    applications: [
+      "AI assistants",
+      "Computer vision",
+      "Recommendation systems",
+      "Automation"
+    ]
   },
   {
     id: "fullstack",
-    title: "Full Stack Dev",
-    icon: "💻",
-    motto: "High-Throughput Modern Web & Cloud Architectures",
-    badge: "WEB & API SYSTEMS",
-    desc: "Crafting scalable, accessible web portals and distributed micro-services with Next.js, React, Node.js, and PostgreSQL using clean decoupled architecture.",
-    tech: ["React 19", "Next.js 15", "TypeScript", "Node.js", "PostgreSQL", "TailwindCSS", "GraphQL"],
-    projects: ["Coderithum Tech Portal v2", "GEC Student Workstation", "Hackathon Management Platform"],
-    pathway: ["Modern ES6+ & DOM Engineering", "TypeScript & Complex State Engines", "RESTful & GraphQL Service Design", "Edge Serverless Deployment"],
-    leadRole: "Full Stack Domain Lead"
+    title: "Full Stack Development",
+    icon: <Code className="w-5 h-5" />,
+    shortDesc: "Designing complete web applications from frontend to backend.",
+    longDesc: "Build complete web applications by combining modern frontend technologies, backend systems, APIs and databases.",
+    color: "border-blue-500 text-blue-600 bg-blue-50 hover:bg-blue-50/50 shadow-[0_0_15px_rgba(59,130,246,0.1)]",
+    tech: ["React", "Next.js", "TypeScript", "Node.js", "Express.js", "MongoDB", "PostgreSQL", "Git & GitHub"],
+    explore: [
+      "Frontend development",
+      "Backend development",
+      "REST APIs",
+      "Authentication",
+      "Database design",
+      "Deployment"
+    ],
+    learningPath: ["HTML/CSS", "JavaScript", "React", "Node.js", "Database", "APIs", "Deployment"],
+    applications: [
+      "Web applications",
+      "College portals",
+      "SaaS platforms",
+      "Real-time applications"
+    ]
   },
   {
     id: "mobile",
-    title: "Mobile App Dev",
-    icon: "📱",
-    badge: "CROSS PLATFORM",
-    motto: "Cross-Platform Native Engineering for iOS & Android",
-    desc: "Designing responsive, offline-first cross-platform mobile experiences using Flutter and React Native integrated with real-time backend sync.",
-    tech: ["Flutter", "React Native", "Dart", "Swift", "Kotlin", "Firebase Sync", "SQLite"],
-    projects: ["Campus Bus Tracker App", "Student Event Companion", "Attendance QR Scanner"],
-    pathway: ["UI Layouts & Micro-Animations", "State Management (Bloc/Zustand)", "Native Hardware API Binding", "App Store Pipeline Release"],
-    leadRole: "Mobile Domain Lead"
+    title: "Mobile App Development",
+    icon: <Smartphone className="w-5 h-5" />,
+    shortDesc: "Creating modern mobile experiences for Android and cross-platform platforms.",
+    longDesc: "Design and compile fast, offline-first mobile applications with dynamic native device integrations.",
+    color: "border-emerald-500 text-emerald-600 bg-emerald-50 hover:bg-emerald-50/50 shadow-[0_0_15px_rgba(16,185,129,0.1)]",
+    tech: ["Flutter", "Dart", "React Native", "Firebase"],
+    explore: [
+      "Cross-platform architecture",
+      "Mobile UI & Animations",
+      "State management",
+      "Local storage & databases",
+      "Native device APIs",
+      "Play Store deployment"
+    ],
+    learningPath: ["Dart/JS", "UI Layouts", "State Management", "Local Databases", "API Integration", "Device Features", "App Stores"],
+    applications: [
+      "Campus utility apps",
+      "Cross-platform tools",
+      "Offline-first clients",
+      "Mobile services"
+    ]
   },
   {
     id: "cloud",
     title: "Cloud & DevOps",
-    icon: "☁️",
-    badge: "GITOPS & INFRA",
-    motto: "Infrastructure as Code & Automated CI/CD Pipelines",
-    desc: "Automating cloud infrastructure provisioning, container orchestration, zero-downtime deployment pipelines, and cluster monitoring across AWS and Docker.",
-    tech: ["AWS EC2/S3", "Docker", "Kubernetes", "GitHub Actions", "Terraform", "Nginx", "Prometheus"],
-    projects: ["Incubator Automated CI/CD Engine", "GEC Portal High-Availability Cluster", "Telemetry Log Pipeline"],
-    pathway: ["Linux Systems Administration", "Containerization Mastery", "GitOps CI/CD Automation", "Kubernetes Cluster Security"],
-    leadRole: "Cloud & DevOps Lead"
+    icon: <CloudLightning className="w-5 h-5" />,
+    shortDesc: "Building, deploying and maintaining scalable cloud infrastructure.",
+    longDesc: "Orchestrate modern servers, design automated pipelines, and manage cloud computing configurations for high-availability apps.",
+    color: "border-cyan-500 text-cyan-600 bg-cyan-50 hover:bg-cyan-50/50 shadow-[0_0_15px_rgba(6,182,212,0.1)]",
+    tech: ["Docker", "AWS", "Linux", "GitHub Actions", "CI/CD"],
+    explore: [
+      "Containerization",
+      "CI/CD automation",
+      "Infrastructure as Code",
+      "Linux administration",
+      "Cloud hosting services",
+      "System telemetry & logging"
+    ],
+    learningPath: ["Linux Terminal", "Bash Scripting", "Docker Containers", "GitOps CI/CD", "AWS Services", "Cloud Orchestration", "Monitoring"],
+    applications: [
+      "High-availability clusters",
+      "Automated test rigs",
+      "Scalable pipelines",
+      "Server management"
+    ]
   },
   {
     id: "cyber",
     title: "Cybersecurity",
-    icon: "🔒",
-    badge: "DEFENSIVE & AUDIT",
-    motto: "Penetration Testing, Auditing & Offensive CTF Operations",
-    desc: "Auditing application security posture, discovering vulnerabilities, running CTF competitions, and securing campus network perimeters.",
-    tech: ["Burp Suite", "Kali Linux", "Wireshark", "OWASP Top 10", "Metasploit", "Python Exploits", "Cryptography"],
-    projects: ["Campus Infrastructure Pen-Test Audit", "CTF Training Laboratory", "Vulnerability Bot Scanner"],
-    pathway: ["Network Protocols & Linux Internals", "Web App Vulnerability Analysis", "Binary Exploitation & Crypto", "Enterprise Security Audit"],
-    leadRole: "Cybersecurity Lead"
+    icon: <Lock className="w-5 h-5" />,
+    shortDesc: "Understanding security, networks, vulnerabilities and secure systems.",
+    longDesc: "Audit codebases, analyze server vulnerabilities, investigate networking packets, and practice secure coding paradigms.",
+    color: "border-rose-500 text-rose-600 bg-rose-50 hover:bg-rose-50/50 shadow-[0_0_15px_rgba(244,63,94,0.1)]",
+    tech: ["Networking", "Linux", "OWASP", "Burp Suite", "Wireshark"],
+    explore: [
+      "Penetration testing",
+      "Network sniffing",
+      "Cryptography fundamentals",
+      "Secure coding practices",
+      "Vulnerability patching",
+      "CTF operations"
+    ],
+    learningPath: ["Networking Basics", "Linux Administration", "OWASP Top 10", "Wireshark Packet Analysis", "Vulnerability Scanning", "Penetration Testing", "Security Auditing"],
+    applications: [
+      "Secure campus portals",
+      "Vulnerability audits",
+      "Code integrity checks",
+      "Network protection"
+    ]
   },
   {
     id: "uiux",
     title: "UI/UX & Design",
-    icon: "🎨",
-    badge: "SYSTEMS & BRAND",
-    motto: "Human-Centered Design Systems & Brutalist Aesthetics",
-    desc: "Transforming complex workflows into intuitive, vibrant visual interfaces using design tokens, wireframing, interactive prototypes, and micro-interactions.",
-    tech: ["Figma", "Design Tokens", "Framer Motion", "Storybook", "Adobe CC", "Accessibility (a11y)"],
-    projects: ["Coderithum Brutalist Design System", "GEC Library Interface Overhaul", "Event Portal Design Spec"],
-    pathway: ["User Research & Wireframing", "Design System Tokenization", "Interactive Prototyping", "Design System Documentation"],
-    leadRole: "UI/UX Design Lead"
+    icon: <Brush className="w-5 h-5" />,
+    shortDesc: "Designing intuitive, accessible and engaging digital experiences.",
+    longDesc: "Craft user flows, build tokenized design systems, design prototypes, and test usability postures.",
+    color: "border-amber-500 text-amber-600 bg-amber-50 hover:bg-amber-50/50 shadow-[0_0_15px_rgba(245,158,11,0.1)]",
+    tech: ["Figma", "Design Systems", "Prototyping", "Framer Motion"],
+    explore: [
+      "Information architecture",
+      "Wireframing & layouts",
+      "Prototyping interactions",
+      "Usability testing",
+      "Accessibility standards",
+      "Visual assets & branding"
+    ],
+    learningPath: ["User Research", "Wireframing", "Figma Auto-layout", "Design System Tokens", "High-Fi Prototyping", "Micro-interactions", "A11y Standards"],
+    applications: [
+      "High-fidelity wireframes",
+      "Interactive design tokens",
+      "Mockup interfaces",
+      "Usability specifications"
+    ]
   },
   {
     id: "datascience",
     title: "Data Science",
-    icon: "📊",
-    badge: "ANALYTICS & ML",
-    motto: "Predictive Analytics, Data Pipelines & Insights",
-    desc: "Extracting actionable insights from complex datasets, constructing machine learning pipelines, and engineering interactive data visualization dashboards.",
-    tech: ["Python", "Pandas", "NumPy", "Scikit-Learn", "Matplotlib", "SQL", "Tableau"],
-    projects: ["Academic Performance Analytics", "Campus Placement Predictor", "Solar Yield Forecasting Model"],
-    pathway: ["Exploratory Data Analysis", "Statistical Modeling & Hypothesis Testing", "Machine Learning Pipelines", "Production Analytics Dashboards"],
-    leadRole: "Data Science Lead"
+    icon: <BarChart className="w-5 h-5" />,
+    shortDesc: "Turning data into insights using statistics, programming and visualization.",
+    longDesc: "Gather datasets, execute statistical modeling, draw interactive telemetry dashboards, and make predictive models.",
+    color: "border-indigo-500 text-indigo-600 bg-indigo-50 hover:bg-indigo-50/50 shadow-[0_0_15px_rgba(99,102,241,0.1)]",
+    tech: ["Python", "Pandas", "NumPy", "Matplotlib", "Scikit-learn", "SQL"],
+    explore: [
+      "Exploratory data analysis",
+      "Database query construction",
+      "Data cleaning methods",
+      "Statistical hypothesis testing",
+      "Predictive regressions",
+      "Interactive visualization charts"
+    ],
+    learningPath: ["Python Basics", "SQL Queries", "Pandas Dataframes", "Data Cleaning", "Matplotlib Visualization", "Statistical Analysis", "Predictive Modeling"],
+    applications: [
+      "Academic performance dashboards",
+      "Predictive placement tools",
+      "Interactive usage metrics",
+      "Analytics reports"
+    ]
   },
   {
-    id: "incubator",
-    title: "Incubator Ops",
-    icon: "🛠️",
-    badge: "VENTURES & IPR",
-    motto: "Product Management, IPR Patents & Student Venture Growth",
-    desc: "Guiding student software projects from concept validation to intellectual property filing, agile sprint management, and venture pitch mentorship.",
-    tech: ["Agile/Scrum", "Jira", "Product Specs", "IPR & Patents", "Pitch Decks", "Growth Analytics"],
-    projects: ["Student Startup Acceleration Program", "IPR Patent Registration Drive", "Annual Incubator Showcase"],
-    pathway: ["Problem Discovery & Product Spec", "Agile Sprint Management", "Patent & Licensing Strategy", "Investor & Venture Presentation"],
-    leadRole: "Incubator Operations Lead"
+    id: "incubation",
+    title: "Innovation & Incubation",
+    icon: <Lightbulb className="w-5 h-5" />,
+    shortDesc: "Transforming ideas into practical solutions, projects and future opportunities.",
+    longDesc: "Guide student software projects from concept validation to intellectual property filing, agile sprint management, and venture pitch mentorship.",
+    color: "border-teal-500 text-teal-600 bg-teal-50 hover:bg-teal-50/50 shadow-[0_0_15px_rgba(20,184,166,0.1)]",
+    tech: ["Ideation", "Problem Solving", "Product Development", "Entrepreneurship", "Research", "Project Management"],
+    explore: [
+      "Problem discovery",
+      "Technical scoping",
+      "Agile scrum management",
+      "Pitch deck delivery",
+      "Patent & IPR basics",
+      "Startup formation"
+    ],
+    learningPath: ["Problem Discovery", "Market Scoping", "Agile Sprints", "Product Spec Drafts", "Pitch Practice", "IPR Patent Law", "Incubation Launch"],
+    applications: [
+      "Student entrepreneur ventures",
+      "Technical pitch decks",
+      "Patent registration files",
+      "Product specifications"
+    ]
   }
 ];
 
-// ----------------------------------------------------------------------
-// Dynamic Timeline Stepper Data
-// ----------------------------------------------------------------------
-const timelineMilestones = [
+// Section 5: Student Growth Steps
+interface GrowthStep {
+  num: string;
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+}
+
+const growthSteps: GrowthStep[] = [
   {
-    year: "2024",
-    tag: "ORIGIN & FOUNDATION",
-    title: "Club Conception & Founding at GEC Daman",
-    desc: "Established at Government Engineering College (GEC) Daman by open-source enthusiasts to bridge classroom theory with production software development.",
-    achievements: [
-      "Inaugural cohort of 35 dedicated student developers",
-      "Formed initial 4 core technical domain sub-divisions",
-      "Conducted institute-wide Git & Linux CLI bootcamps"
-    ],
-    highlight: "From 5 founders in a computer lab to a recognized institute tech ecosystem."
+    num: "01",
+    title: "EXPLORE",
+    desc: "Discover technology and find your interest.",
+    icon: <Compass className="w-6 h-6 text-blue-600" />
   },
   {
-    year: "2025",
-    tag: "NATIONAL RECOGNITION",
-    title: "Smart India Hackathon Regional Triumph",
-    desc: "Core developer team secured 1st place in Smart India Hackathon Regional Selection for an automated solar grid telemetry solution.",
-    achievements: [
-      "SIH 2025 Regional Champion Gold Trophy",
-      "Deployed 5 campus utility applications to production",
-      "Expanded active club membership to 90+ student coders"
-    ],
-    highlight: "Validating GEC Daman's technical prowess on a national competitive stage."
+    num: "02",
+    title: "LEARN",
+    desc: "Develop technical and problem-solving skills.",
+    icon: <BookOpen className="w-6 h-6 text-emerald-600" />
   },
   {
-    year: "2026",
-    tag: "PORTAL & INCUBATOR",
-    title: "Next-Gen Tech Portal & 8-Domain Scale",
-    desc: "Launched the unified Coderithum Tech Portal, expanded into 8 specialized domain divisions, and established the Student Project Incubator.",
-    achievements: [
-      "Unified Tech Portal v2 production release",
-      "8 active domain tracks with dedicated mentor leads",
-      "1,400+ monthly GitHub commits across active repositories"
-    ],
-    highlight: "Achieving full production velocity with automated CI/CD and student incubations."
+    num: "03",
+    title: "BUILD",
+    desc: "Work on projects, hackathons and real-world problems.",
+    icon: <Cpu className="w-6 h-6 text-purple-600" />
   },
   {
-    year: "2027",
-    tag: "FUTURE VISION",
-    title: "National Open-Source & Innovation Foundation",
-    desc: "Scaling Coderithum into an inter-collegiate incubator network, publishing research papers, and hosting the inaugural Daman DevCon.",
-    achievements: [
-      "Targeting 300+ active student contributors",
-      "Filing 5+ student software patents/IPR registrations",
-      "Establishing Daman DevCon annual hackathon"
-    ],
-    highlight: "Setting a benchmark for student-driven software engineering excellence in Western India."
+    num: "04",
+    title: "LEAD",
+    desc: "Lead teams, mentor peers and create impact.",
+    icon: <Sparkles className="w-6 h-6 text-amber-500" />
   }
 ];
 
-// ----------------------------------------------------------------------
-// Core Values Data
-// ----------------------------------------------------------------------
-const coreValuesData = [
+const withBasePath = (path: string) => {
+  if (!path || path.startsWith("http") || path.startsWith("data:")) {
+    return path;
+  }
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  const basePath = (process.env.NEXT_PUBLIC_BASE_PATH || "").replace(/\/$/, "");
+  return `${basePath}${normalizedPath}`;
+};
+
+// Section 3.5: Foundation Team Members
+interface FoundationMember {
+  name: string;
+  role: string;
+  image: string;
+  github?: string;
+  linkedin?: string;
+}
+
+const foundationMembers: FoundationMember[] = [
   {
-    id: "impact",
-    icon: "🎯",
+    name: "Kunal Patil",
+    role: "Foundation Team Member",
+    image: "/kunalp.png",
+    github: "https://github.com/KunalPatilCode",
+    linkedin: "https://www.linkedin.com/in/kunal-patil29?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+  },
+  {
+    name: "Abhishek Kumar",
+    role: "Foundation Team Member",
+    image: "/abhishek-kumar.png",
+    github: "https://github.com/CodebyAbhishek123",
+    linkedin: "https://www.linkedin.com/in/abhishek-kumar-63b97b315?utm_source=share_via&utm_content=profile&utm_medium=member_android"
+  },
+  {
+    name: "Maitri Patel",
+    role: "Foundation Team Member",
+    image: "/maitri.png",
+    github: "https://github.com/Maitrify",
+    linkedin: "https://www.linkedin.com/in/maitri-patel-573927287?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+  },
+  {
+    name: "Purnima Upadhyay",
+    role: "Foundation Team Member",
+    image: "/purnima.png",
+    github: "https://github.com",
+    linkedin: "https://www.linkedin.com/in/purnima-upadhyay-0902b12b5?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app"
+  },
+  {
+    name: "Tushar Mahapatra",
+    role: "Foundation Team Member",
+    image: ""
+  },
+  {
+    name: "Aaryan Patel",
+    role: "Foundation Team Member",
+    image: "/aaryan-patel.png",
+    linkedin: "https://linkedin.com"
+  }
+];
+
+// Section 6: Principal Message Config (Fully Editable Placeholder)
+const principalConfig = {
+  name: "Dr. Avinash R. Chaudhari",
+  role: "Principal & Chief Patron",
+  institution: "Government Engineering College, Daman",
+  message: "[Principal's approved message will be added here.]",
+  avatar: withBasePath("/principal1.jpg"),
+};
+
+// Section 7: Future Scope Phases
+interface FuturePhase {
+  phase: string;
+  title: string;
+  points: string[];
+}
+
+const futurePhases: FuturePhase[] = [
+  {
+    phase: "PHASE 01",
+    title: "STRENGTHEN",
+    points: [
+      "Strengthen technical domains",
+      "Conduct regular technical workshops",
+      "Increase student participation",
+      "Build stronger project culture"
+    ]
+  },
+  {
+    phase: "PHASE 02",
+    title: "COLLABORATE",
+    points: [
+      "Industry mentorship",
+      "Alumni interaction",
+      "Collaboration with other colleges",
+      "Inter-college technical events",
+      "Open-source collaboration"
+    ]
+  },
+  {
+    phase: "PHASE 03",
+    title: "INNOVATE",
+    points: [
+      "Student-led products",
+      "Research initiatives",
+      "Project incubation",
+      "Startup-oriented innovation",
+      "Real-world problem solving"
+    ]
+  },
+  {
+    phase: "PHASE 04",
+    title: "IMPACT",
+    points: [
+      "National-level competitions",
+      "Industry-connected projects",
+      "Stronger research culture",
+      "Open-source contributions",
+      "Technology solutions with social and institutional impact"
+    ]
+  }
+];
+
+// Section 9: Value Items
+interface ValueItem {
+  title: string;
+  desc: string;
+}
+
+const valueItems: ValueItem[] = [
+  {
     title: "Build for Real-World Impact",
-    summary: "Every project built targets genuine problem statements for our college, local industries, or digital communities.",
-    culture: "We prioritize solving real user problems over writing vanity code. If it doesn't solve a real issue, we iterate until it does.",
-    enforcement: "Mandatory user validation, production deployment, and telemetry tracking for all incubator projects."
+    desc: "Focus on solving meaningful problems rather than building projects only for demonstration."
   },
   {
-    id: "quality",
-    icon: "🛠️",
-    title: "Code Quality & Architecture",
-    summary: "We enforce strict TypeScript standards, clean modular architecture, systematic Git workflows, and automated testing.",
-    culture: "Code is read far more often than it is written. We take pride in clean abstractions, readable commits, and zero dead code.",
-    enforcement: "Strict TypeScript rules, ESLint enforcement, 100% peer code reviews, and automated CI/CD test gates."
+    title: "Learn Together",
+    desc: "Encourage peer learning, collaboration and knowledge sharing."
   },
   {
-    id: "mentorship",
-    icon: "🤝",
-    title: "Inclusivity & Peer Mentorship",
-    summary: "We welcome developers of all skill levels. Senior leads actively pair program with beginners to accelerate growth.",
-    culture: "No developer is left behind. Ego is checked at the door, and learning is a collaborative team sport.",
-    enforcement: "Weekly 1-on-1 pair programming sprints, beginner-friendly Git labs, and open office hours."
+    title: "Create with Curiosity",
+    desc: "Explore emerging technologies and experiment with new ideas."
   },
   {
-    id: "curiosity",
-    icon: "🚀",
-    title: "Continuous Curiosity",
-    summary: "Technology evolves rapidly. We constantly explore bleeding-edge tools, frameworks, and engineering paradigms.",
-    culture: "We foster an environment where experimentation is celebrated and failure is viewed as valuable technical telemetry.",
-    enforcement: "Bi-weekly Tech Radar sessions, monthly spike projects, and rapid prototyping hackathons."
+    title: "Lead Through Innovation",
+    desc: "Develop students who can take ownership, lead teams and create impact."
   }
 ];
 
 export default function AboutView({ team, setView }: AboutViewProps) {
-  // Terminal Simulator State
-  const [activeTab, setActiveTab] = useState<string>("about");
-  const [typedCmd, setTypedCmd] = useState<string>("");
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [copied, setCopied] = useState<boolean>(false);
-
-  // Ecosystem Matrix State
-  const [activeDomainId, setActiveDomainId] = useState<string>("ai");
-
-  // Timeline Stepper State
-  const [activeYear, setActiveYear] = useState<string>("2026");
-
-  // Core Values Interactive View State (culture vs enforcement)
-  const [valueViewMode, setValueViewMode] = useState<"culture" | "enforcement">("culture");
-
-  // Typing animation effect when terminal tab changes
-  useEffect(() => {
-    const target = terminalCommands.find((c) => c.id === activeTab)?.command || "";
-    setTypedCmd("");
-    setIsTyping(true);
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i < target.length) {
-        setTypedCmd(target.slice(0, i + 1));
-        i++;
-      } else {
-        setIsTyping(false);
-        clearInterval(interval);
-      }
-    }, 20);
-    return () => clearInterval(interval);
-  }, [activeTab]);
-
-  const handleCopyCmd = () => {
-    const cmdStr = terminalCommands.find((c) => c.id === activeTab)?.command || "";
-    navigator.clipboard.writeText(cmdStr);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
-
-  // Faculty filtering with fallback
-  const rawFaculty = team ? team.filter((t) => t.category === "Faculty") : [];
-  const facultyMembers = rawFaculty.length > 0 ? rawFaculty : [
-    {
-      name: "Dr. Avinash R. Chaudhari",
-      role: "Principal & Chief Patron",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
-      linkedin: "https://linkedin.com",
-    },
-    {
-      name: "Mrs. Hemali J. Damania",
-      role: "Faculty Coordinator & Asst. Professor",
-      avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&h=150&q=80",
-      linkedin: "https://linkedin.com",
-    },
-    {
-      name: "Ms. Dipika Ganpat Damania",
-      role: "Faculty Advisor & Asst. Professor",
-      avatar: "https://images.unsplash.com/photo-1534751516642-a131ffd103fd?auto=format&fit=crop&w=150&h=150&q=80",
-      linkedin: "https://linkedin.com",
-    }
-  ];
-
-  const facultyFocusMap: Record<string, string[]> = {
-    "Dr. Avinash R. Chaudhari": ["Distributed Systems", "Academic Research", "Institute Strategy"],
-    "Mrs. Hemali J. Damania": ["Cloud Architecture", "Fullstack Systems", "Incubator Mentorship"],
-    "Ms. Dipika Ganpat Damania": ["Algorithms & DSA", "Data Engineering", "Student Guidance"],
-  };
-
-  const facultyQuoteMap: Record<string, string> = {
-    "Dr. Avinash R. Chaudhari": "Empowering GEC Daman students to bridge academic theory with industry-grade engineering.",
-    "Mrs. Hemali J. Damania": "Fostering an open-source technical culture where student projects launch into real production.",
-    "Ms. Dipika Ganpat Damania": "Guiding future software leaders to write clean code, solve hard problems, and inspire peers.",
-  };
-
-  const activeDomain = domainTracks.find((d) => d.id === activeDomainId) || domainTracks[0];
-  const activeMilestone = timelineMilestones.find((m) => m.year === activeYear) || timelineMilestones[2];
+  // Why Coderithum State (to show interactive cards)
+  const [selectedWhyStage, setSelectedWhyStage] = useState<string>("learn");
+  // Technical Ecosystem Active Domain State
+  const [activeDomainId, setActiveDomainId] = useState<string | null>(null);
+  // Foundation Team States
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   return (
     <motion.div
@@ -346,749 +542,924 @@ export default function AboutView({ team, setView }: AboutViewProps) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -15 }}
       transition={{ duration: 0.4 }}
-      className="space-y-20 max-w-6xl mx-auto pb-12"
+      className="space-y-24 max-w-6xl mx-auto pb-20"
     >
-      {/* ------------------------------------------------------------------ */}
-      {/* 1. Cyber Hero Banner & Interactive CLI Terminal Simulator           */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="space-y-8">
-        {/* Banner Header */}
-        <div className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 bg-blue-100 text-blue-900 text-xs font-mono font-bold rounded-none border-2 border-slate-900 shadow-[2px_2px_0px_#000]">
-            <Zap className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
-            <span>EST. 2024 • GEC DAMAN</span>
+      {/* ================================================================== */}
+      {/* 1. HERO — "What is Coderithum?"                                    */}
+      {/* ================================================================== */}
+      <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-6">
+        <div className="lg:col-span-7 space-y-6 text-left">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 bg-blue-100 text-blue-900 text-xs font-mono font-bold border-2 border-slate-900 shadow-[2px_2px_0px_#000]">
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" />
+            <span>WHO WE ARE</span>
           </div>
 
-          <div>
-            <InteractiveHeading
-              text="Who We Are"
-              as="h2"
-              className="text-xs font-mono tracking-widest text-blue-600 uppercase"
-            />
-            <div>
-              <InteractiveHeading
-                text="About Coderithum Ecosystem"
-                as="h1"
-                className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight mt-1"
-              />
-            </div>
-          </div>
+          <h1 className="text-3xl sm:text-5xl font-black text-slate-900 leading-tight">
+            Building the Next Generation of <span className="text-blue-600">Student Innovators</span>
+          </h1>
 
-          <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium">
-            <strong>Coderithum</strong> is the premier student developer & innovation ecosystem at{" "}
-            <strong>Government Engineering College (GEC) Daman</strong>. Operating under the Computer
-            Engineering Department, we empower engineering students to build production cloud apps,
-            AI pipelines, and open-source software.
+          <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-medium">
+            Coderithum is a student-driven technology and innovation community at{" "}
+            <span className="font-bold text-slate-900">Government Engineering College, Daman</span>. 
+            It brings together students who are passionate about technology, problem solving, innovation, 
+            and building real-world solutions.
           </p>
-        </div>
 
-        {/* Interactive CLI Terminal Simulator */}
-        <div className="bg-slate-950 border-2 border-slate-900 rounded-none shadow-[8px_8px_0px_#000] overflow-hidden text-mono font-mono text-xs sm:text-sm text-slate-200">
-          {/* Terminal Window Header Bar */}
-          <div className="bg-slate-900 border-b-2 border-slate-800 px-4 py-2.5 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 rounded-full bg-red-500 border border-red-700" />
-              <div className="w-3 h-3 rounded-full bg-yellow-500 border border-yellow-700" />
-              <div className="w-3 h-3 rounded-full bg-emerald-500 border border-emerald-700" />
-              <span className="ml-2 text-[11px] text-slate-400 font-mono hidden sm:inline">
-                coderithum-cli v2.4.0 — zsh — 80x24
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-mono">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-                SYSTEM_STATUS: ONLINE
-              </span>
-              <button
-                onClick={handleCopyCmd}
-                title="Copy Command"
-                className="p-1 text-slate-400 hover:text-white transition-colors cursor-pointer"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-              </button>
-            </div>
-          </div>
-
-          {/* Terminal Clickable Command Tabs */}
-          <div className="bg-slate-900/60 border-b border-slate-800 px-3 py-1.5 flex items-center gap-2 overflow-x-auto scrollbar-none">
-            {terminalCommands.map((cmd) => (
-              <button
-                key={cmd.id}
-                onClick={() => setActiveTab(cmd.id)}
-                className={`px-3 py-1 text-[11px] font-mono border transition-all cursor-pointer whitespace-nowrap ${
-                  activeTab === cmd.id
-                    ? "bg-blue-600 text-white border-blue-400 shadow-[2px_2px_0px_#000]"
-                    : "bg-slate-800/80 text-slate-300 border-slate-700 hover:bg-slate-800 hover:text-white"
-                }`}
-              >
-                {cmd.filename}
-              </button>
+          {/* List of Opportunities */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            {[
+              "Learn emerging technologies",
+              "Build real-world projects",
+              "Participate in hackathons & competitions",
+              "Collaborate with peers",
+              "Explore research and innovation",
+              "Develop leadership and teamwork skills",
+            ].map((item, idx) => (
+              <div key={idx} className="flex items-center gap-2.5 text-xs sm:text-sm text-slate-700 font-mono font-bold">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{item}</span>
+              </div>
             ))}
           </div>
+        </div>
 
-          {/* Terminal Screen Body */}
-          <div className="p-5 sm:p-6 space-y-4 font-mono leading-relaxed min-h-[220px]">
-            {/* Prompt line with typing effect */}
-            <div className="flex items-center gap-2 text-cyan-400">
-              <span className="text-emerald-400">coderithum@gecdaman:~$</span>
-              <span className="text-white">{typedCmd}</span>
-              {isTyping && <span className="w-2 h-4 bg-emerald-400 animate-pulse" />}
+        {/* Hero Visual Block */}
+        <div className="lg:col-span-5 flex justify-center items-center">
+          <div className="w-full max-w-[380px] p-6 bg-slate-900 border-2 border-slate-900 shadow-[8px_8px_0px_#000] relative overflow-hidden text-mono font-mono text-xs text-slate-300">
+            {/* Visual Node Graph Overlay / Code Graphic */}
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3 mb-4">
+              <div className="flex items-center gap-1.5">
+                <span className="w-3 h-3 rounded-full bg-red-500" />
+                <span className="w-3 h-3 rounded-full bg-yellow-500" />
+                <span className="w-3 h-3 rounded-full bg-green-500" />
+              </div>
+              <span className="text-[10px] text-slate-500">coderithum_nodes.py</span>
             </div>
 
-            {/* Rendered Output based on activeTab */}
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeTab}
-                initial={{ opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -4 }}
-                transition={{ duration: 0.15 }}
-                className="pt-2 text-slate-300 space-y-2 text-xs sm:text-sm"
+            {/* Simulated interactive network layout */}
+            <div className="relative h-48 border border-slate-800 bg-slate-950 flex items-center justify-center rounded-sm overflow-hidden">
+              <div className="absolute inset-0 bg-grid-pattern opacity-10" />
+              
+              {/* Central Core Node */}
+              <motion.div 
+                animate={{ scale: [1, 1.05, 1] }} 
+                transition={{ duration: 3, repeat: Infinity }}
+                className="w-16 h-16 rounded-full bg-blue-600/20 border border-blue-500 flex flex-col items-center justify-center z-10 p-2 text-center"
               >
-                {activeTab === "about" && (
-                  <div className="space-y-1.5 text-slate-300">
-                    <p className="text-emerald-400 font-bold">[OK] Initializing Coderithum Core Subsystems...</p>
-                    <p><span className="text-cyan-400">Organization  :</span> Coderithum Tech & Innovation Club</p>
-                    <p><span className="text-cyan-400">Institution   :</span> Government Engineering College (GEC) Daman</p>
-                    <p><span className="text-cyan-400">Department    :</span> Computer Engineering Division</p>
-                    <p><span className="text-cyan-400">Affiliation   :</span> GTU / UT Administration of DNH & DD</p>
-                    <p><span className="text-cyan-400">Active Cohort :</span> 150+ Student Developers across 8 Domains</p>
-                    <p className="text-yellow-400 pt-1">⚡ Mission: Bridge textbook theory with production software pipelines and competitive excellence.</p>
-                  </div>
-                )}
-
-                {activeTab === "stats" && (
-                  <div className="text-emerald-400">
-                    <pre className="overflow-x-auto text-[11px] sm:text-xs">
-{`{
-  "active_student_developers": 150,
-  "production_live_deployments": 24,
-  "national_hackathon_awards": 15,
-  "monthly_git_commits": 1420,
-  "specialized_domain_tracks": 8,
-  "peer_code_reviews_completed": 480,
-  "incubator_sprint_velocity": "94%",
-  "system_uptime": "99.9%"
-}`}
-                    </pre>
-                  </div>
-                )}
-
-                {activeTab === "stack" && (
-                  <div className="space-y-1.5">
-                    <p className="text-blue-400 font-bold">// Coderithum Production Engineering Stack</p>
-                    <p><span className="text-purple-400">Frontend     :</span> React 19, Next.js 15, TypeScript, TailwindCSS v4, Framer Motion</p>
-                    <p><span className="text-purple-400">Backend      :</span> Node.js, Express, Python PyTorch, Go Microservices, GraphQL</p>
-                    <p><span className="text-purple-400">Databases    :</span> PostgreSQL, Redis, MongoDB, SQLite</p>
-                    <p><span className="text-purple-400">DevOps/Cloud :</span> AWS EC2/S3, Docker Containers, Kubernetes, GitHub Actions CI/CD</p>
-                    <p><span className="text-purple-400">Security     :</span> OWASP Penetration Auditing, Burp Suite, CTF Cyber Labs</p>
-                  </div>
-                )}
-
-                {activeTab === "mission" && (
-                  <div className="space-y-1 text-slate-300 text-[11px] sm:text-xs">
-                    <p className="text-slate-500">[2024-08-01 10:00:00] INITIAL_COMMIT: Coderithum founded at GEC Daman lab.</p>
-                    <p className="text-slate-400">[2025-03-12 14:30:00] HACKATHON_WIN: 1st Prize @ Smart India Hackathon Regionals.</p>
-                    <p className="text-slate-300">[2026-01-10 09:15:00] DEPLOYMENT: V2 Portal & Student Incubator Pipeline live.</p>
-                    <p className="text-emerald-400">[2026-08-11 20:20:00] RUNTIME_STATUS: All 8 domain subtrees active & pushing code.</p>
-                  </div>
-                )}
-
-                {activeTab === "manifesto" && (
-                  <div className="space-y-2 border-l-2 border-emerald-500 pl-3 py-1">
-                    <p className="text-white font-bold"># Coderithum Engineering Manifesto</p>
-                    <p className="italic text-yellow-300">"Theory without code is abstract; Code without architecture is fragile."</p>
-                    <ul className="space-y-1 text-[11px] sm:text-xs text-slate-300">
-                      <li>1. <span className="text-emerald-400 font-bold">Zero Monoliths:</span> Build modular, decoupled micro-architectures.</li>
-                      <li>2. <span className="text-emerald-400 font-bold">Open Source First:</span> Internal tools are open to the student community.</li>
-                      <li>3. <span className="text-emerald-400 font-bold">Production Grade:</span> Strict TypeScript, 100% peer code reviews & automated CI/CD.</li>
-                      <li>4. <span className="text-emerald-400 font-bold">Peer Mentorship:</span> Senior leads pair program with incoming students daily.</li>
-                    </ul>
-                  </div>
-                )}
+                <Cpu className="w-5 h-5 text-blue-400" />
+                <span className="text-[8px] font-bold text-white mt-1">CORE</span>
               </motion.div>
-            </AnimatePresence>
+
+              {/* Connecting lines */}
+              <div className="absolute w-full h-full flex items-center justify-center">
+                <svg className="w-full h-full absolute inset-0 pointer-events-none">
+                  {/* Dashed animated links */}
+                  <line x1="20%" y1="20%" x2="50%" y2="50%" stroke="#3b82f6" strokeWidth="1" strokeDasharray="4" />
+                  <line x1="80%" y1="20%" x2="50%" y2="50%" stroke="#10b981" strokeWidth="1" strokeDasharray="4" />
+                  <line x1="20%" y1="80%" x2="50%" y2="50%" stroke="#8b5cf6" strokeWidth="1" strokeDasharray="4" />
+                  <line x1="80%" y1="80%" x2="50%" y2="50%" stroke="#f59e0b" strokeWidth="1" strokeDasharray="4" />
+                </svg>
+              </div>
+
+              {/* Surrounding Nodes */}
+              <div className="absolute top-4 left-6 flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                <span className="text-[9px] text-slate-300">LEARN</span>
+              </div>
+
+              <div className="absolute top-4 right-6 flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[9px] text-slate-300">EXPLORE</span>
+              </div>
+
+              <div className="absolute bottom-4 left-6 flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+                <span className="text-[9px] text-slate-300">BUILD</span>
+              </div>
+
+              <div className="absolute bottom-4 right-6 flex items-center gap-1 bg-slate-900 border border-slate-800 px-2 py-0.5 rounded shadow-sm">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                <span className="text-[9px] text-slate-300">INNOVATE</span>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-t border-slate-800 text-[10px] text-slate-400 flex items-center justify-between">
+              <span>STATUS: Active</span>
+              <span className="text-blue-400">GEC Daman Hub</span>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* 2. Asymmetrical Neo-Brutalist Bento Grid                           */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="space-y-6">
-        <div className="text-center space-y-2">
+      {/* ================================================================== */}
+      {/* 2. WHY CODERITHUM EXISTS                                           */}
+      {/* ================================================================== */}
+      <section className="space-y-8">
+        <div className="text-left space-y-2 border-l-4 border-blue-600 pl-4">
           <InteractiveHeading
-            text="Metrics & Impact"
+            text="Why Coderithum?"
             as="h2"
-            className="text-xs font-mono tracking-widest text-blue-600 uppercase"
+            className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight"
           />
-          <div>
-            <InteractiveHeading
-              text="Our Engineering Metrics"
-              as="h3"
-              className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
-            />
-          </div>
-        </div>
-
-        {/* Bento Grid Container */}
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {/* Bento Card 1: Large Counter + Domain Breakdown (Span 2) */}
-          <div className="md:col-span-2 p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] flex flex-col justify-between space-y-6 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] transition-all">
-            <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <span className="text-[10px] font-mono font-bold bg-blue-100 text-blue-900 border border-blue-300 px-2 py-0.5 uppercase">
-                  ACTIVE COMMUNITY
-                </span>
-                <h4 className="text-lg font-black text-slate-900">Student Developer Cohort</h4>
-              </div>
-              <Users className="w-6 h-6 text-blue-600 shrink-0" />
-            </div>
-
-            <div className="flex items-baseline gap-2">
-              <span className="text-5xl font-black text-blue-600 font-mono">
-                <AnimatedCounter target={150} />+
-              </span>
-              <span className="text-xs text-slate-500 font-mono uppercase font-bold">Active Coders @ GEC Daman</span>
-            </div>
-
-            {/* Domain Breakdown Progress Bar */}
-            <div className="space-y-2 pt-2 border-t border-slate-200">
-              <div className="flex justify-between text-[11px] font-mono text-slate-600 font-bold">
-                <span>Domain Composition</span>
-                <span>100% Student Driven</span>
-              </div>
-              <div className="h-3 w-full bg-slate-100 border border-slate-900 flex overflow-hidden">
-                <div className="h-full bg-blue-600" style={{ width: "45%" }} title="Web & API (45%)" />
-                <div className="h-full bg-emerald-500" style={{ width: "25%" }} title="AI & ML (25%)" />
-                <div className="h-full bg-purple-500" style={{ width: "15%" }} title="Mobile (15%)" />
-                <div className="h-full bg-amber-500" style={{ width: "15%" }} title="Cloud & Cyber (15%)" />
-              </div>
-              <div className="flex flex-wrap gap-x-4 gap-y-1 text-[10px] font-mono text-slate-500 pt-1">
-                <span className="flex items-center gap-1"><span className="w-2 h-2 bg-blue-600 inline-block" /> Web (45%)</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 bg-emerald-500 inline-block" /> AI/ML (25%)</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 bg-purple-500 inline-block" /> Mobile (15%)</span>
-                <span className="flex items-center gap-1"><span className="w-2 h-2 bg-amber-500 inline-block" /> DevOps/Cyber (15%)</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Bento Card 2: Live Production Systems (Span 1) */}
-          <div className="p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] transition-all">
-            <div className="flex items-center justify-between">
-              <Server className="w-6 h-6 text-emerald-600" />
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-50 text-emerald-700 border border-emerald-300 text-[10px] font-mono font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                LIVE
-              </span>
-            </div>
-            <div>
-              <div className="text-4xl font-black text-slate-900 font-mono">
-                <AnimatedCounter target={20} />+
-              </div>
-              <div className="text-xs font-bold text-slate-900 mt-1">Production Systems</div>
-              <p className="text-[11px] text-slate-500 font-mono mt-0.5">Campus tools & open-source portals deployed.</p>
-            </div>
-            <div className="pt-2 border-t border-slate-200 text-[10px] font-mono text-emerald-700 font-bold flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" /> 99.9% Cloud Uptime SLA
-            </div>
-          </div>
-
-          {/* Bento Card 3: Hackathon Awards & Recognition (Span 1) */}
-          <div className="p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] transition-all">
-            <div className="flex items-center justify-between">
-              <Award className="w-6 h-6 text-amber-500" />
-              <span className="px-2 py-0.5 bg-amber-50 text-amber-800 border border-amber-300 text-[10px] font-mono font-bold">
-                SIH '25 WINNERS
-              </span>
-            </div>
-            <div>
-              <div className="text-4xl font-black text-slate-900 font-mono">
-                <AnimatedCounter target={15} />+
-              </div>
-              <div className="text-xs font-bold text-slate-900 mt-1">Hackathon Trophies</div>
-              <p className="text-[11px] text-slate-500 font-mono mt-0.5">Smart India Hackathon & GTU Techfests.</p>
-            </div>
-            <div className="pt-2 border-t border-slate-200 text-[10px] font-mono text-amber-700 font-bold flex items-center gap-1">
-              <Trophy className="w-3.5 h-3.5 text-amber-500" /> Regional Selection 1st Prize
-            </div>
-          </div>
-
-          {/* Bento Card 4: Incubator Lab Velocity (Span 2) */}
-          <div className="md:col-span-2 p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] transition-all">
-            <div className="flex items-center justify-between">
-              <div className="space-y-0.5">
-                <span className="text-[10px] font-mono font-bold text-purple-700 bg-purple-50 border border-purple-200 px-2 py-0.5">
-                  INCUBATOR VELOCITY
-                </span>
-                <h4 className="text-sm font-black text-slate-900">Sprint Delivery Pipeline</h4>
-              </div>
-              <Activity className="w-5 h-5 text-purple-600" />
-            </div>
-
-            <div className="grid grid-cols-3 gap-3 text-center py-2 bg-slate-50 border border-slate-200 p-3">
-              <div>
-                <div className="text-lg sm:text-xl font-extrabold text-slate-900 font-mono">94%</div>
-                <div className="text-[9px] font-mono text-slate-500 uppercase font-bold">Sprint Pace</div>
-              </div>
-              <div className="border-x border-slate-300">
-                <div className="text-lg sm:text-xl font-extrabold text-slate-900 font-mono">1,420</div>
-                <div className="text-[9px] font-mono text-slate-500 uppercase font-bold">Commits / Mo</div>
-              </div>
-              <div>
-                <div className="text-lg sm:text-xl font-extrabold text-slate-900 font-mono">480+</div>
-                <div className="text-[9px] font-mono text-slate-500 uppercase font-bold">PR Reviews</div>
-              </div>
-            </div>
-
-            <div className="text-[11px] text-slate-600 leading-relaxed">
-              Automated CI/CD pipelines trigger unit tests and static code audits for every pull request merged into our GitHub organization.
-            </div>
-          </div>
-
-          {/* Bento Card 5: Technical Ecosystem Spotlight (Span 2) */}
-          <div className="md:col-span-1 lg:col-span-2 p-6 bg-slate-900 text-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] transition-all">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Globe className="w-5 h-5 text-blue-400" />
-                <h4 className="text-sm font-black text-white">8 Technical Domains</h4>
-              </div>
-              <span className="px-2 py-0.5 bg-blue-600 text-white text-[10px] font-mono font-bold">
-                SPECIALIZED
-              </span>
-            </div>
-
-            <p className="text-xs text-slate-300 leading-relaxed">
-              From low-level C++ embedded AI systems to high-concurrency Node.js web backends, our club operates across 8 specialized developer divisions.
-            </p>
-
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {domainTracks.map((d) => (
-                <span
-                  key={d.id}
-                  onClick={() => setActiveDomainId(d.id)}
-                  className="px-2 py-0.5 bg-slate-800 hover:bg-blue-600 text-slate-200 hover:text-white border border-slate-700 text-[10px] font-mono cursor-pointer transition-colors"
-                >
-                  {d.icon} {d.title}
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 3. Interactive Technical Ecosystem Matrix (8 Domains)               */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="space-y-8">
-        <div className="text-center space-y-2">
-          <InteractiveHeading
-            text="Technical Ecosystem"
-            as="h2"
-            className="text-xs font-mono tracking-widest text-blue-600 uppercase"
-          />
-          <div>
-            <InteractiveHeading
-              text="8 Specialization Divisions"
-              as="h3"
-              className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
-            />
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto font-medium">
-            Select a technical domain below to inspect core tech stacks, active production projects, and mastery pathways.
+          <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-semibold">
+            Classroom education provides the foundation. Coderithum provides the environment to apply that knowledge.
           </p>
         </div>
 
-        {/* 8 Domain Selector Tabs */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-          {domainTracks.map((domain) => {
-            const isSelected = domain.id === activeDomainId;
+        {/* Stepper Node Selector */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          {whyStages.map((stage) => {
+            const isSelected = selectedWhyStage === stage.id;
             return (
               <button
-                key={domain.id}
-                onClick={() => setActiveDomainId(domain.id)}
-                className={`p-3 border-2 border-slate-900 text-center transition-all cursor-pointer flex flex-col items-center gap-1.5 ${
+                key={stage.id}
+                onClick={() => setSelectedWhyStage(stage.id)}
+                className={`p-3.5 border-2 border-slate-900 text-center font-mono font-black text-xs sm:text-sm transition-all cursor-pointer shadow-[3px_3px_0px_#000] relative ${
                   isSelected
-                    ? "bg-blue-600 text-white shadow-[4px_4px_0px_#000] translate-x-[-1px] translate-y-[-1px]"
-                    : "bg-white text-slate-900 hover:bg-slate-50 shadow-[2px_2px_0px_#000]"
+                    ? "bg-slate-900 text-white translate-x-[1px] translate-y-[1px] shadow-[1px_1px_0px_#000]"
+                    : "bg-white text-slate-800 hover:bg-slate-50"
                 }`}
               >
-                <span className="text-2xl">{domain.icon}</span>
-                <span className="text-xs font-black truncate w-full">{domain.title}</span>
+                {stage.label}
+                {isSelected && (
+                  <span className="absolute bottom-[-6px] left-1/2 transform -translate-x-1/2 w-3 h-3 bg-slate-900 rotate-45 border-r border-b border-slate-900 hidden sm:block" />
+                )}
               </button>
             );
           })}
         </div>
 
-        {/* Selected Domain Deep-Dive Card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeDomain.id}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-            className="p-6 sm:p-8 bg-white border-2 border-slate-900 shadow-[8px_8px_0px_#000] space-y-6"
-          >
-            {/* Domain Card Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-200 pb-5">
-              <div className="flex items-center gap-3">
-                <span className="text-4xl p-3 bg-blue-50 border-2 border-slate-900 shadow-[3px_3px_0px_#000]">
-                  {activeDomain.icon}
-                </span>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="px-2 py-0.5 bg-blue-100 text-blue-900 text-[10px] font-mono font-bold border border-blue-300 uppercase">
-                      {activeDomain.badge}
+        {/* Dynamic Display Card */}
+        <div className="relative min-h-[140px]">
+          <AnimatePresence mode="wait">
+            {whyStages.map((stage) => {
+              if (stage.id !== selectedWhyStage) return null;
+              return (
+                <motion.div
+                  key={stage.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                  className={`p-6 border-2 border-slate-900 shadow-[6px_6px_0px_#000] rounded-none ${stage.color} flex flex-col justify-between`}
+                >
+                  <div className="space-y-2">
+                    <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest border border-current px-2 py-0.5 inline-block">
+                      STAGE — {stage.label}
                     </span>
-                    <span className="text-xs font-mono text-slate-500 font-bold">{activeDomain.leadRole}</span>
+                    <h3 className="text-lg sm:text-xl font-black">{stage.title}</h3>
+                    <p className="text-xs sm:text-sm font-medium leading-relaxed max-w-2xl">{stage.desc}</p>
                   </div>
-                  <h4 className="text-xl sm:text-2xl font-black text-slate-900 mt-0.5">{activeDomain.title}</h4>
-                </div>
-              </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      </section>
 
-              <div className="text-right sm:text-right text-xs font-mono text-blue-600 font-bold bg-blue-50 px-3 py-1.5 border border-blue-200">
-                {activeDomain.motto}
-              </div>
-            </div>
-
-            {/* Description */}
-            <p className="text-sm text-slate-700 leading-relaxed font-medium">
-              {activeDomain.desc}
-            </p>
-
-            {/* 3-Column Content Breakdown */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
-              {/* Tech Stack Column */}
-              <div className="space-y-3 p-4 bg-slate-50 border border-slate-300">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-900 uppercase">
-                  <Code className="w-4 h-4 text-blue-600" /> Core Tech Stack
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {activeDomain.tech.map((t, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-1 bg-white border border-slate-400 text-[11px] font-mono font-semibold text-slate-800 shadow-[1px_1px_0px_#000]"
-                    >
-                      {t}
-                    </span>
-                  ))}
-                </div>
-              </div>
-
-              {/* Active Projects Column */}
-              <div className="space-y-3 p-4 bg-slate-50 border border-slate-300">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-900 uppercase">
-                  <Rocket className="w-4 h-4 text-blue-600" /> Key Projects
-                </div>
-                <ul className="space-y-1.5">
-                  {activeDomain.projects.map((p, idx) => (
-                    <li key={idx} className="text-xs text-slate-700 flex items-start gap-2 font-medium">
-                      <span className="text-blue-600 font-bold">•</span>
-                      <span>{p}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Mastery Pathway Column */}
-              <div className="space-y-3 p-4 bg-slate-50 border border-slate-300">
-                <div className="flex items-center gap-2 text-xs font-mono font-bold text-slate-900 uppercase">
-                  <BookOpen className="w-4 h-4 text-blue-600" /> Skill Roadmap
-                </div>
-                <div className="space-y-1.5 text-[11px] font-mono text-slate-700">
-                  {activeDomain.pathway.map((step, idx) => (
-                    <div key={idx} className="flex items-center gap-2">
-                      <span className="w-4 h-4 rounded-full bg-blue-600 text-white flex items-center justify-center text-[9px] font-bold shrink-0">
-                        {idx + 1}
-                      </span>
-                      <span className="truncate">{step}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 4. Dynamic Timeline Stepper                                         */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="space-y-8">
+      {/* ================================================================== */}
+      {/* 3. WHAT WE DO                                                      */}
+      {/* ================================================================== */}
+      <section className="space-y-8">
         <div className="text-center space-y-2">
           <InteractiveHeading
-            text="Evolution"
+            text="What We Do"
             as="h2"
-            className="text-xs font-mono tracking-widest text-blue-600 uppercase"
+            className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight"
           />
-          <div>
-            <InteractiveHeading
-              text="Our Journey & Milestones"
-              as="h3"
-              className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
-            />
-          </div>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto font-medium">
-            Click on milestone years to trace Coderithum's growth from a student initiative to a national hackathon champion.
+          <p className="text-xs sm:text-sm text-slate-500 font-mono font-bold uppercase">
+            EXPLORING CORE ACTIVITIES & COLLABORATIVE INITIATIVES
           </p>
         </div>
 
-        {/* Year Stepper Bar */}
-        <div className="flex items-center justify-center gap-2 sm:gap-4 overflow-x-auto pb-2">
-          {timelineMilestones.map((m) => {
-            const isActive = m.year === activeYear;
-            return (
-              <button
-                key={m.year}
-                onClick={() => setActiveYear(m.year)}
-                className={`px-5 py-2.5 border-2 border-slate-900 font-mono font-black text-sm transition-all cursor-pointer flex items-center gap-2 ${
-                  isActive
-                    ? "bg-blue-600 text-white shadow-[4px_4px_0px_#000] translate-x-[-1px] translate-y-[-1px]"
-                    : "bg-white text-slate-900 hover:bg-slate-50 shadow-[2px_2px_0px_#000]"
-                }`}
-              >
-                <span>{m.year}</span>
-                <span className="text-[10px] font-normal opacity-85 hidden sm:inline">({m.tag.split(" ")[0]})</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Active Milestone Card */}
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeMilestone.year}
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{ duration: 0.25 }}
-            className="p-6 sm:p-8 bg-white border-2 border-slate-900 shadow-[8px_8px_0px_#000] space-y-6"
-          >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-slate-200 pb-4">
-              <div>
-                <span className="text-xs font-mono font-black text-blue-600 bg-blue-50 border border-blue-200 px-3 py-1 uppercase">
-                  {activeMilestone.tag}
-                </span>
-                <h4 className="text-xl sm:text-2xl font-black text-slate-900 mt-2">{activeMilestone.title}</h4>
-              </div>
-              <div className="text-4xl sm:text-5xl font-black font-mono text-slate-300">
-                {activeMilestone.year}
-              </div>
-            </div>
-
-            <p className="text-sm text-slate-700 leading-relaxed font-medium">
-              {activeMilestone.desc}
-            </p>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
-              {/* Key Deliverables & Achievements */}
-              <div className="space-y-3 p-4 bg-slate-50 border border-slate-300">
-                <div className="text-xs font-mono font-bold text-slate-900 uppercase flex items-center gap-2">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" /> Key Deliverables & Milestones
-                </div>
-                <ul className="space-y-2">
-                  {activeMilestone.achievements.map((ach, idx) => (
-                    <li key={idx} className="text-xs text-slate-700 flex items-start gap-2 font-medium">
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-600 mt-1.5 shrink-0" />
-                      <span>{ach}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Highlight Quote */}
-              <div className="p-4 bg-blue-50 border-2 border-blue-600/30 flex flex-col justify-between space-y-4">
-                <div className="space-y-2">
-                  <Quote className="w-6 h-6 text-blue-600 opacity-60" />
-                  <p className="text-xs sm:text-sm font-bold text-slate-900 italic leading-relaxed">
-                    "{activeMilestone.highlight}"
-                  </p>
-                </div>
-                <div className="text-[10px] font-mono text-blue-800 font-bold uppercase tracking-wider">
-                  — Coderithum Leadership Log {activeMilestone.year}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </AnimatePresence>
-      </div>
-
-      {/* ------------------------------------------------------------------ */}
-      {/* 5. Core Engineering Values (Interactive View Mode Toggle)           */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="space-y-8">
-        <div className="text-center space-y-3">
-          <InteractiveHeading
-            text="Our Culture & Standards"
-            as="h2"
-            className="text-xs font-mono tracking-widest text-blue-600 uppercase"
-          />
-          <div>
-            <InteractiveHeading
-              text="Core Engineering Values"
-              as="h3"
-              className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
-            />
-          </div>
-
-          {/* Toggle View Mode Button */}
-          <div className="inline-flex p-1 bg-slate-100 border-2 border-slate-900 shadow-[3px_3px_0px_#000] text-xs font-mono font-bold mt-2">
-            <button
-              onClick={() => setValueViewMode("culture")}
-              className={`px-4 py-1.5 transition-all cursor-pointer ${
-                valueViewMode === "culture"
-                  ? "bg-blue-600 text-white shadow-[2px_2px_0px_#000]"
-                  : "text-slate-700 hover:text-black"
-              }`}
-            >
-              Philosophy & Culture
-            </button>
-            <button
-              onClick={() => setValueViewMode("enforcement")}
-              className={`px-4 py-1.5 transition-all cursor-pointer ${
-                valueViewMode === "enforcement"
-                  ? "bg-blue-600 text-white shadow-[2px_2px_0px_#000]"
-                  : "text-slate-700 hover:text-black"
-              }`}
-            >
-              Production Standards
-            </button>
-          </div>
-        </div>
-
-        {/* 4 Values Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {coreValuesData.map((val) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {whatWeDoItems.map((item, idx) => (
             <div
-              key={val.id}
+              key={idx}
               className="p-6 bg-white border-2 border-slate-900 shadow-[5px_5px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[7px_7px_0px_#000] transition-all"
             >
               <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-3xl p-2 bg-blue-50 border border-slate-900 shadow-[2px_2px_0px_#000]">
-                    {val.icon}
-                  </span>
-                  <span className="text-[10px] font-mono font-bold text-slate-500 uppercase tracking-widest">
-                    VALUE 0{coreValuesData.indexOf(val) + 1}
-                  </span>
+                <div className="w-12 h-12 bg-slate-50 border border-slate-900 flex items-center justify-center shadow-[2px_2px_0px_#000]">
+                  {item.icon}
                 </div>
-                <h4 className="text-lg font-black text-slate-900">{val.title}</h4>
+                <h4 className="text-base font-black text-slate-900">{item.title}</h4>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
-                  {val.summary}
+                  {item.desc}
                 </p>
-              </div>
-
-              {/* Mode-Specific Content Block */}
-              <div className="pt-3 border-t-2 border-slate-100">
-                {valueViewMode === "culture" ? (
-                  <div className="p-3 bg-blue-50/60 border border-blue-200 space-y-1">
-                    <span className="text-[10px] font-mono font-bold text-blue-800 uppercase">PHILOSOPHY</span>
-                    <p className="text-xs text-slate-700 italic font-medium">"{val.culture}"</p>
-                  </div>
-                ) : (
-                  <div className="p-3 bg-emerald-50/60 border border-emerald-200 space-y-1">
-                    <span className="text-[10px] font-mono font-bold text-emerald-800 uppercase">ENFORCEMENT</span>
-                    <p className="text-xs text-slate-800 font-mono font-semibold">✓ {val.enforcement}</p>
-                  </div>
-                )}
               </div>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* 6. Faculty Leadership Showcase                                      */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="space-y-8">
-        <div className="text-center space-y-2">
-          <InteractiveHeading
-            text="Patrons & Advisory"
-            as="h2"
-            className="text-xs font-mono tracking-widest text-blue-600 uppercase"
-          />
-          <div>
-            <InteractiveHeading
-              text="Faculty Leadership"
-              as="h3"
-              className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight"
-            />
+      {/* ================================================================== */}
+      {/* 3.5. FOUNDATION TEAM                                               */}
+      {/* ================================================================== */}
+      <section className="space-y-8 relative">
+        <div className="text-left space-y-3 border-l-4 border-blue-600 pl-4">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-[10px] font-mono font-bold text-blue-600 tracking-wider uppercase bg-blue-100 border-2 border-slate-900 px-3 py-1.5 shadow-[2px_2px_0px_#000] inline-block">
+              FOUNDATION TEAM
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 border-2 border-slate-900 text-[10px] font-mono font-bold uppercase shadow-[2px_2px_0px_#000] relative overflow-hidden shrink-0">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 animate-ping absolute left-3" />
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600 relative" />
+              <span className="pl-4">EST. 2024 • FOUNDATION</span>
+              <motion.div
+                animate={shouldReduceMotion ? {} : { x: ["-100%", "200%"] }}
+                transition={{ repeat: Infinity, duration: 2.5, ease: "linear", repeatDelay: 3 }}
+                className="absolute inset-0 w-[30%] h-full bg-gradient-to-r from-transparent via-white/50 to-transparent -skew-x-12"
+              />
+            </span>
           </div>
-          <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto font-medium">
-            Guided by distinguished faculty mentors at Government Engineering College Daman.
+
+          <InteractiveHeading
+            text="The People Behind Coderithum"
+            as="h2"
+            className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight"
+          />
+          <p className="text-xs sm:text-sm text-slate-500 font-mono font-bold uppercase">
+            “Six students. One shared vision. The beginning of Coderithum.”
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {facultyMembers.map((fac, idx) => {
-            const focusTags = facultyFocusMap[fac.name] || ["Software Systems", "Academic Mentorship", "Engineering"];
-            const quoteText = facultyQuoteMap[fac.name] || "Empowering students to build scalable software solutions.";
+        {/* Responsive Grid with connecting network lines in background */}
+        <div className="relative">
+          {/* Connection lines in background - only shown on desktop/large screens */}
+          <div className="absolute inset-0 pointer-events-none hidden lg:block z-0">
+            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              {/* Star-topology connecting nodes to center </> */}
+              <line
+                x1="16.6%"
+                y1="25%"
+                x2="50%"
+                y2="50%"
+                stroke={hoveredIndex === 0 ? "#2563eb" : "#cbd5e1"}
+                strokeWidth={hoveredIndex === 0 ? "2" : "1"}
+                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
+                className="transition-all duration-300"
+              />
+              <line
+                x1="50%"
+                y1="25%"
+                x2="50%"
+                y2="50%"
+                stroke={hoveredIndex === 1 ? "#2563eb" : "#cbd5e1"}
+                strokeWidth={hoveredIndex === 1 ? "2" : "1"}
+                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
+                className="transition-all duration-300"
+              />
+              <line
+                x1="83.3%"
+                y1="25%"
+                x2="50%"
+                y2="50%"
+                stroke={hoveredIndex === 2 ? "#2563eb" : "#cbd5e1"}
+                strokeWidth={hoveredIndex === 2 ? "2" : "1"}
+                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
+                className="transition-all duration-300"
+              />
+              <line
+                x1="16.6%"
+                y1="75%"
+                x2="50%"
+                y2="50%"
+                stroke={hoveredIndex === 3 ? "#2563eb" : "#cbd5e1"}
+                strokeWidth={hoveredIndex === 3 ? "2" : "1"}
+                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
+                className="transition-all duration-300"
+              />
+              <line
+                x1="50%"
+                y1="75%"
+                x2="50%"
+                y2="50%"
+                stroke={hoveredIndex === 4 ? "#2563eb" : "#cbd5e1"}
+                strokeWidth={hoveredIndex === 4 ? "2" : "1"}
+                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
+                className="transition-all duration-300"
+              />
+              <line
+                x1="83.3%"
+                y1="75%"
+                x2="50%"
+                y2="50%"
+                stroke={hoveredIndex === 5 ? "#2563eb" : "#cbd5e1"}
+                strokeWidth={hoveredIndex === 5 ? "2" : "1"}
+                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
+                className="transition-all duration-300"
+              />
 
-            return (
-              <div
-                key={idx}
-                className="p-6 bg-white border-2 border-slate-900 shadow-[6px_6px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] transition-all text-center items-center"
+              {/* Center Code Node */}
+              <circle cx="50%" cy="50%" r="20" fill="#f8fafc" stroke="#0f172a" strokeWidth="2" />
+              <text
+                x="50%"
+                y="50%"
+                dominantBaseline="central"
+                textAnchor="middle"
+                fill="#2563eb"
+                fontSize="12"
+                fontWeight="black"
+                fontFamily="monospace"
               >
-                <div className="space-y-3 flex flex-col items-center">
-                  <div className="w-24 h-24 rounded-none overflow-hidden border-2 border-slate-900 shadow-[2px_2px_0px_#000] bg-slate-100 shrink-0">
-                    <img src={fac.avatar} alt={fac.name} className="w-full h-full" style={getMemberAvatarStyle(fac)} />
+                &lt;/&gt;
+              </text>
+            </svg>
+          </div>
+
+          {/* Cards Grid */}
+          <motion.div
+            variants={shouldReduceMotion ? {} : {
+              hidden: { opacity: 0 },
+              show: {
+                opacity: 1,
+                transition: {
+                  staggerChildren: 0.1
+                }
+              }
+            }}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10"
+          >
+            {foundationMembers.map((member, idx) => (
+              <motion.div
+                key={idx}
+                variants={shouldReduceMotion ? {} : {
+                  hidden: { opacity: 0, y: 30, scale: 0.97 },
+                  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
+                }}
+                onMouseEnter={() => setHoveredIndex(idx)}
+                onMouseLeave={() => setHoveredIndex(null)}
+                className="group bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] hover:shadow-[6px_6px_0px_#2563eb] hover:border-blue-600 hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-300 flex flex-col overflow-hidden relative max-w-[240px] mx-auto w-full"
+              >
+                {/* Technical Light Sweep Overlay */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+                  <motion.div
+                    initial={{ x: "-150%" }}
+                    animate={hoveredIndex === idx ? { x: "150%" } : { x: "-150%" }}
+                    transition={{ duration: 0.6, ease: "easeInOut" }}
+                    className="absolute inset-y-0 w-24 bg-gradient-to-r from-transparent via-blue-500/10 to-transparent -skew-x-12"
+                  />
+                </div>
+
+                {/* Top Badge bar */}
+                <div className="flex justify-between items-center w-full px-4 pt-3.5 pb-2.5 border-b border-slate-100 bg-slate-50/50">
+                  <span className="px-2 py-0.5 border border-blue-600 bg-blue-50 text-blue-700 text-[9px] font-mono font-bold tracking-wider uppercase relative overflow-hidden">
+                    FOUNDING MEMBER
+                    <motion.div
+                      animate={shouldReduceMotion ? {} : { x: ["-100%", "200%"] }}
+                      transition={{ repeat: Infinity, duration: 1.5, ease: "linear", repeatDelay: 4 }}
+                      className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/70 to-transparent -skew-x-12"
+                    />
+                  </span>
+                  <span className="text-[9px] text-slate-400 font-mono font-bold">EST. 2024</span>
+                </div>
+
+                {/* Portrait wrapper with reduced size */}
+                <div className="relative pt-6 pb-4 flex justify-center items-center">
+                  {/* Subtle blur glow behind portrait on hover */}
+                  <div className="absolute w-24 h-24 bg-blue-500/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+
+                  <div className="relative size-24 border-2 border-slate-900 bg-blue-50/50 shadow-[3px_3px_0px_#000] overflow-hidden group-hover:shadow-[4px_4px_0px_#2563eb] group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] transition-all duration-300">
+                    {member.image ? (
+                      <img
+                        src={withBasePath(member.image)}
+                        alt={`${member.name} — Foundation Team Member`}
+                        className="absolute inset-0 w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 group-hover:-translate-y-1 transition-all duration-300"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-blue-50/30">
+                        <div className="absolute inset-0 bg-grid-pattern opacity-[0.07] pointer-events-none" />
+                        <span className="text-xl font-mono font-black text-slate-300 group-hover:text-blue-500 transition-colors duration-300">
+                          {member.name.split(" ").map((n) => n[0]).join("")}
+                        </span>
+                        <span className="text-[8px] font-mono font-bold text-slate-400 group-hover:text-blue-500 mt-1 uppercase tracking-widest transition-colors duration-300">
+                          No Photo
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Details Section */}
+                <div className="px-4 pb-4 flex flex-col justify-between flex-grow space-y-3">
+                  <div className="space-y-2 text-center w-full">
+                    <h4 className="text-sm font-black text-slate-900 group-hover:text-blue-600 transition-colors duration-300 uppercase tracking-tight">
+                      {member.name}
+                    </h4>
+                    <span className="text-[9px] text-slate-500 font-mono font-bold block uppercase tracking-wider">
+                      {member.role}
+                    </span>
+
+                    {/* Hover contribution reveal info */}
+                    <div className="h-4 overflow-hidden relative">
+                      <span className="text-[9px] font-mono font-extrabold text-blue-600 absolute inset-x-0 bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                        PART OF THE CODERITHUM FOUNDATION
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Social links */}
+                  <div className="flex items-center justify-center gap-3 pt-3 border-t border-slate-100 w-full">
+                    {member.github ? (
+                      <a
+                        href={member.github}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-600 rounded-none shadow-[2px_2px_0px_#000] hover:shadow-[2px_2px_0px_#2563eb] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000] transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-600"
+                        title={`${member.name}'s GitHub`}
+                      >
+                        <Github className="w-3.5 h-3.5" />
+                      </a>
+                    ) : (
+                      <span className="p-1.5 border border-slate-200 text-slate-300 cursor-not-allowed">
+                        <Github className="w-3.5 h-3.5 opacity-30" />
+                      </span>
+                    )}
+
+                    {member.linkedin ? (
+                      <a
+                        href={member.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-1.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-600 rounded-none shadow-[2px_2px_0px_#000] hover:shadow-[2px_2px_0px_#2563eb] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000] transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-600"
+                        title={`${member.name}'s LinkedIn`}
+                      >
+                        <Linkedin className="w-3.5 h-3.5" />
+                      </a>
+                    ) : (
+                      <span className="p-1.5 border border-slate-200 text-slate-300 cursor-not-allowed">
+                        <Linkedin className="w-3.5 h-3.5 opacity-30" />
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* 4. OUR TECHNICAL ECOSYSTEM                                         */}
+      {/* ================================================================== */}
+      <section className="space-y-8">
+        <div className="text-center space-y-2">
+          <span className="text-[10px] font-mono font-bold text-blue-600 tracking-wider uppercase bg-blue-100 border-2 border-slate-900 px-3 py-1.5 shadow-[2px_2px_0px_#000] inline-block mb-2">
+            TECHNICAL ECOSYSTEM
+          </span>
+          <InteractiveHeading
+            text="Explore Our Technical Domains"
+            as="h2"
+            className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight"
+          />
+          <p className="text-sm text-slate-600 max-w-2xl mx-auto font-medium leading-relaxed">
+            Coderithum provides a flexible, modular environment where students can explore different areas of technology, develop specialized skills, and collaborate across domains on real-world projects.
+          </p>
+        </div>
+
+        {/* 8 Domains Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {ecosystemDomains.map((domain) => {
+            const isActive = activeDomainId === domain.id;
+            const hasSelection = activeDomainId !== null;
+            const opacityClass = isActive
+              ? "opacity-100"
+              : hasSelection
+                ? "opacity-60 hover:opacity-100"
+                : "opacity-100";
+            return (
+              <button
+                key={domain.id}
+                onClick={() => setActiveDomainId(isActive ? null : domain.id)}
+                className={`p-5 border-2 border-slate-900 flex flex-col text-left justify-between space-y-4 hover:translate-y-[-2px] transition-all duration-200 cursor-pointer ${opacityClass} ${
+                  isActive
+                    ? `${domain.color.split(" ")[2]} scale-[1.02] border-blue-600 shadow-[0_0_15px_rgba(37,99,235,0.2),_4px_4px_0px_#000]`
+                    : "bg-white text-slate-800 shadow-[3px_3px_0px_#000]"
+                }`}
+              >
+                <div className="space-y-3 w-full">
+                  <div className="flex justify-between items-center w-full">
+                    <div className={`w-10 h-10 border-2 border-slate-900 flex items-center justify-center ${domain.color.split(" ")[0]} ${domain.color.split(" ")[1]} shadow-[2px_2px_0px_#000]`}>
+                      {domain.icon}
+                    </div>
+                    {isActive && (
+                      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 bg-blue-600 text-white text-[9px] font-mono font-bold uppercase shadow-[1px_1px_0px_#000]">
+                        <Zap className="w-2.5 h-2.5 animate-pulse" /> Active
+                      </span>
+                    )}
                   </div>
                   <div>
-                    <h4 className="text-base font-black text-slate-900">{fac.name}</h4>
-                    <p className="text-xs text-blue-600 font-mono font-bold mt-0.5">{fac.role}</p>
-                    <p className="text-[11px] text-slate-500 font-mono">GEC Daman</p>
+                    <h4 className="text-sm font-black text-slate-900">{domain.title}</h4>
+                    <p className="text-[11px] text-slate-500 font-medium leading-normal mt-1">
+                      {domain.shortDesc}
+                    </p>
                   </div>
                 </div>
-
-                {/* Focus Tags */}
-                <div className="flex flex-wrap gap-1 justify-center py-1">
-                  {focusTags.map((tag, tIdx) => (
-                    <span key={tIdx} className="px-2 py-0.5 bg-slate-100 border border-slate-300 text-[10px] font-mono text-slate-700 font-semibold">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Quote Callout */}
-                <div className="p-3 bg-blue-50/70 border border-blue-200 text-left space-y-1 w-full">
-                  <Quote className="w-3.5 h-3.5 text-blue-600" />
-                  <p className="text-[11px] text-slate-700 italic leading-normal font-medium">"{quoteText}"</p>
-                </div>
-
-                {/* Social Connect Link */}
-                {fac.linkedin && (
-                  <a
-                    href={fac.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-full py-2 bg-slate-100 hover:bg-blue-600 hover:text-white border-2 border-slate-900 text-xs font-mono font-bold transition-all shadow-[2px_2px_0px_#000] flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    <Linkedin className="w-3.5 h-3.5" /> Connect on LinkedIn
-                  </a>
-                )}
-              </div>
+              </button>
             );
           })}
         </div>
-      </div>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* 7. Interactive Ecosystem CTA Banner                                 */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="p-8 sm:p-12 bg-white border-2 border-slate-900 text-center space-y-6 shadow-[10px_10px_0px_#000] relative overflow-hidden">
+        {/* Animated Details Panel */}
+        <AnimatePresence>
+          {activeDomainId !== null && (
+            <motion.div
+              key="ecosystem-details-container"
+              initial={{ height: 0, opacity: 0, marginTop: 0 }}
+              animate={{ height: "auto", opacity: 1, marginTop: 24 }}
+              exit={{ height: 0, opacity: 0, marginTop: 0 }}
+              transition={{ duration: 0.35, ease: "easeInOut" }}
+              className="overflow-hidden relative"
+            >
+              {ecosystemDomains.map((domain) => {
+                if (domain.id !== activeDomainId) return null;
+                return (
+                  <motion.div
+                    key={domain.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25 }}
+                    className="p-6 sm:p-8 bg-white border-2 border-slate-900 shadow-[8px_8px_0px_#000] space-y-8 relative overflow-hidden"
+                  >
+                    {/* Decorative Glow */}
+                    <div className="absolute top-0 right-0 w-48 h-48 bg-blue-500/5 rounded-full blur-2xl pointer-events-none" />
+
+                    {/* Panel Header */}
+                    <div className="border-b-2 border-slate-200 pb-5">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-12 h-12 border-2 border-slate-900 flex items-center justify-center ${domain.color.split(" ")[0]} ${domain.color.split(" ")[1]} shadow-[3px_3px_0px_#000] text-xl`}>
+                            {domain.icon}
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-mono font-bold text-blue-600 tracking-wider uppercase">
+                              SPECIALIZATION BRANCH
+                            </span>
+                            <h3 className="text-xl sm:text-2xl font-black text-slate-900 uppercase">
+                              {domain.title}
+                            </h3>
+                          </div>
+                        </div>
+
+                        {/* Close Button inside flow */}
+                        <button
+                          onClick={() => setActiveDomainId(null)}
+                          title="Close Domain Info"
+                          className="p-1.5 bg-white hover:bg-slate-100 text-slate-800 hover:text-black border-2 border-slate-900 shadow-[2px_2px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000] transition-all cursor-pointer flex items-center gap-1.5 text-xs font-mono font-bold self-start sm:self-center"
+                        >
+                          <span>Close Domain</span>
+                          <span className="text-sm font-black leading-none">×</span>
+                        </button>
+                      </div>
+                      <p className="text-xs sm:text-sm text-slate-700 font-semibold leading-relaxed mt-3 max-w-3xl">
+                        {domain.longDesc}
+                      </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      {/* Left: What Students Explore & Tech Stack */}
+                      <div className="space-y-6">
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-mono font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-blue-600" />
+                            What Students Explore
+                          </h4>
+                          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {domain.explore.map((point, idx) => (
+                              <li key={idx} className="text-xs text-slate-600 flex items-center gap-2 font-medium">
+                                <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                                <span>{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-mono font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <Code className="w-4 h-4 text-emerald-600" />
+                            Technology Stack
+                          </h4>
+                          <div className="flex flex-wrap gap-1.5">
+                            {domain.tech.map((t, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2.5 py-1 bg-slate-50 hover:bg-emerald-50 hover:text-emerald-700 border border-slate-300 text-[11px] font-mono font-bold transition-all shadow-[1px_1px_0px_#000]"
+                              >
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right: Learning Path & Project Applications */}
+                      <div className="space-y-6">
+                        {/* Learning Path Flow */}
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-mono font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <Compass className="w-4 h-4 text-purple-600" />
+                            Learning Roadmap
+                          </h4>
+                          
+                          {/* Desktop Horizontal Learning Path */}
+                          <div className="hidden sm:flex flex-wrap items-center gap-2 p-4 bg-slate-50 border border-slate-300 rounded-sm">
+                            {domain.learningPath.map((step, idx) => (
+                              <React.Fragment key={idx}>
+                                <div className="flex flex-col items-center">
+                                  <span className="px-2.5 py-1 bg-white border border-slate-400 text-[10px] font-mono font-bold text-slate-700 shadow-[1px_1px_0px_#000]">
+                                    {step}
+                                  </span>
+                                </div>
+                                {idx < domain.learningPath.length - 1 && (
+                                  <ArrowRight className="w-3.5 h-3.5 text-slate-400 shrink-0 animate-pulse" />
+                                )}
+                              </React.Fragment>
+                            ))}
+                          </div>
+
+                          {/* Mobile Vertical Learning Path */}
+                          <div className="flex sm:hidden flex-col gap-2 p-3 bg-slate-50 border border-slate-300 rounded-sm">
+                            {domain.learningPath.map((step, idx) => (
+                              <div key={idx} className="flex items-center gap-2">
+                                <span className="w-5 h-5 rounded-full bg-slate-900 text-white flex items-center justify-center text-[9px] font-mono font-bold shrink-0">
+                                  {idx + 1}
+                                </span>
+                                <span className="text-[11px] font-mono font-bold text-slate-700">{step}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Project Applications */}
+                        <div className="space-y-3">
+                          <h4 className="text-xs font-mono font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                            <Rocket className="w-4 h-4 text-amber-600" />
+                            Where It Can Be Applied
+                          </h4>
+                          <div className="grid grid-cols-2 gap-2">
+                            {domain.applications.map((app, idx) => (
+                              <div key={idx} className="p-2.5 bg-slate-50 border border-slate-300 text-xs font-mono font-bold text-slate-700 flex items-center gap-2 shadow-[1px_1px_0px_#000]">
+                                <ArrowUpRight className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                                <span>{app}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Cross-Domain Collaboration */}
+                    <div className="border-t-2 border-slate-200 pt-6 mt-4 space-y-4">
+                      <div>
+                        <h4 className="text-xs font-mono font-bold text-slate-900 uppercase tracking-wider flex items-center gap-2">
+                          <Layers className="w-4 h-4 text-blue-600" />
+                          Built Together (Cross-Domain Collaboration)
+                        </h4>
+                        <p className="text-xs text-slate-600 mt-1 max-w-2xl font-medium">
+                          Real-world projects often combine multiple domains. A single project may involve UI/UX, Full Stack Development, AI, Data Science, Cloud and Cybersecurity.
+                        </p>
+                      </div>
+
+                      {/* Visual Connection Flowchart */}
+                      <div className="p-4 bg-blue-50/40 border-2 border-blue-600/20 rounded-sm">
+                        <div className="text-[9px] font-mono font-extrabold text-blue-800 uppercase tracking-widest mb-3">
+                          DIFFERENT DOMAINS. ONE ECOSYSTEM.
+                        </div>
+                        
+                        {/* Connection Graph flow */}
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                          {[
+                            { label: "UI/UX & Design", color: "border-amber-400 text-amber-800 bg-amber-50" },
+                            { label: "Full Stack Dev", color: "border-blue-400 text-blue-800 bg-blue-50" },
+                            { label: "AI & Data", color: "border-purple-400 text-purple-800 bg-purple-50" },
+                            { label: "Cloud & DevOps", color: "border-cyan-400 text-cyan-800 bg-cyan-50" },
+                            { label: "Cybersecurity", color: "border-rose-400 text-rose-800 bg-rose-50" }
+                          ].map((node, nIdx) => (
+                            <React.Fragment key={nIdx}>
+                              <motion.div
+                                whileHover={{ scale: 1.05 }}
+                                className={`px-3 py-1.5 border-2 border-slate-900 font-mono text-[10px] font-bold text-center shadow-[2px_2px_0px_#000] w-full sm:w-auto ${node.color}`}
+                              >
+                                {node.label}
+                              </motion.div>
+                              {nIdx < 4 && (
+                                <ArrowRight className="w-4 h-4 text-slate-400 shrink-0 rotate-90 sm:rotate-0" />
+                              )}
+                            </React.Fragment>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </section>
+
+      {/* ================================================================== */}
+      {/* 5. STUDENT GROWTH JOURNEY                                          */}
+      {/* ================================================================== */}
+      <section className="space-y-8">
+        <div className="text-center space-y-2">
+          <InteractiveHeading
+            text="From Learner to Builder"
+            as="h2"
+            className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight"
+          />
+          <p className="text-xs sm:text-sm text-slate-500 font-mono font-bold uppercase">
+            THE SEQUENTIAL VALUE PIPELINE FOR CLUB MEMBERS
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          {growthSteps.map((step, idx) => (
+            <div
+              key={step.num}
+              className="p-6 bg-white border-2 border-slate-900 shadow-[5px_5px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[7px_7px_0px_#000] transition-all relative"
+            >
+              {/* Step Number Badge */}
+              <div className="absolute top-4 right-4 text-3xl font-black font-mono text-slate-200">
+                {step.num}
+              </div>
+
+              <div className="space-y-3 pt-4">
+                <div className="w-12 h-12 bg-slate-50 border border-slate-900 flex items-center justify-center shadow-[2px_2px_0px_#000]">
+                  {step.icon}
+                </div>
+                <h4 className="text-base font-black text-slate-900">{step.title}</h4>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  {step.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* 6. PRINCIPAL'S MESSAGE                                             */}
+      {/* ================================================================== */}
+      <section className="space-y-6">
+        <div className="text-left space-y-1">
+          <span className="text-[10px] font-mono font-bold text-blue-600 tracking-wider uppercase">
+            INSTITUTIONAL VISION
+          </span>
+          <InteractiveHeading
+            text="Message from the Principal"
+            as="h2"
+            className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 bg-white border-2 border-slate-900 shadow-[8px_8px_0px_#000] overflow-hidden">
+          {/* Photograph Col */}
+          <div className="md:col-span-4 bg-slate-100 border-b-2 md:border-b-0 md:border-r-2 border-slate-900 min-h-[250px] relative flex items-center justify-center overflow-hidden">
+            <img
+              src={principalConfig.avatar}
+              alt={principalConfig.name}
+              className="absolute inset-0 w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-300"
+            />
+          </div>
+
+          {/* Profile & Message Col */}
+          <div className="md:col-span-8 p-6 sm:p-8 flex flex-col justify-between space-y-6">
+            <div className="space-y-4">
+              <Quote className="w-8 h-8 text-blue-600/30" />
+              <p className="text-xs sm:text-sm text-slate-600 italic leading-relaxed font-semibold font-mono">
+                {principalConfig.message}
+              </p>
+            </div>
+
+            <div className="pt-4 border-t border-slate-200">
+              <h4 className="text-base font-black text-slate-900">{principalConfig.name}</h4>
+              <p className="text-xs text-blue-600 font-mono font-bold">{principalConfig.role}</p>
+              <p className="text-[11px] text-slate-500 font-mono">{principalConfig.institution}</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* 7. FUTURE SCOPE                                                    */}
+      {/* ================================================================== */}
+      <section className="space-y-8">
+        <div className="text-center space-y-2">
+          <InteractiveHeading
+            text="Where Coderithum Is Going"
+            as="h2"
+            className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight"
+          />
+          <span className="inline-flex px-3 py-1 bg-purple-100 text-purple-900 text-xs font-mono font-bold border border-purple-300 uppercase">
+            Planned Growth & Vision
+          </span>
+        </div>
+
+        {/* Futuristic Roadmap Flow */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {futurePhases.map((phase, idx) => (
+            <div
+              key={idx}
+              className="p-6 bg-slate-950 text-slate-200 border-2 border-slate-900 shadow-[5px_5px_0px_#000] flex flex-col justify-between space-y-4 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[6px_6px_0px_#000] transition-all"
+            >
+              <div className="space-y-3">
+                <div className="flex justify-between items-center">
+                  <span className="text-[10px] font-mono font-extrabold text-purple-400 bg-purple-950 border border-purple-900 px-2.5 py-0.5">
+                    {phase.phase}
+                  </span>
+                  <span className="text-[10px] font-mono text-slate-500">Planned</span>
+                </div>
+                <h4 className="text-sm font-black text-white">{phase.title}</h4>
+                <ul className="space-y-1.5 pt-2 border-t border-slate-800">
+                  {phase.points.map((pt, pIdx) => (
+                    <li key={pIdx} className="text-[11px] text-slate-400 flex items-start gap-1.5 font-medium leading-relaxed">
+                      <span className="text-purple-400">•</span>
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* 8. OUR VISION                                                      */}
+      {/* ================================================================== */}
+      <section className="p-8 sm:p-12 bg-slate-900 text-white border-2 border-slate-900 shadow-[10px_10px_0px_#000] relative overflow-hidden text-center">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(37,99,235,0.06),transparent_60%)] pointer-events-none" />
+        
+        <div className="space-y-4 max-w-3xl mx-auto relative z-10">
+          <span className="text-[10px] font-mono font-extrabold text-blue-400 bg-blue-950/80 border border-blue-900 px-3 py-1 inline-block uppercase tracking-widest">
+            OUR VISION
+          </span>
+          <h2 className="text-xl sm:text-3xl font-black tracking-tight leading-relaxed">
+            "To build a student-led technology ecosystem where every learner gets the opportunity to learn, build, collaborate and create meaningful impact."
+          </h2>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto font-medium leading-relaxed pt-2">
+            Coderithum aims to grow beyond a technical club into a platform where students can transform ideas 
+            into projects, projects into solutions, and solutions into meaningful opportunities.
+          </p>
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* 9. OUR VALUES                                                      */}
+      {/* ================================================================== */}
+      <section className="space-y-8">
+        <div className="text-center space-y-2">
+          <InteractiveHeading
+            text="Our Values"
+            as="h2"
+            className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight"
+          />
+          <p className="text-xs sm:text-sm text-slate-500 font-mono font-bold uppercase">
+            THE FOUR CORE PILLARS OF OUR TECH CLUB
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {valueItems.map((val, idx) => (
+            <div
+              key={idx}
+              className="p-6 bg-white border-2 border-slate-900 shadow-[5px_5px_0px_#000] flex flex-col justify-between space-y-3 hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[7px_7px_0px_#000] transition-all"
+            >
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <h4 className="text-base font-black text-slate-900">{val.title}</h4>
+                  <span className="text-[10px] font-mono font-extrabold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5">
+                    VALUE 0{idx + 1}
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-medium">
+                  {val.desc}
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ================================================================== */}
+      {/* 10. CALL TO ACTION                                                 */}
+      {/* ================================================================== */}
+      <section className="p-8 sm:p-12 bg-white border-2 border-slate-900 text-center space-y-6 shadow-[10px_10px_0px_#000] relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(37,99,235,0.06),transparent_60%)] pointer-events-none" />
 
         <div className="space-y-3 max-w-2xl mx-auto relative z-10">
           <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-900 text-xs font-mono font-bold border border-blue-300">
-            <Sparkles className="w-3.5 h-3.5 text-blue-600" /> READY TO CODE & INNOVATE?
+            <Sparkles className="w-3.5 h-3.5 text-blue-600" /> BE PART OF THE CODERITHUM JOURNEY
           </span>
           <h3 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight">
-            Join the Coderithum Ecosystem
+            Ready to Code, Build & Connect?
           </h3>
           <p className="text-sm text-slate-600 leading-relaxed font-medium">
-            Whether you want to explore active open-source projects, register for upcoming hackathons, or get in touch with domain leads, take the next step.
+            Whether you want to learn, build, compete, collaborate or innovate, Coderithum gives you a place to start.
           </p>
         </div>
 
@@ -1112,12 +1483,10 @@ export default function AboutView({ team, setView }: AboutViewProps) {
             onClick={() => setView?.("contact")}
             className="px-6 py-3 bg-white text-slate-900 border-2 border-slate-900 text-xs sm:text-sm font-mono font-black shadow-[4px_4px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[3px_3px_0px_#000] active:translate-x-[3px] active:translate-y-[3px] active:shadow-[1px_1px_0px_#000] transition-all flex items-center gap-2 cursor-pointer"
           >
-            Get In Touch <ArrowRight className="w-4 h-4 text-blue-600" />
+            Join Coderithum <ArrowRight className="w-4 h-4 text-blue-600" />
           </button>
         </div>
-      </div>
+      </section>
     </motion.div>
   );
 }
-
-

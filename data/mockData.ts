@@ -1479,8 +1479,7 @@ export const initialTeam: TeamMember[] = [
     role: "Principal & Chief Patron",
     category: "Faculty",
     tierLevel: 1,
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
+    avatar: "/principal1.jpg",
     linkedin: "https://linkedin.com",
   },
   {

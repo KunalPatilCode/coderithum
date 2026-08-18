@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Crown, Sparkles, BookOpen, Compass, ChevronRight, FileText, CheckCircle2, AlertTriangle, Cpu, Radio, ShieldAlert, ChevronLeft } from "lucide-react";
+import { ShieldCheck, Crown, Sparkles, BookOpen, Compass, ChevronRight, FileText, CheckCircle2, AlertTriangle, Cpu, Radio, ShieldAlert, ChevronLeft, Download } from "lucide-react";
 import InteractiveHeading from "../InteractiveHeading";
 
 interface RuleBookViewProps {}
@@ -842,6 +842,16 @@ export default function RuleBookView({}: RuleBookViewProps) {
           <InteractiveHeading text="Technical Grimoire" as="h2" className="text-[10px] font-mono tracking-widest text-theme uppercase" />
           <InteractiveHeading text="Technical Rule Book" as="h1" className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight" />
           <p className="text-xs text-slate-500 font-medium">Click the navigation controls or tab headers to flip the handbook pages.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <a
+            href="/rulebook.pdf"
+            download="Coderithum_Rule_Book.pdf"
+            className="px-3 py-2 border-2 border-slate-900 bg-slate-950 text-cyan-400 font-mono text-xs font-bold uppercase tracking-wider shadow-[3px_3px_0px_#000] hover:bg-slate-900 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] transition-all flex items-center gap-2 self-start sm:self-center"
+          >
+            <Download className="size-4" />
+            [ DOWNLOAD PDF ]
+          </a>
         </div>
       </div>
 

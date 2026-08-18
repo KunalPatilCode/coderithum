@@ -55,26 +55,26 @@ function NetworkNodeCard({
   compact,
   isPremium
 }: NetworkCardProps) {
-  let themeBorder = isPremium ? "border-[3px] border-cyan-400" : "border-cyan-500"
-  let themeShadow = isPremium ? "shadow-[0_0_35px_rgba(34,211,238,0.5)]" : "shadow-[0_0_20px_rgba(34,211,238,0.3)]"
+  let themeBorder = isPremium ? "border-2 border-cyan-400/90" : "border-2 border-cyan-500/70"
+  let themeShadow = isPremium ? "shadow-[0_0_22px_rgba(34,211,238,0.32)]" : "shadow-[0_0_14px_rgba(34,211,238,0.20)]"
   let themeText = "text-cyan-400"
-  let themeBadgeBg = isPremium ? "bg-cyan-950 border-cyan-400 text-cyan-300" : "bg-cyan-950/80 border-cyan-800"
-  let themeRotatingBorder = "border-cyan-400/50"
+  let themeBadgeBg = isPremium ? "bg-cyan-950/90 border-cyan-400/80 text-cyan-300" : "bg-cyan-950/80 border-cyan-800/80"
+  let themeRotatingBorder = "border-cyan-400/40"
   let themeDot = "bg-cyan-400"
 
   if (themeColor === "emerald") {
-    themeBorder = isPremium ? "border-[3px] border-emerald-400" : "border-emerald-500"
-    themeShadow = isPremium ? "shadow-[0_0_35px_rgba(16,185,129,0.5)]" : "shadow-[0_0_20px_rgba(16,185,129,0.3)]"
+    themeBorder = isPremium ? "border-2 border-emerald-400/90" : "border-2 border-emerald-500/70"
+    themeShadow = isPremium ? "shadow-[0_0_22px_rgba(16,185,129,0.32)]" : "shadow-[0_0_14px_rgba(16,185,129,0.20)]"
     themeText = "text-emerald-400"
-    themeBadgeBg = isPremium ? "bg-emerald-950 border-emerald-400 text-emerald-300" : "bg-emerald-950/80 border-emerald-800"
-    themeRotatingBorder = "border-emerald-400/50"
+    themeBadgeBg = isPremium ? "bg-emerald-950/90 border-emerald-400/80 text-emerald-300" : "bg-emerald-950/80 border-emerald-800/80"
+    themeRotatingBorder = "border-emerald-400/40"
     themeDot = "bg-emerald-400"
   } else if (themeColor === "amber") {
-    themeBorder = isPremium ? "border-[3px] border-amber-400" : "border-amber-500"
-    themeShadow = isPremium ? "shadow-[0_0_35px_rgba(245,158,11,0.5)]" : "shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+    themeBorder = isPremium ? "border-2 border-amber-400/90" : "border-2 border-amber-500/70"
+    themeShadow = isPremium ? "shadow-[0_0_22px_rgba(245,158,11,0.32)]" : "shadow-[0_0_14px_rgba(245,158,11,0.20)]"
     themeText = "text-amber-400"
-    themeBadgeBg = isPremium ? "bg-amber-950 border-amber-400 text-amber-300" : "bg-amber-950/80 border-amber-800"
-    themeRotatingBorder = "border-amber-400/50"
+    themeBadgeBg = isPremium ? "bg-amber-950/90 border-amber-400/80 text-amber-300" : "bg-amber-950/80 border-amber-800/80"
+    themeRotatingBorder = "border-amber-400/40"
     themeDot = "bg-amber-400"
   }
 
@@ -91,7 +91,7 @@ function NetworkNodeCard({
   }
 
   const renderPremiumLabel = () => {
-    if (!isPremium) return isHub ? "CENTRAL HUB" : compact ? "RING NODE" : "PERMANENT CORE"
+    if (!isPremium) return isHub ? "CENTRAL HUB" : compact ? "" : "PERMANENT CORE"
     if (themeColor === "emerald") return "FACULTY ADVISOR"
     if (themeColor === "amber") return "CHIEF COMMAND"
     return "EXECUTIVE VP"
@@ -430,6 +430,11 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
     if (selectedLeader?.name === member.name) return
     setSelectedLeader(member)
     if (onSelectMember) onSelectMember(member)
+    setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
+      }
+    }, 60)
   }
 
   const handleResetToRing = () => {
@@ -437,6 +442,11 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
     setSearchQuery("")
     setZoomLevel(1)
     setHoveredMemberName(null)
+    setTimeout(() => {
+      if (containerRef.current) {
+        containerRef.current.scrollIntoView({ behavior: "smooth", block: "center" })
+      }
+    }, 60)
   }
 
   const getTierBadgeStyle = (tier: number) => {
@@ -461,7 +471,7 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
   }, [dimensions])
 
   return (
-    <div className="relative w-full bg-slate-950 text-slate-100 rounded-none border-2 border-slate-800 shadow-[8px_8px_0px_#000] overflow-hidden select-none space-y-4">
+    <div ref={containerRef} className="relative w-full bg-slate-950 text-slate-100 rounded-none border-2 border-slate-800 shadow-[8px_8px_0px_#000] overflow-hidden select-none space-y-4">
 
       {/* Background Grid & Scanlines */}
       <div className="absolute inset-0 bg-[radial-gradient(#1e293b_1px,transparent_1px)] [background-size:20px_20px] opacity-40 pointer-events-none" />
@@ -526,7 +536,7 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
                 onClick={handleResetToRing}
                 className="px-2.5 py-1.5 bg-cyan-950 hover:bg-cyan-900 text-cyan-300 border-2 border-cyan-500 text-[10px] font-bold uppercase flex items-center gap-1.5 shadow-[2px_2px_0px_#000] cursor-pointer transition-all"
               >
-                <ArrowLeft className="size-3.5" /> ← BACK TO RING
+                <ArrowLeft className="size-3.5" /> BACK
               </motion.button>
             )}
 
@@ -590,16 +600,13 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
               <GraduationCap className="size-3.5 text-emerald-400" />
               PERMANENT CORE & DOMAIN LEADERSHIP
             </span>
-            <span className="text-[9px] text-slate-400 font-bold bg-slate-800 border border-slate-700 px-2 py-0.5">
-              ALWAYS VISIBLE
-            </span>
           </div>
           <div className="space-y-5 max-w-6xl mx-auto py-1 px-2">
             
-            {/* LEVEL 1: PRINCIPAL & CHIEF PATRON */}
+            {/* LEVEL 1: PRINCIPAL */}
             <div className="space-y-2">
               <div className="text-[9px] text-emerald-400 font-extrabold tracking-widest uppercase text-center w-full">
-                ▲ LEVEL 1: PRINCIPAL & CHIEF PATRON
+                ▲ LEVEL 1: PRINCIPAL
               </div>
               <div className="flex justify-center items-center w-full">
                 {principalMember && (
@@ -712,7 +719,7 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
                     )}
                   </svg>
 
-                  {/* 1. TOP RING NODE: MD ISMILE (CHIEF TECHNICAL LEAD) */}
+                  {/* 1. TOP RING NODE: MD ISMILE (TECHNICAL LEAD) */}
                   {ismileLeader && (
                     <div className="relative md:absolute md:left-[50%] md:top-[28%] md:-translate-x-1/2 md:-translate-y-1/2 z-10 w-full md:w-auto flex justify-center">
                       <NetworkNodeCard
@@ -727,7 +734,7 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
                     </div>
                   )}
 
-                  {/* 2. BOTTOM-LEFT RING NODE: PURNIMA UPADHYAY (INCUBATOR & OPS LEAD) */}
+                  {/* 2. BOTTOM-LEFT RING NODE: PURNIMA UPADHYAY (OPERATIONS LEAD) */}
                   {purnimaLeader && (
                     <div className="relative md:absolute md:left-[22%] md:top-[72%] md:-translate-x-1/2 md:-translate-y-1/2 z-10 w-full md:w-auto flex justify-center">
                       <NetworkNodeCard
@@ -747,7 +754,7 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
                     <div className="relative md:absolute md:left-[78%] md:top-[72%] md:-translate-x-1/2 md:-translate-y-1/2 z-10 w-full md:w-auto flex justify-center">
                       <NetworkNodeCard
                         member={abhishekLeader}
-                        badgeText={abhishekLeader.category.toUpperCase()}
+                        badgeText="MEDIA"
                         themeColor="cyan"
                         compact={true}
                         memberCount={getMembersForLeader(abhishekLeader).length}
@@ -829,7 +836,7 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
               >
                 <NetworkNodeCard
                   member={selectedLeader}
-                  badgeText={selectedLeader.category.toUpperCase()}
+                  badgeText={selectedLeader.category === "Digital Media & Outreach Team" || selectedLeader.name.toLowerCase().includes("abhishek") ? "MEDIA" : selectedLeader.category.toUpperCase()}
                   themeColor="cyan"
                   isSelected={true}
                   isHub={true}
@@ -885,7 +892,7 @@ export default function CoderithumNetwork({ team, onSelectMember }: CoderithumNe
                             if (onSelectMember) onSelectMember(member)
                           }}
                           className={`absolute w-44 sm:w-48 p-2.5 bg-slate-950 border-2 cursor-pointer select-none group transition-all duration-200 ${isHovered
-                            ? "border-cyan-400 shadow-[0_0_18px_rgba(34,211,238,0.4)] z-30"
+                            ? "border-cyan-400/90 shadow-[0_0_14px_rgba(34,211,238,0.25)] z-30"
                             : "border-slate-800 bg-slate-950/90 z-20"
                             }`}
                         >

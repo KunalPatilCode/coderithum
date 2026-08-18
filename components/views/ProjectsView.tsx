@@ -33,7 +33,11 @@ export default function ProjectsView({ projects, setView, setSelectedId }: Proje
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {projects.map(project => (
-          <div key={project.id} className="p-6 rounded-none bg-white border-2 border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group relative">
+          <div 
+            key={project.id} 
+            onClick={() => handleProjectClick(project.id)}
+            className="p-6 rounded-none bg-white border-2 border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group relative cursor-pointer"
+          >
             <div className="space-y-4">
               <div className="w-full h-[200px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
                 {/* Base Image */}

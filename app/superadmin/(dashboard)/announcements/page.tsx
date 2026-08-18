@@ -209,7 +209,7 @@ export default function AnnouncementsManagerPage() {
                         <TableHead>Linked Event</TableHead>
                         <TableHead>Priority</TableHead>
                         <TableHead>Status</TableHead>
-                        <TableHead className="text-right">Actions</TableHead>
+                        <TableHead className="text-right font-bold uppercase tracking-wider font-mono text-[11px] text-slate-700">ACTIONS</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -261,22 +261,26 @@ export default function AnnouncementsManagerPage() {
                             </TableCell>
 
                             <TableCell className="text-right">
-                              <div className="flex justify-end gap-1.5">
+                              <div className="flex justify-end items-center gap-2">
                                 <Button
                                   variant="secondary"
-                                  className="size-8 p-0"
+                                  size="sm"
                                   onClick={() => handleOpenEdit(ann)}
+                                  className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                                   title="Edit Announcement"
                                 >
-                                  <Edit2 className="size-3.5" />
+                                  <Edit2 className="size-3.5 text-blue-600" />
+                                  <span>Edit</span>
                                 </Button>
                                 <Button
                                   variant="destructive"
-                                  className="size-8 p-0"
+                                  size="sm"
                                   onClick={() => handleDelete(ann.id)}
-                                  title="Delete Announcement"
+                                  className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
+                                  title="Remove Announcement"
                                 >
                                   <Trash2 className="size-3.5" />
+                                  <span>Remove</span>
                                 </Button>
                               </div>
                             </TableCell>

@@ -10,6 +10,7 @@ export interface ClubEvent {
   agenda: string[];
   speakers: { name: string; role: string; company: string; avatar: string }[];
   regLink: string;
+  hideRegistration?: boolean;
   feedbackLink: string;
   gallery: string[];
   type: "upcoming" | "past";
@@ -41,7 +42,7 @@ export interface TeamMember {
   id?: string;
   name: string;
   role: string;
-  category: "Faculty" | "Leadership" | "Technical" | "Design" | "Marketing";
+  category: "Faculty" | "Leadership" | "Technical" | "Design" | "Marketing" | "Digital Media & Outreach Team";
   avatar: string;
   avatarClassName?: string;
   avatarStyle?: React.CSSProperties;

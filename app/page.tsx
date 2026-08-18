@@ -103,7 +103,19 @@ export default function Home() {
 
       const storedEvents = localStorage.getItem("coderithum_events");
       if (storedEvents) {
-        setEvents(JSON.parse(storedEvents));
+        try {
+          const parsed = JSON.parse(storedEvents);
+          const orientationEvt = parsed.find((e: any) => e.id === "registration-orientation-2026");
+          if (!orientationEvt || !orientationEvt.hideRegistration || orientationEvt.date !== "August 29, 2026" || !orientationEvt.description?.includes("Key Highlights")) {
+            localStorage.setItem("coderithum_events", JSON.stringify(initialEvents));
+            setEvents(initialEvents);
+          } else {
+            setEvents(parsed);
+          }
+        } catch {
+          localStorage.setItem("coderithum_events", JSON.stringify(initialEvents));
+          setEvents(initialEvents);
+        }
       } else {
         localStorage.setItem("coderithum_events", JSON.stringify(initialEvents));
         setEvents(initialEvents);
@@ -176,7 +188,39 @@ export default function Home() {
           localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));
           setTeam(initialTeam);
         } else {
-          setTeam(parsed);
+          const sanitized = parsed.map((t: any) => {
+            let role = t.role || "";
+            let category = t.category || "";
+            if (role.includes("Marketing") || role.includes("Digital Media and Outreach")) {
+              role = role
+                .replace("Marketing & Outreach", "Digital Media & Outreach Team")
+                .replace("Digital Media and Outreach", "Digital Media & Outreach Team");
+            }
+            if (role.includes("Incubator") || role.includes("Operational Lead")) {
+              role = role
+                .replace("Incubator & Ops Lead", "Operations Lead")
+                .replace("Incubator & Operations Lead", "Operations Lead")
+                .replace("Incubator Operations Lead", "Operations Lead")
+                .replace("Operational Lead", "Operations Lead");
+            }
+            if (role.includes("Chief")) {
+              role = role
+                .replace("Chief Technical Lead", "Technical Lead")
+                .replace("Chief Technology Lead", "Technical Lead")
+                .replace("Chief Tech Lead", "Tech Lead");
+            }
+            if (role.includes("Patron")) {
+              role = role
+                .replace("Principal & Chief Patron", "Principal")
+                .replace("Principal and Chief Patron", "Principal");
+            }
+            if (category === "Marketing") {
+              category = "Digital Media & Outreach Team";
+            }
+            return { ...t, role, category };
+          });
+          localStorage.setItem("coderithum_team", JSON.stringify(sanitized));
+          setTeam(sanitized);
         }
       } else {
         localStorage.setItem("coderithum_team", JSON.stringify(initialTeam));

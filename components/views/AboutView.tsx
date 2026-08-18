@@ -164,7 +164,7 @@ const domainTracks: DomainTrack[] = [
     tech: ["Agile/Scrum", "Jira", "Product Specs", "IPR & Patents", "Pitch Decks", "Growth Analytics"],
     projects: ["Student Startup Acceleration Program", "IPR Patent Registration Drive", "Annual Incubator Showcase"],
     pathway: ["Problem Discovery & Product Spec", "Agile Sprint Management", "Patent & Licensing Strategy", "Investor & Venture Presentation"],
-    leadRole: "Incubator Operations Lead"
+    leadRole: "Operations Lead"
   }
 ];
 
@@ -306,7 +306,7 @@ export default function AboutView({ team, setView }: AboutViewProps) {
   const facultyMembers = rawFaculty.length > 0 ? rawFaculty : [
     {
       name: "Dr. Avinash R. Chaudhari",
-      role: "Principal & Chief Patron",
+      role: "Principal",
       avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
       linkedin: "https://linkedin.com",
     },

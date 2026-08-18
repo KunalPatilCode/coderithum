@@ -101,11 +101,11 @@ export default function ContactView({ contactSuccess, setContactSuccess }: Conta
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-mono text-slate-600 uppercase">First Name</label>
-                    <input required type="text" placeholder="Kunal" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-theme transition-colors" />
+                    <input required type="text" placeholder="First Name" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-theme transition-colors" />
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-[10px] font-mono text-slate-600 uppercase">Email Address</label>
-                    <input required type="email" placeholder="kunal@example.com" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-theme transition-colors" />
+                    <input required type="email" placeholder="example@domain.com" className="w-full bg-white border-2 border-slate-900 rounded-none p-2.5 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-theme transition-colors" />
                   </div>
                 </div>
                 <div className="space-y-1.5">

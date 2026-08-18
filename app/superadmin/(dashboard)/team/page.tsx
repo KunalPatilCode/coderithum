@@ -55,7 +55,7 @@ export default function TeamManagerPage() {
   // Form Fields
   const [name, setName] = useState("")
   const [role, setRole] = useState("")
-  const [category, setCategory] = useState<"Faculty" | "Leadership" | "Technical" | "Design" | "Marketing">("Leadership")
+  const [category, setCategory] = useState<"Faculty" | "Leadership" | "Technical" | "Design" | "Marketing" | "Digital Media & Outreach Team">("Leadership")
   const [avatar, setAvatar] = useState("")
   const [github, setGithub] = useState("")
   const [linkedin, setLinkedin] = useState("")
@@ -79,21 +79,50 @@ export default function TeamManagerPage() {
         try {
           const parsed: TeamMember[] = JSON.parse(stored)
           const sanitized = parsed.map(m => {
+            let role = m.role || ""
+            let category = m.category || ""
+            if (role.includes("Marketing") || role.includes("Digital Media and Outreach")) {
+              role = role
+                .replace("Marketing & Outreach", "Digital Media & Outreach Team")
+                .replace("Digital Media and Outreach", "Digital Media & Outreach Team")
+            }
+            if (role.includes("Incubator") || role.includes("Operational Lead")) {
+              role = role
+                .replace("Incubator & Ops Lead", "Operations Lead")
+                .replace("Incubator & Operations Lead", "Operations Lead")
+                .replace("Incubator Operations Lead", "Operations Lead")
+                .replace("Operational Lead", "Operations Lead")
+            }
+            if (role.includes("Chief")) {
+              role = role
+                .replace("Chief Technical Lead", "Technical Lead")
+                .replace("Chief Technology Lead", "Technical Lead")
+                .replace("Chief Tech Lead", "Tech Lead")
+            }
+            if (role.includes("Patron")) {
+              role = role
+                .replace("Principal & Chief Patron", "Principal")
+                .replace("Principal and Chief Patron", "Principal")
+            }
+            if (category === "Marketing") {
+              category = "Digital Media & Outreach Team" as const
+            }
+            let updatedMember = { ...m, role, category }
             if (m.name === "Kunal Patil" && m.avatarStyle?.transform?.includes("-46px")) {
-              return {
-                ...m,
+              updatedMember = {
+                ...updatedMember,
                 photoPosition: { scale: 1.25, offsetX: 0, offsetY: 0, objectPosition: "center 10%" },
                 avatarStyle: { objectPosition: "center 10%", transform: "scale(1.25) translate(0%, 0%)" }
               }
             }
-            return m
+            return updatedMember
           })
           const hasAaryan = sanitized.some((t: any) => t.name === "Aaryan Patel")
           if (!hasAaryan) {
             const updated: TeamMember[] = [...sanitized, {
               name: "Aaryan Patel",
-              role: "Marketing & Outreach (Outreach Lead)",
-              category: "Marketing" as const,
+              role: "Digital Media & Outreach Team (Outreach Lead)",
+              category: "Digital Media & Outreach Team" as const,
               avatar: "/aaryan-patel.png",
               photoPosition: { scale: 1.2, offsetX: 0, offsetY: 5, objectPosition: "center 10%" },
               avatarStyle: { objectPosition: "center 10%", transform: "scale(1.2) translate(0%, 5%)" },
@@ -103,6 +132,7 @@ export default function TeamManagerPage() {
             }]
             saveToStorage(updated)
           } else {
+            saveToStorage(sanitized)
             setTeam(sanitized)
           }
         } catch (err) {
@@ -511,7 +541,7 @@ export default function TeamManagerPage() {
               <option value="Leadership">Leadership</option>
               <option value="Technical">Technical</option>
               <option value="Design">Design</option>
-              <option value="Marketing">Marketing</option>
+              <option value="Digital Media & Outreach Team">Digital Media & Outreach Team</option>
             </select>
 
             {/* Role Filter Dropdown */}
@@ -617,30 +647,36 @@ export default function TeamManagerPage() {
                                 <span className="text-xs font-mono font-bold text-slate-700">{m.academicYear || "2026-2027"}</span>
                               </TableCell>
                               <TableCell className="text-right">
-                                <div className="flex justify-end gap-1.5">
+                                <div className="flex justify-end items-center gap-2">
                                   <Button
                                     variant="outline"
-                                    className="size-8 p-0"
+                                    size="sm"
                                     onClick={() => handleOpenPhotoAdjuster(targetIdx)}
+                                    className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                                     title="Crop & Adjust Photo"
                                   >
-                                    <Crop className="size-3.5 text-purple-600" />
+                                    <Camera className="size-3.5 text-blue-600" />
+                                    <span>Photo</span>
                                   </Button>
                                   <Button
                                     variant="secondary"
-                                    className="size-8 p-0"
+                                    size="sm"
                                     onClick={() => handleOpenEdit(m, targetIdx)}
+                                    className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                                     title="Edit Member"
                                   >
-                                    <Edit2 className="size-3.5" />
+                                    <Edit2 className="size-3.5 text-blue-600" />
+                                    <span>Edit</span>
                                   </Button>
                                   <Button
                                     variant="destructive"
-                                    className="size-8 p-0"
+                                    size="sm"
                                     onClick={() => handleDelete(targetIdx)}
+                                    className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                                     title="Remove Member"
                                   >
                                     <Trash2 className="size-3.5" />
+                                    <span>Remove</span>
                                   </Button>
                                 </div>
                               </TableCell>
@@ -840,7 +876,7 @@ export default function TeamManagerPage() {
                     <option value="Leadership">Student Leadership Committee</option>
                     <option value="Technical">Technical Operations Tree</option>
                     <option value="Design">Creative & UI/UX Design Tree</option>
-                    <option value="Marketing">Branding & Social Outreach Tree</option>
+                    <option value="Digital Media & Outreach Team">Digital Media & Outreach Team Tree</option>
                   </select>
                 </div>
 

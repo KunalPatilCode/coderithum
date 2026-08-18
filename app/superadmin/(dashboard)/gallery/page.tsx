@@ -14,7 +14,7 @@ import {
   TableHead,
   TableCell
 } from "@/components/ui/table"
-import { Image, Plus, Edit2, Trash2, ArrowLeft, ArrowUpRight } from "lucide-react"
+import { Image, Plus, Edit2, Trash2, ArrowLeft, ArrowUpRight, Upload, X } from "lucide-react"
 import { broadcastDataChange } from "@/types"
 
 export default function GalleryManagerPage() {
@@ -31,7 +31,8 @@ export default function GalleryManagerPage() {
   const [name, setName] = useState("")
   const [cover, setCover] = useState("")
 
-  // Photo Add Form Fields
+  // Photo Add/Edit Form Fields
+  const [editingPhotoIdx, setEditingPhotoIdx] = useState<number | null>(null)
   const [photoUrl, setPhotoUrl] = useState("")
   const [photoCaption, setPhotoCaption] = useState("")
 
@@ -151,7 +152,33 @@ export default function GalleryManagerPage() {
     setSelectedAlbumId(id)
     setPhotoUrl("")
     setPhotoCaption("")
+    setEditingPhotoIdx(null)
     setView("photos")
+  }
+
+  const handleOpenEditPhoto = (idx: number, photo: any) => {
+    setEditingPhotoIdx(idx)
+    setPhotoUrl(photo.url || "")
+    setPhotoCaption(photo.caption || "")
+  }
+
+  const handleCancelPhotoEdit = () => {
+    setEditingPhotoIdx(null)
+    setPhotoUrl("")
+    setPhotoCaption("")
+  }
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      const rawResult = event.target?.result
+      if (typeof rawResult !== "string") return
+      setPhotoUrl(rawResult)
+    }
+    reader.readAsDataURL(file)
   }
 
   const handleAddPhoto = (e: React.FormEvent) => {
@@ -159,33 +186,66 @@ export default function GalleryManagerPage() {
 
     if (!selectedAlbumId) return
 
-    const updated = albums.map((album) => {
-      if (album.id === selectedAlbumId) {
-        return {
-          ...album,
-          media: [
-            ...album.media,
-            { url: photoUrl, caption: photoCaption }
-          ]
+    if (editingPhotoIdx !== null) {
+      const updated = albums.map((album) => {
+        if (album.id === selectedAlbumId) {
+          const updatedMedia = album.media.map((item: any, idx: number) => {
+            if (idx === editingPhotoIdx) {
+              return { url: photoUrl, caption: photoCaption }
+            }
+            return item
+          })
+          return {
+            ...album,
+            media: updatedMedia
+          }
         }
-      }
-      return album
-    })
+        return album
+      })
 
-    saveToStorage(updated)
-    toast({
-      title: "Photo Uploaded",
-      description: "New image has been appended to the album gallery.",
-      variant: "success",
-    })
+      saveToStorage(updated)
+      toast({
+        title: "Photo Updated",
+        description: "Photo details and caption updated successfully.",
+        variant: "success",
+      })
 
-    setPhotoUrl("")
-    setPhotoCaption("")
+      setEditingPhotoIdx(null)
+      setPhotoUrl("")
+      setPhotoCaption("")
+    } else {
+      const updated = albums.map((album) => {
+        if (album.id === selectedAlbumId) {
+          return {
+            ...album,
+            media: [
+              ...album.media,
+              { url: photoUrl, caption: photoCaption }
+            ]
+          }
+        }
+        return album
+      })
+
+      saveToStorage(updated)
+      toast({
+        title: "Photo Uploaded",
+        description: "New image has been appended to the album gallery.",
+        variant: "success",
+      })
+
+      setPhotoUrl("")
+      setPhotoCaption("")
+    }
   }
 
   const handleDeletePhoto = (photoIdx: number) => {
     if (!selectedAlbumId) return
     if (!confirm("Are you sure you want to remove this photo?")) return
+
+    if (editingPhotoIdx === photoIdx) {
+      handleCancelPhotoEdit()
+    }
 
     const updated = albums.map((album) => {
       if (album.id === selectedAlbumId) {
@@ -260,7 +320,7 @@ export default function GalleryManagerPage() {
                     <TableHead>Album Name</TableHead>
                     <TableHead>Cover Art</TableHead>
                     <TableHead>Items Count</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-right font-bold uppercase tracking-wider font-mono text-[11px] text-slate-700">ACTIONS</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -284,31 +344,36 @@ export default function GalleryManagerPage() {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-1.5">
+                        <div className="flex justify-end items-center gap-2">
                           <Button
-                            variant="secondary"
-                            className="flex items-center gap-1.5 h-8 text-[10px]"
+                            variant="outline"
+                            size="sm"
+                            className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                             onClick={() => handleOpenPhotos(album.id)}
                             title="Manage Photos"
                           >
-                            Add/Edit Photos
+                            <span>Photos</span>
                             <ArrowUpRight className="size-3" />
                           </Button>
                           <Button
                             variant="secondary"
-                            className="size-8 p-0"
+                            size="sm"
+                            className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                             onClick={() => handleOpenEditAlbum(album)}
                             title="Edit Album Settings"
                           >
-                            <Edit2 className="size-3.5" />
+                            <Edit2 className="size-3.5 text-blue-600" />
+                            <span>Edit</span>
                           </Button>
                           <Button
                             variant="destructive"
-                            className="size-8 p-0"
+                            size="sm"
+                            className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                             onClick={() => handleDeleteAlbum(album.id)}
-                            title="Delete Album"
+                            title="Remove Album"
                           >
                             <Trash2 className="size-3.5" />
+                            <span>Remove</span>
                           </Button>
                         </div>
                       </TableCell>
@@ -366,48 +431,103 @@ export default function GalleryManagerPage() {
             </div>
           </form>
         ) : (
-          /* Manage photos inside selected album */
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pb-12">
-            {/* Upload form (1 col) */}
+            {/* Upload/Edit photo form (1 col) */}
             <Card className="p-5 h-fit bg-white border-2 border-slate-900 rounded-none shadow-[3px_3px_0px_#000] flex flex-col justify-between">
               <form onSubmit={handleAddPhoto} className="space-y-4">
-                <div className="flex items-center gap-3 border-b-2 border-slate-900 pb-2 mb-4">
-                  <div className="p-1.5 rounded bg-blue-50 text-blue-600 border-2 border-blue-600 shadow-[1.5px_1.5px_0px_#000]">
-                    <Plus className="size-4" />
+                <div className="flex items-center justify-between border-b-2 border-slate-900 pb-2 mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`p-1.5 rounded border-2 shadow-[1.5px_1.5px_0px_#000] ${
+                      editingPhotoIdx !== null 
+                        ? "bg-amber-50 text-amber-600 border-amber-600" 
+                        : "bg-blue-50 text-blue-600 border-blue-600"
+                    }`}>
+                      {editingPhotoIdx !== null ? <Edit2 className="size-4" /> : <Plus className="size-4" />}
+                    </div>
+                    <div>
+                      <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">
+                        {editingPhotoIdx !== null ? `Edit Photo #${editingPhotoIdx + 1}` : "Add Photo"}
+                      </h2>
+                      <p className="text-[9px] text-slate-500 font-mono">
+                        {editingPhotoIdx !== null ? "Modify photo image or caption below." : "Attach a new image to this scroll."}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono">Add Photo</h2>
-                    <p className="text-[9px] text-slate-500 font-mono">Attach a new image to this scroll.</p>
+                  {editingPhotoIdx !== null && (
+                    <Button 
+                      type="button" 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={handleCancelPhotoEdit}
+                      className="h-7 text-[10px] text-slate-500 hover:text-slate-900 px-2"
+                    >
+                      <X className="size-3 mr-1" /> Cancel
+                    </Button>
+                  )}
+                </div>
+
+                {/* Photo Preview if photoUrl exists */}
+                {photoUrl && (
+                  <div className="w-full h-36 border-2 border-slate-900 overflow-hidden bg-slate-100 relative group">
+                    <img 
+                      src={photoUrl} 
+                      alt="Preview" 
+                      className="w-full h-full object-cover"
+                      onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=120&q=80" }}
+                    />
+                    <div className="absolute top-1 left-1 px-1.5 py-0.5 bg-slate-900 text-white text-[8px] font-mono font-bold uppercase">
+                      Image Preview
+                    </div>
                   </div>
+                )}
+
+                <div>
+                  <label className={labelClass}>Upload New Photo File</label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="w-full text-xs font-mono file:mr-3 file:py-1.5 file:px-3 file:rounded-none file:border-2 file:border-slate-900 file:bg-slate-100 file:text-xs file:font-bold file:cursor-pointer hover:file:bg-slate-200 cursor-pointer"
+                  />
+                  <p className="text-[9px] text-slate-400 font-mono mt-1">Pick an image file from your device, or paste a URL below.</p>
                 </div>
 
                 <div>
-                  <label className={labelClass}>Image URL</label>
+                  <label className={labelClass}>Image URL / Source</label>
                   <input
-                    type="url"
+                    type="text"
                     className={formInputClass}
                     value={photoUrl}
                     onChange={(e) => setPhotoUrl(e.target.value)}
                     required
-                    placeholder="https://images.unsplash.com/..."
+                    placeholder="https://images.unsplash.com/... or data:image/..."
                   />
                 </div>
 
                 <div>
-                  <label className={labelClass}>Caption (A short title or description)</label>
-                  <input
-                    type="text"
-                    className={formInputClass}
+                  <label className={labelClass}>Caption (Description text)</label>
+                  <textarea
+                    className="w-full min-h-[75px] p-3 rounded-none bg-white border-2 border-slate-900 text-xs font-semibold text-slate-900 placeholder-slate-400 focus:outline-none focus:border-blue-600 focus:ring-0 transition-all font-mono"
                     value={photoCaption}
                     onChange={(e) => setPhotoCaption(e.target.value)}
                     required
-                    placeholder="e.g. Teams brainstorming during SIH Round 1"
+                    placeholder="e.g. Teams presenting their prototype to SIH evaluators"
                   />
                 </div>
 
-                <div className="flex justify-end pt-2">
-                  <Button type="submit" className="w-full">
-                    Upload Photo
+                <div className="flex gap-2 pt-2">
+                  {editingPhotoIdx !== null && (
+                    <Button 
+                      type="button" 
+                      variant="secondary" 
+                      onClick={handleCancelPhotoEdit} 
+                      className="w-1/3"
+                    >
+                      Cancel
+                    </Button>
+                  )}
+                  <Button type="submit" className={editingPhotoIdx !== null ? "w-2/3" : "w-full"}>
+                    {editingPhotoIdx !== null ? "Save Photo Changes" : "Upload Photo"}
                   </Button>
                 </div>
               </form>
@@ -415,8 +535,13 @@ export default function GalleryManagerPage() {
 
             {/* Photos List (2 cols) */}
             <Card className="lg:col-span-2 p-5 bg-white border-2 border-slate-900 rounded-none shadow-[3px_3px_0px_#000]">
-              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono border-b-2 border-slate-900 pb-2 mb-4">
-                Current Photos ({(activeAlbum?.media || []).length})
+              <h2 className="text-xs font-bold text-slate-900 uppercase tracking-wider font-mono border-b-2 border-slate-900 pb-2 mb-4 flex items-center justify-between">
+                <span>Current Photos ({(activeAlbum?.media || []).length})</span>
+                {editingPhotoIdx !== null && (
+                  <span className="text-[10px] text-amber-600 font-mono font-bold bg-amber-50 px-2 py-0.5 border border-amber-300">
+                    Editing Photo #{editingPhotoIdx + 1}
+                  </span>
+                )}
               </h2>
 
               {(activeAlbum?.media || []).length === 0 ? (
@@ -424,30 +549,62 @@ export default function GalleryManagerPage() {
                   This album is empty. Upload a photo on the left panel to begin.
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {activeAlbum?.media.map((mediaItem: any, idx: number) => (
-                    <div key={idx} className="relative group rounded-none overflow-hidden border-2 border-slate-900 bg-white flex flex-col justify-between shadow-[2px_2px_0px_#000]">
-                      <div className="aspect-[4/3] w-full overflow-hidden bg-black relative">
-                        <img
-                          src={mediaItem.url}
-                          alt={mediaItem.caption}
-                          className="w-full h-full object-cover"
-                          onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=120&q=80" }}
-                        />
-                        <button
-                          type="button"
-                          onClick={() => handleDeletePhoto(idx)}
-                          className="absolute top-2 right-2 bg-red-600 text-white border-2 border-slate-900 rounded-none p-1.5 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer hover:bg-red-700 shadow-md shadow-black/20"
-                          title="Delete Photo"
-                        >
-                          <Trash2 className="size-3.5" />
-                        </button>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {activeAlbum?.media.map((mediaItem: any, idx: number) => {
+                    const isEditing = editingPhotoIdx === idx;
+                    return (
+                      <div 
+                        key={idx} 
+                        className={`relative group rounded-none overflow-hidden border-2 transition-all bg-white flex flex-col justify-between ${
+                          isEditing 
+                            ? "border-amber-500 ring-2 ring-amber-500 shadow-[4px_4px_0px_#f59e0b]" 
+                            : "border-slate-900 shadow-[2px_2px_0px_#000]"
+                        }`}
+                      >
+                        <div className="aspect-[4/3] w-full overflow-hidden bg-black relative">
+                          <img
+                            src={mediaItem.url}
+                            alt={mediaItem.caption}
+                            className="w-full h-full object-cover"
+                            onError={(e: any) => { e.target.src = "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=120&q=80" }}
+                          />
+                          <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2">
+                            <button
+                              type="button"
+                              onClick={() => handleOpenEditPhoto(idx, mediaItem)}
+                              className="bg-white text-slate-900 border-2 border-slate-900 rounded-none px-2 py-1 text-[10px] font-bold font-mono flex items-center gap-1 cursor-pointer hover:bg-amber-400 transition-colors shadow-[1.5px_1.5px_0px_#000]"
+                              title="Edit Caption & Photo"
+                            >
+                              <Edit2 className="size-3" /> Edit
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => handleDeletePhoto(idx)}
+                              className="bg-red-600 text-white border-2 border-slate-900 rounded-none px-2 py-1 text-[10px] font-bold font-mono flex items-center gap-1 cursor-pointer hover:bg-red-700 transition-colors shadow-[1.5px_1.5px_0px_#000]"
+                              title="Delete Photo"
+                            >
+                              <Trash2 className="size-3" /> Delete
+                            </button>
+                          </div>
+                          {isEditing && (
+                            <div className="absolute top-2 left-2 bg-amber-500 text-white border border-slate-900 text-[8px] font-mono font-bold uppercase px-1.5 py-0.5">
+                              Editing Now
+                            </div>
+                          )}
+                        </div>
+                        <div className="p-2.5 bg-white border-t-2 border-slate-900 flex flex-col justify-between gap-2">
+                          <p className="text-[10px] text-slate-800 font-bold font-mono line-clamp-2">{mediaItem.caption}</p>
+                          <button
+                            type="button"
+                            onClick={() => handleOpenEditPhoto(idx, mediaItem)}
+                            className="w-full py-1 bg-slate-100 hover:bg-slate-200 border border-slate-900 text-[9px] font-bold font-mono text-slate-700 flex items-center justify-center gap-1 cursor-pointer transition-colors"
+                          >
+                            <Edit2 className="size-2.5" /> Edit Caption & Photo
+                          </button>
+                        </div>
                       </div>
-                      <div className="p-2.5">
-                        <p className="text-[10px] text-slate-800 font-bold font-mono line-clamp-2">{mediaItem.caption}</p>
-                      </div>
-                    </div>
-                  ))}
+                    )
+                  })}
                 </div>
               )}
             </Card>

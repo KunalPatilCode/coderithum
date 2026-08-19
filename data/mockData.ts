@@ -23,18 +23,33 @@ const withBasePath = (path: string) => {
 export const initialEvents: ClubEvent[] = [
   {
     id: "registration-orientation-2026",
-    title: "Club Member Registration & Orientation",
+    title: "Coderithum Club Orientation & Interview Session 2026",
     banner: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80",
-    shortDesc: "Welcome to CodeRhythm! Onboarding, team introduction, and core tech domain selections.",
-    description: "Kick off the academic year 2026-2027 with our official onboarding session. Introduce yourself to the leadership team, understand the calendar roadmap, and select your primary learning track: AI, Web Development, App Development, or Cybersecurity.",
-    date: "August 15, 2026",
-    time: "10:00 AM - 01:00 PM",
-    venue: "Main Seminar Hall, GEC Daman",
+    shortDesc: "Coderithum Orientation & Interview Session on 29 August 2026. Two stages: Orientation & Interview Round for 100+ participants.",
+    description: `THE WAIT IS OVER. YOUR CODERITHUM JOURNEY STARTS NOW. 🔥
+
+Get ready for the Coderithum Club Orientation & Interview Session 2026!
+📅 Date: 29 August 2026
+
+Key Highlights:
+🎯 1. ORIENTATION — Vision, teams, opportunities, and community introduction.
+⚡ 2. INTERVIEW ROUND — Selection process for 100+ participants to showcase skills.
+
+💻 Available Domains:
+Development | Design | Content | Management | Marketing | AI/ML
+
+⚠️ IMPORTANT RULE:
+Each participant can select ONLY ONE DOMAIN for the interview. Choose where you are most confident.
+
+🔥 CODE. CONNECT. CREATE IMPACT.`,
+    date: "August 29, 2026",
+    time: "10:00 AM - 04:00 PM",
+    venue: "Main Seminar Hall & Computer Dept, GEC Daman",
     agenda: [
-      "10:00 AM - Keynote speech by Dr. Avinash R. Chaudhari (Principal)",
-      "10:45 AM - Introduction of the Core Committee & Mentors",
-      "11:30 AM - Domain Tracks overview & syllabus reveal",
-      "12:15 PM - Interactive Q&A and track registration"
+      "10:00 AM - Stage 1: ORIENTATION - Vision, teams, opportunities & community roadmap",
+      "11:30 AM - Stage 2: INTERVIEW ROUND - Selection process across chosen tech/design domains",
+      "01:30 PM - Domain Selection Rule: Each participant selects ONLY ONE DOMAIN for the interview",
+      "03:00 PM - Closing & Networking: Meet like-minded creators, developers, designers & leaders"
     ],
     speakers: [
       {
@@ -50,7 +65,8 @@ export const initialEvents: ClubEvent[] = [
         avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&h=150&q=80"
       }
     ],
-    regLink: "https://gecdaman.org.in/coderithum/register-2026",
+    regLink: "",
+    hideRegistration: true,
     feedbackLink: "https://gecdaman.org.in/feedback/orientation",
     gallery: [],
     type: "upcoming",
@@ -74,7 +90,7 @@ export const initialEvents: ClubEvent[] = [
     speakers: [
       {
         name: "Md Ismile",
-        role: "Chief Technical Lead",
+        role: "Technical Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80"
       }
@@ -240,7 +256,7 @@ export const initialEvents: ClubEvent[] = [
     speakers: [
       {
         name: "Md Ismile",
-        role: "Chief Technical Lead",
+        role: "Technical Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80"
       },
@@ -380,7 +396,7 @@ export const initialEvents: ClubEvent[] = [
     speakers: [
       {
         name: "Purnima Upadhyay",
-        role: "Incubator & Ops Lead",
+        role: "Operations Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1534751516642-a131ffd103fd?auto=format&fit=crop&w=150&h=150&q=80"
       },
@@ -421,7 +437,7 @@ export const initialEvents: ClubEvent[] = [
       },
       {
         name: "Md Ismile",
-        role: "Chief Technical Lead",
+        role: "Technical Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80"
       }
@@ -521,7 +537,7 @@ export const initialEvents: ClubEvent[] = [
     speakers: [
       {
         name: "Purnima Upadhyay",
-        role: "Incubator & Ops Lead",
+        role: "Operations Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1534751516642-a131ffd103fd?auto=format&fit=crop&w=150&h=150&q=80"
       },
@@ -627,7 +643,7 @@ export const initialEvents: ClubEvent[] = [
       },
       {
         name: "Md Ismile",
-        role: "Chief Technical Lead",
+        role: "Technical Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80"
       }
@@ -769,7 +785,7 @@ export const initialEvents: ClubEvent[] = [
       },
       {
         name: "Md Ismile",
-        role: "Chief Technical Lead",
+        role: "Technical Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80"
       }
@@ -999,7 +1015,7 @@ export const initialEvents: ClubEvent[] = [
     speakers: [
       {
         name: "Purnima Upadhyay",
-        role: "Incubator & Ops Lead",
+        role: "Operations Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1534751516642-a131ffd103fd?auto=format&fit=crop&w=150&h=150&q=80"
       },
@@ -1040,7 +1056,7 @@ export const initialEvents: ClubEvent[] = [
       },
       {
         name: "Md Ismile",
-        role: "Chief Technical Lead",
+        role: "Technical Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80"
       }
@@ -1111,7 +1127,7 @@ export const initialEvents: ClubEvent[] = [
       },
       {
         name: "Purnima Upadhyay",
-        role: "Incubator & Ops Lead",
+        role: "Operations Lead",
         company: "CodeRhythm Club",
         avatar: "https://images.unsplash.com/photo-1534751516642-a131ffd103fd?auto=format&fit=crop&w=150&h=150&q=80"
       }
@@ -1476,7 +1492,7 @@ export const initialTeam: TeamMember[] = [
   },
   {
     name: "Dr. Avinash R. Chaudhari",
-    role: "Principal & Chief Patron",
+    role: "Principal",
     category: "Faculty",
     tierLevel: 1,
     avatar: "/principal1.jpg",
@@ -1538,7 +1554,7 @@ export const initialTeam: TeamMember[] = [
   },
   {
     name: "Md Ismile",
-    role: "Chief Technical Lead",
+    role: "Technical Lead",
     category: "Technical",
     avatar: withBasePath("/ismile.png?v=12"),
     photoPosition: {
@@ -1619,7 +1635,7 @@ export const initialTeam: TeamMember[] = [
   },
   {
     name: "Purnima Upadhyay",
-    role: "Incubator & Ops Lead",
+    role: "Operations Lead",
     category: "Leadership",
     avatar: withBasePath("/purnima.png?v=1"),
     avatarStyle: {
@@ -1632,8 +1648,8 @@ export const initialTeam: TeamMember[] = [
   },
   {
     name: "Abhishek Kumar",
-    role: "Marketing & Outreach (Brand Lead)",
-    category: "Marketing",
+    role: "Digital Media & Outreach Team (Brand Lead)",
+    category: "Digital Media & Outreach Team",
     avatar: "/abhishek-kumar.png",
     avatarStyle: {
       objectPosition: "center 20%",
@@ -1643,8 +1659,8 @@ export const initialTeam: TeamMember[] = [
   },
   {
     name: "Aaryan Patel",
-    role: "Marketing & Outreach (Outreach Lead)",
-    category: "Marketing",
+    role: "Digital Media & Outreach Team (Outreach Lead)",
+    category: "Digital Media & Outreach Team",
     avatar: withBasePath("/aaryan-patel.png"),
     avatarStyle: {
       objectPosition: "center 10%",
@@ -1687,7 +1703,7 @@ export const initialTeam: TeamMember[] = [
   {
     name: "Kabir Mehta",
     role: "Public Relations Lead",
-    category: "Marketing",
+    category: "Digital Media & Outreach Team",
     avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80",
     github: "https://github.com",
     linkedin: "https://linkedin.com"
@@ -1695,7 +1711,7 @@ export const initialTeam: TeamMember[] = [
   {
     name: "Riya Patel",
     role: "Sponsorship & Corporate Relations Lead",
-    category: "Marketing",
+    category: "Digital Media & Outreach Team",
     avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=150&h=150&q=80",
     github: "https://github.com",
     linkedin: "https://linkedin.com"
@@ -1740,8 +1756,8 @@ export const initialHeroConfig: HeroThemeConfig = {
   badgeText: "GEC Daman CodeRhythm",
   title: "Empowering Developers & Tech Innovators",
   highlightTitle: "CodeRhythm 2026-2027",
-  subtitle: "Registrations are now open for the CodeRhythm Academic Year 2026-2027! Join workshops, hackathons, and open-source project sprints.",
-  primaryCtaText: "Register Now",
+  subtitle: "Coderithum Club Orientation & Interview Session 2026 on 29 August 2026! Showcase your domain skills and start your journey.",
+  primaryCtaText: "Orientation Details",
   primaryCtaLink: "registration-orientation-2026",
   secondaryCtaText: "Explore Events",
   secondaryCtaLink: "events",
@@ -1755,10 +1771,10 @@ export const initialHeroConfig: HeroThemeConfig = {
 export const initialAnnouncements: AnnouncementItem[] = [
   {
     id: "ann-1",
-    title: "CodeRhythm Academic Year 2026-2027 Onboarding Open!",
-    message: "Registrations are now open for the CodeRhythm Academic Year 2026-2027! Secure your spots for Orientation and Git & GitHub basics.",
+    title: "Coderithum Club Orientation & Interview Session 2026",
+    message: "Get ready for the Coderithum Club Orientation & Interview Session 2026 on 29 August 2026! Two stages: Orientation & Interview Round.",
     badge: "Orientation Special",
-    date: "August 15, 2026",
+    date: "August 29, 2026",
     linkedEventId: "registration-orientation-2026",
     status: "active",
     isPinned: true,

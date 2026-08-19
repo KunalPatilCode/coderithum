@@ -72,6 +72,7 @@ export default function TeamHierarchyGraph({
       case "Design":
         return "bg-purple-100 text-purple-900 border-purple-900"
       case "Marketing":
+      case "Digital Media & Outreach Team":
         return "bg-rose-100 text-rose-900 border-rose-900"
       default:
         return "bg-slate-100 text-slate-900 border-slate-900"

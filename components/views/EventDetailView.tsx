@@ -41,7 +41,7 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
         <div className="lg:col-span-8 space-y-8">
           <div className="space-y-4">
             <InteractiveHeading text={currentEvent.title} as="h1" className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight" />
-            <p className="text-sm sm:text-base text-slate-600 leading-relaxed">{currentEvent.description}</p>
+            <div className="text-sm sm:text-base text-slate-600 leading-relaxed whitespace-pre-line">{currentEvent.description}</div>
           </div>
 
           {/* Agenda */}
@@ -105,17 +105,19 @@ export default function EventDetailView({ currentEvent, setView }: EventDetailVi
             </div>
 
             <div className="pt-4 border-t-2 border-slate-200 space-y-3">
-              {currentEvent.type === "upcoming" ? (
-                <button
-                  onClick={() => alert("Coming Soon")}
-                  className="w-full py-2.5 bg-theme hover:bg-theme-hover text-white rounded-none border-2 border-theme-hover text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
-                >
-                  Register for Event <ArrowUpRight className="w-3.5 h-3.5" />
-                </button>
-              ) : (
-                <span className="w-full py-2.5 bg-slate-50 text-slate-400 rounded-none text-xs font-bold flex items-center justify-center select-none border-2 border-slate-200">
-                  Registration Closed
-                </span>
+              {!currentEvent.hideRegistration && (
+                currentEvent.type === "upcoming" ? (
+                  <button
+                    onClick={() => alert("Coming Soon")}
+                    className="w-full py-2.5 bg-theme hover:bg-theme-hover text-white rounded-none border-2 border-theme-hover text-xs font-bold flex items-center justify-center gap-1.5 shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
+                  >
+                    Register for Event <ArrowUpRight className="w-3.5 h-3.5" />
+                  </button>
+                ) : (
+                  <span className="w-full py-2.5 bg-slate-50 text-slate-400 rounded-none text-xs font-bold flex items-center justify-center select-none border-2 border-slate-200">
+                    Registration Closed
+                  </span>
+                )
               )}
 
               <button

@@ -20,12 +20,12 @@ interface CalendarEventItem {
 const calendarEvents: CalendarEventItem[] = [
   {
     id: "registration-orientation-2026",
-    title: "Club Member Registration & Orientation",
-    dateStr: "August 15, 2026",
-    days: [15],
+    title: "Coderithum Club Orientation & Interview Session 2026",
+    dateStr: "August 29, 2026",
+    days: [29],
     month: 7, // August
     year: 2026,
-    time: "10:00 AM - 01:00 PM",
+    time: "10:00 AM - 04:00 PM",
     venue: "Main Seminar Hall, GEC Daman",
     type: "upcoming",
     category: "orientation"

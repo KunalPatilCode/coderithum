@@ -40,7 +40,11 @@ export default function EventsView({ events, setView, setSelectedId }: EventsVie
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {events.filter(e => e.type === "upcoming").map(event => (
-            <div key={event.id} className="p-6 rounded-none bg-white border-2 border-slate-900 hover:border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group">
+            <div 
+              key={event.id} 
+              onClick={() => handleEventClick(event.id)}
+              className="p-6 rounded-none bg-white border-2 border-slate-900 hover:border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group cursor-pointer"
+            >
               <div className="space-y-4">
                 <div className="w-full h-[180px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
                   {/* Base Image */}
@@ -76,7 +80,7 @@ export default function EventsView({ events, setView, setSelectedId }: EventsVie
                   onClick={() => handleEventClick(event.id)}
                   className="px-4 py-2 bg-theme-light border-2 border-theme rounded-none text-xs font-bold text-theme hover:bg-theme hover:text-white transition-all shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer"
                 >
-                  Details & Reg
+                  {event.hideRegistration ? "View Details" : "Details & Reg"}
                 </button>
               </div>
             </div>
@@ -89,7 +93,11 @@ export default function EventsView({ events, setView, setSelectedId }: EventsVie
         <h3 className="text-base font-mono text-slate-900 tracking-wider uppercase">Past Training Camps</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {events.filter(e => e.type === "past").map(event => (
-            <div key={event.id} className="p-6 rounded-none bg-white border-2 border-slate-900 flex flex-col justify-between space-y-6 opacity-95 hover:opacity-100 transition-all shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group">
+            <div 
+              key={event.id} 
+              onClick={() => handleEventClick(event.id)}
+              className="p-6 rounded-none bg-white border-2 border-slate-900 flex flex-col justify-between space-y-6 opacity-95 hover:opacity-100 transition-all shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group cursor-pointer"
+            >
               <div className="space-y-4">
                 <div className="w-full h-[180px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
                   <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105 filter grayscale group-hover/glitch:grayscale-0" />

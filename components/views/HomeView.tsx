@@ -66,14 +66,14 @@ export default function HomeView({
               </div>
 
               <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
-                Registrations are now open for the CodeRhythm Academic Year 2026-2027! Secure your spots for Orientation and Git & GitHub basics.
+                Coderithum Club Orientation & Interview Session 2026 is scheduled for 29 August 2026! Check details for Orientation & Interview domain rounds.
               </p>
 
               {/* List of upcoming events inside the announcement box */}
               <div className="space-y-2 pt-1.5">
                 <div className="text-[9px] font-mono text-slate-400 uppercase tracking-widest border-b border-slate-200 pb-1">Upcoming Schedule</div>
                 {[
-                  { title: "Club Member Registration & Orientation", date: "Aug 15, 2026", id: "registration-orientation-2026" },
+                  { title: "Coderithum Club Orientation & Interview Session 2026", date: "Aug 29, 2026", id: "registration-orientation-2026" },
                   { title: "Git & GitHub Basics + Team Formation", date: "Aug 29, 2026", id: "git-github-basics-2026" }
                 ].map(evt => (
                   <div
@@ -96,7 +96,7 @@ export default function HomeView({
                 onClick={() => { setView("event-detail"); setSelectedId("registration-orientation-2026"); }}
                 className="w-full py-2 rounded-none bg-theme border-2 border-theme-hover text-white font-bold text-xs shadow-[3px_3px_0px_#000] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0px_#000] transition-all cursor-pointer text-center"
               >
-                Register Now
+                View Event Details
               </button>
             </div>
           </div>
@@ -141,7 +141,11 @@ export default function HomeView({
         </div>
 
         {events.filter(e => e.type === "upcoming").slice(0, 1).map(event => (
-          <div key={event.id} className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white border-2 border-slate-900 rounded-none overflow-hidden group hover:border-slate-900 transition-all shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000]">
+          <div 
+            key={event.id} 
+            onClick={() => { setView("event-detail"); setSelectedId(event.id); }}
+            className="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-white border-2 border-slate-900 rounded-none overflow-hidden group hover:border-slate-900 transition-all shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] cursor-pointer"
+          >
             <div className="lg:col-span-6 relative h-[250px] lg:h-auto overflow-hidden group/glitch">
               {/* Base Image */}
               <img src={event.banner} alt={event.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />
@@ -207,7 +211,11 @@ export default function HomeView({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.slice(0, 2).map(project => (
-            <div key={project.id} className="p-6 rounded-none bg-white border-2 border-slate-900 hover:border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group">
+            <div 
+              key={project.id} 
+              onClick={() => { setView("project-detail"); setSelectedId(project.id); }}
+              className="p-6 rounded-none bg-white border-2 border-slate-900 hover:border-slate-900 transition-all flex flex-col justify-between space-y-6 shadow-[6px_6px_0px_#000] hover:translate-x-[-2px] hover:translate-y-[-2px] hover:shadow-[8px_8px_0px_#000] group cursor-pointer"
+            >
               <div className="space-y-4">
                 <div className="w-full h-[180px] rounded-none border-2 border-slate-900 overflow-hidden relative group/glitch">
                   <img src={project.banner} alt={project.title} className="w-full h-full object-cover transition-transform duration-500 group-hover/glitch:scale-105" />

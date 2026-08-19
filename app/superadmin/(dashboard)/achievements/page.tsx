@@ -168,45 +168,50 @@ export default function AchievementsManagerPage() {
                     <TableHead>Accolade / Trophy</TableHead>
                     <TableHead>Recipient</TableHead>
                     <TableHead>Date Awarded</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-right font-bold uppercase tracking-wider font-mono text-[11px] text-slate-700">ACTIONS</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {achievements.map((ach) => (
                     <TableRow key={ach.id}>
-                      <TableCell className="font-semibold">
-                        <div className="text-slate-900 text-xs font-bold font-mono">{ach.title}</div>
-                        <div className="text-[10px] text-slate-500 line-clamp-1 mt-0.5">{ach.description}</div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-600">
-                          <Trophy className="size-3.5 shrink-0" />
-                          <span>{ach.award}</span>
+                      <TableCell className="font-semibold max-w-xs">
+                        <div className="space-y-1">
+                          <span className="text-xs font-bold text-slate-900 font-mono line-clamp-1">{ach.title}</span>
+                          <div className="text-[10px] text-slate-500 font-mono line-clamp-2">{ach.description}</div>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <span className="text-[11px] text-slate-600 font-mono font-bold">{ach.recipient}</span>
+                        <Badge variant="outline" className="text-[10px] font-mono">
+                          {ach.award}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-xs font-mono font-bold text-slate-800">{ach.recipient}</span>
                       </TableCell>
                       <TableCell>
                         <span className="text-[11px] text-slate-500 font-mono font-bold">{ach.date}</span>
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-1.5">
+                        <div className="flex justify-end items-center gap-2">
                           <Button
                             variant="secondary"
-                            className="size-8 p-0"
+                            size="sm"
                             onClick={() => handleOpenEdit(ach)}
+                            className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                             title="Edit Accolade"
                           >
-                            <Edit2 className="size-3.5" />
+                            <Edit2 className="size-3.5 text-blue-600" />
+                            <span>Edit</span>
                           </Button>
                           <Button
                             variant="destructive"
-                            className="size-8 p-0"
+                            size="sm"
                             onClick={() => handleDelete(ach.id)}
-                            title="Delete Accolade"
+                            className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
+                            title="Remove Accolade"
                           >
                             <Trash2 className="size-3.5" />
+                            <span>Remove</span>
                           </Button>
                         </div>
                       </TableCell>

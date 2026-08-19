@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ShieldCheck, Crown, Sparkles, BookOpen, Compass, ChevronRight, FileText, CheckCircle2, AlertTriangle, Cpu, Radio, ShieldAlert, ChevronLeft } from "lucide-react";
+import { ShieldCheck, Crown, Sparkles, BookOpen, Compass, ChevronRight, FileText, CheckCircle2, AlertTriangle, Cpu, Radio, ShieldAlert, ChevronLeft, Download } from "lucide-react";
 import InteractiveHeading from "../InteractiveHeading";
 
 interface RuleBookViewProps {}
@@ -182,9 +182,9 @@ export default function RuleBookView({}: RuleBookViewProps) {
               "01 Purpose & Leadership Architecture",
               "02 Club Authority — Faculty Coordinator",
               "03 President & Vice President",
-              "04 Chief Technology Lead",
-              "05 Marketing & Outreach Lead",
-              "06 Incubator & Operations Lead",
+              "04 Technical Lead",
+              "05 Digital Media & Outreach Team Lead",
+              "06 Operations Lead",
               "07 Team Leads & Club Members",
               "08 Member Selection & Removal",
               "09 Zebra Control & Permissions",
@@ -234,7 +234,7 @@ export default function RuleBookView({}: RuleBookViewProps) {
             <span className="text-cyan-400 font-bold uppercase tracking-widest text-[9px] block border-b border-slate-800 pb-1">LEADERSHIP HIERARCHY</span>
             <div><span className="text-emerald-400 font-bold">01</span> FACULTY COORDINATOR / CLUB AUTHORITY</div>
             <div><span className="text-amber-400 font-bold">02</span> PRESIDENT + VICE PRESIDENT</div>
-            <div><span className="text-cyan-400 font-bold">03</span> CHIEF TECH LEAD | MARKETING & OUTREACH | INCUBATOR & OPERATIONS</div>
+            <div><span className="text-cyan-400 font-bold">03</span> TECH LEAD | DIGITAL MEDIA & OUTREACH TEAM | OPERATIONS</div>
             <div><span className="text-slate-400 font-bold">04</span> DOMAIN LEADS / TEAM LEADS</div>
             <div><span className="text-slate-500 font-bold">05</span> CLUB MEMBERS</div>
           </div>
@@ -333,8 +333,8 @@ export default function RuleBookView({}: RuleBookViewProps) {
     }
 
     if (pageNumber === 7) {
-      // Module 04: Chief Technology Lead
-      return renderInnerPageWrapper("MODULE 04 // DEVELOPMENT", "Chief Technology Lead", "04", "PAGE 07", (
+      // Module 04: Technical Lead
+      return renderInnerPageWrapper("MODULE 04 // DEVELOPMENT", "Technical Lead", "04", "PAGE 07", (
         <div className="space-y-4 font-mono text-[11px] text-slate-700">
           <p className="text-slate-500 text-[10px] italic leading-normal">Responsible for the technical direction and technical operations of the club. The CTL has primary authority over technical matters within the club.</p>
           <div className="border border-slate-200/80 p-3 bg-slate-100/40 text-[9.5px] text-slate-600 space-y-1.5">
@@ -368,17 +368,17 @@ export default function RuleBookView({}: RuleBookViewProps) {
     }
 
     if (pageNumber === 8) {
-      // Module 05: Marketing & Outreach Lead
-      return renderInnerPageWrapper("MODULE 05 // OUTREACH", "Marketing & Outreach Lead", "05", "PAGE 08", (
+      // Module 05: Digital Media & Outreach Team Lead
+      return renderInnerPageWrapper("MODULE 05 // OUTREACH", "Digital Media & Outreach Team Lead", "05", "PAGE 08", (
         <div className="space-y-4 font-mono text-[11px] text-slate-700">
           <p className="text-slate-500 text-[10px] italic leading-normal">Responsible for the club's public presence, promotion, communication, and external outreach.</p>
           <div className="border border-slate-200/80 p-3 bg-slate-100/40 text-[9.5px] text-slate-600 space-y-1.5">
-            <div><span className="font-bold text-slate-800">01</span> Have primary control over club marketing and social media activities.</div>
-            <div><span className="font-bold text-slate-800">02</span> Manage the marketing and outreach team.</div>
-            <div><span className="font-bold text-slate-800">03</span> Assign members to marketing domains.</div>
-            <div><span className="font-bold text-slate-800">04</span> Select suitable members for marketing responsibilities.</div>
+            <div><span className="font-bold text-slate-800">01</span> Have primary control over club Digital Media & Outreach Team activities.</div>
+            <div><span className="font-bold text-slate-800">02</span> Manage the Digital Media & Outreach Team.</div>
+            <div><span className="font-bold text-slate-800">03</span> Assign members to outreach domains.</div>
+            <div><span className="font-bold text-slate-800">04</span> Select suitable members for digital media responsibilities.</div>
             <div><span className="font-bold text-slate-800">05</span> Plan social media campaigns.</div>
-            <div><span className="font-bold text-slate-800">06</span> Create marketing strategies for events and projects.</div>
+            <div><span className="font-bold text-slate-800">06</span> Create promotion strategies for events and projects.</div>
             <div><span className="font-bold text-slate-800">07</span> Manage promotional content.</div>
             <div><span className="font-bold text-slate-800">08</span> Coordinate creation of posters, videos, reels, social media posts, event creatives, and promotional materials.</div>
             <div><span className="font-bold text-slate-800">09</span> Review and verify promotional content before publication.</div>
@@ -386,22 +386,22 @@ export default function RuleBookView({}: RuleBookViewProps) {
             <div><span className="font-bold text-slate-800">11</span> Contact potential collaborators and communities.</div>
             <div><span className="font-bold text-slate-800">12</span> Coordinate with speakers, organizations, and external partners when assigned.</div>
             <div><span className="font-bold text-slate-800">13</span> Promote club events and achievements.</div>
-            <div><span className="font-bold text-slate-800">14</span> Track marketing performance.</div>
+            <div><span className="font-bold text-slate-800">14</span> Track outreach performance.</div>
             <div><span className="font-bold text-slate-800">15</span> Analyze engagement and reach.</div>
-            <div><span className="font-bold text-slate-800">16</span> Suggest improvements to the club's marketing strategy.</div>
-            <div><span className="font-bold text-slate-800">17</span> Maintain an organized archive of official marketing content.</div>
+            <div><span className="font-bold text-slate-800">16</span> Suggest improvements to the club's media strategy.</div>
+            <div><span className="font-bold text-slate-800">17</span> Maintain an organized archive of official promotional content.</div>
           </div>
           <div className="border border-amber-500/80 p-3 bg-amber-50/20 text-slate-900 border-l-4 text-[10px] leading-relaxed">
             <span className="font-bold uppercase text-[9px] block text-amber-800 mb-0.5">PUBLICATION RULE</span>
-            Official public content representing Coderithum should be reviewed by the Marketing & Outreach Lead before publication. Sensitive announcements, official statements, or reputation-related posts should also receive President approval.
+            Official public content representing Coderithum should be reviewed by the Digital Media & Outreach Team Lead before publication. Sensitive announcements, official statements, or reputation-related posts should also receive President approval.
           </div>
         </div>
       ));
     }
 
     if (pageNumber === 9) {
-      // Module 06: Incubator & Operations Lead
-      return renderInnerPageWrapper("MODULE 06 // OPERATIONS", "Incubator & Operations Lead", "06", "PAGE 09", (
+      // Module 06: Operations Lead
+      return renderInnerPageWrapper("MODULE 06 // OPERATIONS", "Operations Lead", "06", "PAGE 09", (
         <div className="space-y-4 font-mono text-[11px] text-slate-700">
           <p className="text-slate-500 text-[10px] italic leading-normal">Responsible for organizational execution, deadlines, documentation, and operational coordination.</p>
           <div className="border border-slate-200/80 p-3 bg-slate-100/40 text-[9.5px] text-slate-600 space-y-1.5">
@@ -593,7 +593,7 @@ export default function RuleBookView({}: RuleBookViewProps) {
             <h4 className="font-black text-slate-900 uppercase text-[10.5px] border-b pb-0.5 mb-1">EVERY OFFICIAL EVENT SHOULD HAVE</h4>
             <div><span className="font-bold">01</span> Event Lead</div>
             <div><span className="font-bold">02</span> Technical/Operations Team</div>
-            <div><span className="font-bold">03</span> Marketing Team</div>
+            <div><span className="font-bold">03</span> Digital Media & Outreach Team</div>
             <div><span className="font-bold">04</span> Registration/Coordination Team</div>
             <div><span className="font-bold">05</span> Clear timeline</div>
             <div><span className="font-bold">06</span> Defined responsibilities</div>
@@ -656,12 +656,12 @@ export default function RuleBookView({}: RuleBookViewProps) {
 
           <div className="border border-slate-200/80 p-2.5 bg-slate-100/40 text-[9px] space-y-1">
             <span className="font-bold text-slate-900 block border-b pb-0.5 mb-1 text-[9.5px]">MONTHLY REVIEW SHOULD COVER</span>
-            <div><span className="font-bold">01</span> Project progress, <span className="font-bold">02</span> Event progress, <span className="font-bold">03</span> Member activity, <span className="font-bold">04</span> Technical development, <span className="font-bold">05</span> Marketing performance, <span className="font-bold">06</span> Operational issues, <span className="font-bold">07</span> Upcoming events, <span className="font-bold">08</span> Problems, <span className="font-bold">09</span> Improvements.</div>
+            <div><span className="font-bold">01</span> Project progress, <span className="font-bold">02</span> Event progress, <span className="font-bold">03</span> Member activity, <span className="font-bold">04</span> Technical development, <span className="font-bold">05</span> Digital Media & Outreach Team performance, <span className="font-bold">06</span> Operational issues, <span className="font-bold">07</span> Upcoming events, <span className="font-bold">08</span> Problems, <span className="font-bold">09</span> Improvements.</div>
           </div>
 
           <div className="border border-slate-200/80 p-2.5 bg-slate-100/40 text-[9px] space-y-1">
             <span className="font-bold text-slate-900 block border-b pb-0.5 mb-1 text-[9.5px]">MONTHLY CLUB REPORT</span>
-            <div><span className="font-bold">01</span> Major activities, <span className="font-bold">02</span> Projects, <span className="font-bold">03</span> Events, <span className="font-bold">04</span> Member participation, <span className="font-bold">05</span> Achievements, <span className="font-bold">06</span> Marketing performance, <span className="font-bold">07</span> Technical progress, <span className="font-bold">08</span> Problems, <span className="font-bold">09</span> Solutions, <span className="font-bold">10</span> Next month's goals.</div>
+            <div><span className="font-bold">01</span> Major activities, <span className="font-bold">02</span> Projects, <span className="font-bold">03</span> Events, <span className="font-bold">04</span> Member participation, <span className="font-bold">05</span> Achievements, <span className="font-bold">06</span> Digital Media & Outreach Team performance, <span className="font-bold">07</span> Technical progress, <span className="font-bold">08</span> Problems, <span className="font-bold">09</span> Solutions, <span className="font-bold">10</span> Next month's goals.</div>
           </div>
 
           <div className="border border-slate-900 p-3 bg-slate-950 text-white shadow-[2px_2px_0px_#000] text-[9px] space-y-2">
@@ -842,6 +842,16 @@ export default function RuleBookView({}: RuleBookViewProps) {
           <InteractiveHeading text="Technical Grimoire" as="h2" className="text-[10px] font-mono tracking-widest text-theme uppercase" />
           <InteractiveHeading text="Technical Rule Book" as="h1" className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight" />
           <p className="text-xs text-slate-500 font-medium">Click the navigation controls or tab headers to flip the handbook pages.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <a
+            href="/rulebook.pdf"
+            download="Coderithum_Rule_Book.pdf"
+            className="px-3 py-2 border-2 border-slate-900 bg-slate-950 text-cyan-400 font-mono text-xs font-bold uppercase tracking-wider shadow-[3px_3px_0px_#000] hover:bg-slate-900 hover:translate-x-[-1px] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[2px_2px_0px_#000] transition-all flex items-center gap-2 self-start sm:self-center"
+          >
+            <Download className="size-4" />
+            [ DOWNLOAD PDF ]
+          </a>
         </div>
       </div>
 

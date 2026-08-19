@@ -199,7 +199,7 @@ export default function ProjectsManagerPage() {
                     <TableHead>Technologies Used</TableHead>
                     <TableHead>Team Members</TableHead>
                     <TableHead>Advising Mentor</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead className="text-right font-bold uppercase tracking-wider font-mono text-[11px] text-slate-700">ACTIONS</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -232,22 +232,26 @@ export default function ProjectsManagerPage() {
                         <span className="text-[11px] text-slate-500 font-bold font-mono">{proj.mentor || "Self-guided"}</span>
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end gap-1.5">
+                        <div className="flex justify-end items-center gap-2">
                           <Button
                             variant="secondary"
-                            className="size-8 p-0"
+                            size="sm"
                             onClick={() => handleOpenEdit(proj)}
+                            className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
                             title="Edit Project"
                           >
-                            <Edit2 className="size-3.5" />
+                            <Edit2 className="size-3.5 text-blue-600" />
+                            <span>Edit</span>
                           </Button>
                           <Button
                             variant="destructive"
-                            className="size-8 p-0"
+                            size="sm"
                             onClick={() => handleDelete(proj.id)}
-                            title="Delete Project"
+                            className="flex items-center gap-1.5 border-2 border-slate-900 shadow-[2px_2px_0px_#000]"
+                            title="Remove Project"
                           >
                             <Trash2 className="size-3.5" />
+                            <span>Remove</span>
                           </Button>
                         </div>
                       </TableCell>

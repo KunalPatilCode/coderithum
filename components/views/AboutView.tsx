@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
 import {
   Terminal,
   Cpu,
@@ -548,6 +550,121 @@ export default function AboutView({ team, setView }: AboutViewProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const shouldReduceMotion = useReducedMotion();
 
+  // Refs for GSAP
+  const containerRef = useRef<HTMLDivElement>(null);
+  const timelinesRef = useRef<gsap.core.Timeline[]>([]);
+
+  useGSAP(() => {
+    if (shouldReduceMotion) return;
+
+    // Kunal (Card 0): mostly vertical float
+    const tl0 = gsap.timeline({ repeat: -1, defaults: { ease: "power1.inOut" } });
+    tl0.to(".card-gsap-float-0", { duration: 3, y: -12, x: 2, rotation: -1.5 })
+       .to(".card-gsap-float-0", { duration: 2.2, y: 10, x: -1, rotation: 1 })
+       .to(".card-gsap-float-0", { duration: 3, y: -7, rotation: 0 })
+       .to(".card-gsap-float-0", { duration: 3, y: 7, rotation: 0 })
+       .to(".card-gsap-float-0", { duration: 2.5, y: -10, x: -2, rotation: 1.2 })
+       .to(".card-gsap-float-0", { duration: 2.5, y: 0, x: 0, rotation: 0 });
+
+    // Abhishek (Card 1): slight diagonal float
+    const tl1 = gsap.timeline({ repeat: -1, defaults: { ease: "power1.inOut" } });
+    tl1.to(".card-gsap-float-1", { duration: 2.8, y: -9, x: 6, rotation: -1 })
+       .to(".card-gsap-float-1", { duration: 2, y: 8, x: -6, rotation: 0.5 })
+       .to(".card-gsap-float-1", { duration: 2.6, y: -5, x: 3, rotation: -0.5 })
+       .to(".card-gsap-float-1", { duration: 3, y: 5, x: -3, rotation: 0.5 })
+       .to(".card-gsap-float-1", { duration: 2.3, y: -8, x: 4, rotation: 1 })
+       .to(".card-gsap-float-1", { duration: 2.5, y: 0, x: 0, rotation: 0 });
+
+    // Maitri (Card 2): vertical float + rotation
+    const tl2 = gsap.timeline({ repeat: -1, defaults: { ease: "power1.inOut" } });
+    tl2.to(".card-gsap-float-2", { duration: 3.2, y: -11, rotation: -1.8 })
+       .to(".card-gsap-float-2", { duration: 2.4, y: 9, rotation: 1.5 })
+       .to(".card-gsap-float-2", { duration: 2.8, y: -6, rotation: -0.8 })
+       .to(".card-gsap-float-2", { duration: 2.6, y: 6, rotation: 0.8 })
+       .to(".card-gsap-float-2", { duration: 2.7, y: -9, rotation: 1.3 })
+       .to(".card-gsap-float-2", { duration: 2.3, y: 0, x: 0, rotation: 0 });
+
+    // Purnima (Card 3): diagonal float
+    const tl3 = gsap.timeline({ repeat: -1, defaults: { ease: "power1.inOut" } });
+    tl3.to(".card-gsap-float-3", { duration: 3.5, y: -10, x: -6, rotation: 1.2 })
+       .to(".card-gsap-float-3", { duration: 2.5, y: 10, x: 6, rotation: -1.2 })
+       .to(".card-gsap-float-3", { duration: 3.1, y: -6, x: -4, rotation: 0.5 })
+       .to(".card-gsap-float-3", { duration: 2.9, y: 6, x: 4, rotation: -0.5 })
+       .to(".card-gsap-float-3", { duration: 2.7, y: -8, x: -5, rotation: 1 })
+       .to(".card-gsap-float-3", { duration: 2.5, y: 0, x: 0, rotation: 0 });
+
+    // Tushar (Card 4): mostly vertical float
+    const tl4 = gsap.timeline({ repeat: -1, defaults: { ease: "power1.inOut" } });
+    tl4.to(".card-gsap-float-4", { duration: 2.7, y: -11, x: 1, rotation: -1 })
+       .to(".card-gsap-float-4", { duration: 2.1, y: 9, x: -1, rotation: 0.8 })
+       .to(".card-gsap-float-4", { duration: 2.9, y: -7, rotation: 0 })
+       .to(".card-gsap-float-4", { duration: 2.8, y: 7, rotation: 0 })
+       .to(".card-gsap-float-4", { duration: 2.4, y: -9, x: -2, rotation: 1.1 })
+       .to(".card-gsap-float-4", { duration: 2.6, y: 0, x: 0, rotation: 0 });
+
+    // Aaryan (Card 5): diagonal + subtle rotation float
+    const tl5 = gsap.timeline({ repeat: -1, defaults: { ease: "power1.inOut" } });
+    tl5.to(".card-gsap-float-5", { duration: 3.4, y: -9, x: -5, rotation: 1.5 })
+       .to(".card-gsap-float-5", { duration: 2.3, y: 11, x: 5, rotation: -1.5 })
+       .to(".card-gsap-float-5", { duration: 3, y: -6, x: -3, rotation: 0.8 })
+       .to(".card-gsap-float-5", { duration: 2.7, y: 7, x: 3, rotation: -0.8 })
+       .to(".card-gsap-float-5", { duration: 2.9, y: -10, x: -4, rotation: 1.3 })
+       .to(".card-gsap-float-5", { duration: 2.6, y: 0, x: 0, rotation: 0 });
+
+    // Save timelines reference for pause/play
+    timelinesRef.current = [tl0, tl1, tl2, tl3, tl4, tl5];
+  }, { scope: containerRef, dependencies: [shouldReduceMotion] });
+
+  const handleMouseEnter = (idx: number) => {
+    setHoveredIndex(idx);
+    const tl = timelinesRef.current[idx];
+    if (tl) tl.pause();
+
+    // Scale card and translate upwards smoothly
+    gsap.to(`.card-gsap-inner-${idx}`, {
+      scale: shouldReduceMotion ? 1.0 : 1.05,
+      y: -8,
+      rotation: 0,
+      duration: 0.35,
+      ease: "power1.out",
+      overwrite: "auto"
+    });
+
+    // Zoom image
+    gsap.to(`.img-gsap-${idx}`, {
+      scale: shouldReduceMotion ? 1.0 : 1.08,
+      duration: 0.35,
+      ease: "power1.out",
+      overwrite: "auto"
+    });
+  };
+
+  const handleMouseLeave = (idx: number) => {
+    setHoveredIndex(null);
+    const tl = timelinesRef.current[idx];
+
+    // Resume floating timeline immediately
+    if (tl && !shouldReduceMotion) tl.play();
+
+    // Tween the card back to its base state
+    gsap.to(`.card-gsap-inner-${idx}`, {
+      scale: 1.0,
+      y: 0,
+      rotation: 0,
+      duration: 0.35,
+      ease: "power1.out",
+      overwrite: "auto"
+    });
+
+    // Zoom image back
+    gsap.to(`.img-gsap-${idx}`, {
+      scale: 1.0,
+      duration: 0.35,
+      ease: "power1.out",
+      overwrite: "auto"
+    });
+  };
+
   return (
     <motion.div
       key="about"
@@ -817,46 +934,13 @@ export default function AboutView({ team, setView }: AboutViewProps) {
                 animation: line-pulse 4s ease-in-out infinite;
               }
 
-              /* Card Floating Animations */
-              @keyframes float-timeline {
-                0% { transform: translate(0px, 0px) rotate(0deg); }
-                11% { transform: translate(2px, -3px) rotate(-0.5deg); }
-                18.5% { transform: translate(0px, 0px) rotate(-1deg); }
-                29.6% { transform: translate(0px, -2px) rotate(-0.5deg); }
-                40.7% { transform: translate(0px, 0px) rotate(0deg); }
-                51.8% { transform: translate(0px, -5px) rotate(0deg); }
-                63% { transform: translate(0px, 0px) rotate(0deg); }
-                74% { transform: translate(0px, -3px) rotate(0deg); }
-                85% { transform: translate(0px, 0px) rotate(0deg); }
-                92.5% { transform: translate(0px, -3px) rotate(0deg); }
-                100% { transform: translate(0px, 0px) rotate(0deg); }
-              }
-
-              .card-float-0 { animation: float-timeline 27s ease-in-out infinite; }
-              .card-float-1 { animation: float-timeline 23s ease-in-out infinite; animation-delay: -5s; }
-              .card-float-2 { animation: float-timeline 29s ease-in-out infinite; animation-delay: -11s; }
-              .card-float-3 { animation: float-timeline 25s ease-in-out infinite; animation-delay: -17s; }
-              .card-float-4 { animation: float-timeline 31s ease-in-out infinite; animation-delay: -8s; }
-              .card-float-5 { animation: float-timeline 26s ease-in-out infinite; animation-delay: -14s; }
-
               .foundation-card {
-                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
-              }
-              
-              .foundation-card:hover {
-                animation: none !important;
-                transform: translateY(-10px) scale(1.05) !important;
+                transition: border-color 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
               }
 
               @media (prefers-reduced-motion: reduce) {
-                .card-float-0, .card-float-1, .card-float-2, .card-float-3, .card-float-4, .card-float-5 {
-                  animation: none !important;
-                }
                 .foundation-card {
                   transition: none !important;
-                }
-                .foundation-card:hover {
-                  transform: none !important;
                 }
               }
             `}</style>
@@ -920,6 +1004,7 @@ export default function AboutView({ team, setView }: AboutViewProps) {
 
           {/* Cards Grid */}
           <motion.div
+            ref={containerRef}
             variants={shouldReduceMotion ? {} : {
               hidden: { opacity: 0 },
               show: {
@@ -944,11 +1029,12 @@ export default function AboutView({ team, setView }: AboutViewProps) {
                     hidden: { opacity: 0, y: 30, scale: 0.97 },
                     show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
                   }}
+                  className={`card-gsap-float-${idx}`}
                 >
                   <div
-                    onMouseEnter={() => setHoveredIndex(idx)}
-                    onMouseLeave={() => setHoveredIndex(null)}
-                    className={`foundation-card card-float-${idx} group bg-white border-2 flex flex-col overflow-hidden relative max-w-[240px] mx-auto w-full ${
+                    onMouseEnter={() => handleMouseEnter(idx)}
+                    onMouseLeave={() => handleMouseLeave(idx)}
+                    className={`foundation-card card-gsap-inner-${idx} group bg-white border-2 flex flex-col overflow-hidden relative max-w-[240px] mx-auto w-full ${
                       isHovered 
                         ? "border-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.25),_6px_6px_0px_#2563eb] z-30" 
                         : isAnyCardHovered
@@ -995,10 +1081,8 @@ export default function AboutView({ team, setView }: AboutViewProps) {
                           <img
                             src={withBasePath(member.image)}
                             alt={`${member.name} — Foundation Team Member`}
-                            className={`absolute inset-0 w-full h-full object-cover filter grayscale transition-all duration-300 ${
-                              isHovered 
-                                ? `grayscale-0 ${shouldReduceMotion ? "scale-100" : "scale-108"}` 
-                                : ""
+                            className={`img-gsap-${idx} absolute inset-0 w-full h-full object-cover filter grayscale transition-all duration-300 ${
+                              isHovered ? "grayscale-0" : ""
                             }`}
                           />
                         ) : (

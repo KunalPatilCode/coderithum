@@ -818,37 +818,26 @@ export default function AboutView({ team, setView }: AboutViewProps) {
               }
 
               /* Card Floating Animations */
-              @keyframes float-card-0 {
-                0%, 100% { transform: translateY(0px); }
-                50% { transform: translateY(-4px); }
-              }
-              @keyframes float-card-1 {
-                0%, 100% { transform: translate(0px, 0px); }
-                50% { transform: translate(2px, -3px); }
-              }
-              @keyframes float-card-2 {
-                0%, 100% { transform: translateY(0px); }
-                50% { transform: translateY(4px); }
-              }
-              @keyframes float-card-3 {
-                0%, 100% { transform: translate(0px, 0px); }
-                50% { transform: translate(-3px, 2px); }
-              }
-              @keyframes float-card-4 {
-                0%, 100% { transform: translateY(0px); }
-                50% { transform: translateY(-3px); }
-              }
-              @keyframes float-card-5 {
-                0%, 100% { transform: translate(0px, 0px); }
-                50% { transform: translate(2px, 3px); }
+              @keyframes float-timeline {
+                0% { transform: translate(0px, 0px) rotate(0deg); }
+                11% { transform: translate(2px, -3px) rotate(-0.5deg); }
+                18.5% { transform: translate(0px, 0px) rotate(-1deg); }
+                29.6% { transform: translate(0px, -2px) rotate(-0.5deg); }
+                40.7% { transform: translate(0px, 0px) rotate(0deg); }
+                51.8% { transform: translate(0px, -5px) rotate(0deg); }
+                63% { transform: translate(0px, 0px) rotate(0deg); }
+                74% { transform: translate(0px, -3px) rotate(0deg); }
+                85% { transform: translate(0px, 0px) rotate(0deg); }
+                92.5% { transform: translate(0px, -3px) rotate(0deg); }
+                100% { transform: translate(0px, 0px) rotate(0deg); }
               }
 
-              .card-float-0 { animation: float-card-0 5.2s ease-in-out infinite; }
-              .card-float-1 { animation: float-card-1 6.1s ease-in-out infinite; }
-              .card-float-2 { animation: float-card-2 4.8s ease-in-out infinite; }
-              .card-float-3 { animation: float-card-3 6.7s ease-in-out infinite; }
-              .card-float-4 { animation: float-card-4 5.6s ease-in-out infinite; }
-              .card-float-5 { animation: float-card-5 4.9s ease-in-out infinite; }
+              .card-float-0 { animation: float-timeline 27s ease-in-out infinite; }
+              .card-float-1 { animation: float-timeline 23s ease-in-out infinite; animation-delay: -5s; }
+              .card-float-2 { animation: float-timeline 29s ease-in-out infinite; animation-delay: -11s; }
+              .card-float-3 { animation: float-timeline 25s ease-in-out infinite; animation-delay: -17s; }
+              .card-float-4 { animation: float-timeline 31s ease-in-out infinite; animation-delay: -8s; }
+              .card-float-5 { animation: float-timeline 26s ease-in-out infinite; animation-delay: -14s; }
 
               .foundation-card {
                 transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;

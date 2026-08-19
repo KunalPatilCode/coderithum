@@ -429,7 +429,7 @@ const foundationMembers: FoundationMember[] = [
   {
     name: "Tushar Mahapatra",
     role: "Foundation Team Member",
-    image: ""
+    image: "/tushar.jpeg"
   },
   {
     name: "Aaryan Patel",
@@ -438,6 +438,19 @@ const foundationMembers: FoundationMember[] = [
     linkedin: "https://linkedin.com"
   }
 ];
+
+// Section 3.6: Foundation Connection Lines & Floating Animations Helper Structures
+const lineCoords = [
+  { x1: "16.6%", y1: "25%", x2: "50%", y2: "50%" },
+  { x1: "50%", y1: "25%", x2: "50%", y2: "50%" },
+  { x1: "83.3%", y1: "25%", x2: "50%", y2: "50%" },
+  { x1: "16.6%", y1: "75%", x2: "50%", y2: "50%" },
+  { x1: "50%", y1: "75%", x2: "50%", y2: "50%" },
+  { x1: "83.3%", y1: "75%", x2: "50%", y2: "50%" }
+];
+
+
+
 
 // Section 6: Principal Message Config (Fully Editable Placeholder)
 const principalConfig = {
@@ -787,68 +800,117 @@ export default function AboutView({ team, setView }: AboutViewProps) {
         <div className="relative">
           {/* Connection lines in background - only shown on desktop/large screens */}
           <div className="absolute inset-0 pointer-events-none hidden lg:block z-0">
+            <style>{`
+              @keyframes line-dash {
+                to {
+                  stroke-dashoffset: -120;
+                }
+              }
+              .animate-connection-dash {
+                animation: line-dash 10s linear infinite;
+              }
+              @keyframes line-pulse {
+                0%, 100% { opacity: 0.35; }
+                50% { opacity: 0.65; }
+              }
+              .animate-line-pulse {
+                animation: line-pulse 4s ease-in-out infinite;
+              }
+
+              /* Card Floating Animations */
+              @keyframes float-card-0 {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-4px); }
+              }
+              @keyframes float-card-1 {
+                0%, 100% { transform: translate(0px, 0px); }
+                50% { transform: translate(2px, -3px); }
+              }
+              @keyframes float-card-2 {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(4px); }
+              }
+              @keyframes float-card-3 {
+                0%, 100% { transform: translate(0px, 0px); }
+                50% { transform: translate(-3px, 2px); }
+              }
+              @keyframes float-card-4 {
+                0%, 100% { transform: translateY(0px); }
+                50% { transform: translateY(-3px); }
+              }
+              @keyframes float-card-5 {
+                0%, 100% { transform: translate(0px, 0px); }
+                50% { transform: translate(2px, 3px); }
+              }
+
+              .card-float-0 { animation: float-card-0 5.2s ease-in-out infinite; }
+              .card-float-1 { animation: float-card-1 6.1s ease-in-out infinite; }
+              .card-float-2 { animation: float-card-2 4.8s ease-in-out infinite; }
+              .card-float-3 { animation: float-card-3 6.7s ease-in-out infinite; }
+              .card-float-4 { animation: float-card-4 5.6s ease-in-out infinite; }
+              .card-float-5 { animation: float-card-5 4.9s ease-in-out infinite; }
+
+              .foundation-card {
+                transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.35s ease, opacity 0.35s ease;
+              }
+              
+              .foundation-card:hover {
+                animation: none !important;
+                transform: translateY(-10px) scale(1.05) !important;
+              }
+
+              @media (prefers-reduced-motion: reduce) {
+                .card-float-0, .card-float-1, .card-float-2, .card-float-3, .card-float-4, .card-float-5 {
+                  animation: none !important;
+                }
+                .foundation-card {
+                  transition: none !important;
+                }
+                .foundation-card:hover {
+                  transform: none !important;
+                }
+              }
+            `}</style>
             <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              {/* Star-topology connecting nodes to center </> */}
-              <line
-                x1="16.6%"
-                y1="25%"
-                x2="50%"
-                y2="50%"
-                stroke={hoveredIndex === 0 ? "#2563eb" : "#cbd5e1"}
-                strokeWidth={hoveredIndex === 0 ? "2" : "1"}
-                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
-                className="transition-all duration-300"
-              />
-              <line
-                x1="50%"
-                y1="25%"
-                x2="50%"
-                y2="50%"
-                stroke={hoveredIndex === 1 ? "#2563eb" : "#cbd5e1"}
-                strokeWidth={hoveredIndex === 1 ? "2" : "1"}
-                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
-                className="transition-all duration-300"
-              />
-              <line
-                x1="83.3%"
-                y1="25%"
-                x2="50%"
-                y2="50%"
-                stroke={hoveredIndex === 2 ? "#2563eb" : "#cbd5e1"}
-                strokeWidth={hoveredIndex === 2 ? "2" : "1"}
-                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
-                className="transition-all duration-300"
-              />
-              <line
-                x1="16.6%"
-                y1="75%"
-                x2="50%"
-                y2="50%"
-                stroke={hoveredIndex === 3 ? "#2563eb" : "#cbd5e1"}
-                strokeWidth={hoveredIndex === 3 ? "2" : "1"}
-                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
-                className="transition-all duration-300"
-              />
-              <line
-                x1="50%"
-                y1="75%"
-                x2="50%"
-                y2="50%"
-                stroke={hoveredIndex === 4 ? "#2563eb" : "#cbd5e1"}
-                strokeWidth={hoveredIndex === 4 ? "2" : "1"}
-                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
-                className="transition-all duration-300"
-              />
-              <line
-                x1="83.3%"
-                y1="75%"
-                x2="50%"
-                y2="50%"
-                stroke={hoveredIndex === 5 ? "#2563eb" : "#cbd5e1"}
-                strokeWidth={hoveredIndex === 5 ? "2" : "1"}
-                strokeDasharray={shouldReduceMotion ? undefined : "4 4"}
-                className="transition-all duration-300"
-              />
+              {lineCoords.map((coords, idx) => {
+                const isCardHovered = hoveredIndex === idx;
+                return (
+                  <g key={idx}>
+                    {/* Base Pulse/Highlight Line */}
+                    <line
+                      x1={coords.x1}
+                      y1={coords.y1}
+                      x2={coords.x2}
+                      y2={coords.y2}
+                      stroke={isCardHovered ? "#2563eb" : "#cbd5e1"}
+                      strokeWidth={isCardHovered ? "2.5" : "1.5"}
+                      className={`transition-all duration-300 ${
+                        !shouldReduceMotion && !isCardHovered ? "animate-line-pulse" : ""
+                      }`}
+                      style={{
+                        animationDelay: `${idx * 0.5}s`
+                      }}
+                    />
+                    {/* Moving Dot overlay */}
+                    {!shouldReduceMotion && (
+                      <line
+                        x1={coords.x1}
+                        y1={coords.y1}
+                        x2={coords.x2}
+                        y2={coords.y2}
+                        stroke="#2563eb"
+                        strokeWidth="2.5"
+                        strokeDasharray="6 36"
+                        className="animate-connection-dash"
+                        style={{
+                          opacity: isCardHovered ? 1.0 : 0.35,
+                          animationDuration: isCardHovered ? "4s" : "8s"
+                        }}
+                      />
+                    )}
+                  </g>
+                );
+              })}
 
               {/* Center Code Node */}
               <circle cx="50%" cy="50%" r="20" fill="#f8fafc" stroke="#0f172a" strokeWidth="2" />
@@ -883,121 +945,164 @@ export default function AboutView({ team, setView }: AboutViewProps) {
             viewport={{ once: true, margin: "-100px" }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10"
           >
-            {foundationMembers.map((member, idx) => (
-              <motion.div
-                key={idx}
-                variants={shouldReduceMotion ? {} : {
-                  hidden: { opacity: 0, y: 30, scale: 0.97 },
-                  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
-                }}
-                onMouseEnter={() => setHoveredIndex(idx)}
-                onMouseLeave={() => setHoveredIndex(null)}
-                className="group bg-white border-2 border-slate-900 shadow-[4px_4px_0px_#000] hover:shadow-[6px_6px_0px_#2563eb] hover:border-blue-600 hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-300 flex flex-col overflow-hidden relative max-w-[240px] mx-auto w-full"
-              >
-                {/* Technical Light Sweep Overlay */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
-                  <motion.div
-                    initial={{ x: "-150%" }}
-                    animate={hoveredIndex === idx ? { x: "150%" } : { x: "-150%" }}
-                    transition={{ duration: 0.6, ease: "easeInOut" }}
-                    className="absolute inset-y-0 w-24 bg-gradient-to-r from-transparent via-blue-500/10 to-transparent -skew-x-12"
-                  />
-                </div>
-
-                {/* Top Badge bar */}
-                <div className="flex justify-between items-center w-full px-4 pt-3.5 pb-2.5 border-b border-slate-100 bg-slate-50/50">
-                  <span className="px-2 py-0.5 border border-blue-600 bg-blue-50 text-blue-700 text-[9px] font-mono font-bold tracking-wider uppercase relative overflow-hidden">
-                    FOUNDING MEMBER
-                    <motion.div
-                      animate={shouldReduceMotion ? {} : { x: ["-100%", "200%"] }}
-                      transition={{ repeat: Infinity, duration: 1.5, ease: "linear", repeatDelay: 4 }}
-                      className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/70 to-transparent -skew-x-12"
-                    />
-                  </span>
-                  <span className="text-[9px] text-slate-400 font-mono font-bold">EST. 2024</span>
-                </div>
-
-                {/* Portrait wrapper with reduced size */}
-                <div className="relative pt-6 pb-4 flex justify-center items-center">
-                  {/* Subtle blur glow behind portrait on hover */}
-                  <div className="absolute w-24 h-24 bg-blue-500/10 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-
-                  <div className="relative size-24 border-2 border-slate-900 bg-blue-50/50 shadow-[3px_3px_0px_#000] overflow-hidden group-hover:shadow-[4px_4px_0px_#2563eb] group-hover:translate-x-[-1px] group-hover:translate-y-[-1px] transition-all duration-300">
-                    {member.image ? (
-                      <img
-                        src={withBasePath(member.image)}
-                        alt={`${member.name} — Foundation Team Member`}
-                        className="absolute inset-0 w-full h-full object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 group-hover:-translate-y-1 transition-all duration-300"
+            {foundationMembers.map((member, idx) => {
+              const isHovered = hoveredIndex === idx;
+              const isAnyCardHovered = hoveredIndex !== null;
+              return (
+                <motion.div
+                  key={idx}
+                  variants={shouldReduceMotion ? {} : {
+                    hidden: { opacity: 0, y: 30, scale: 0.97 },
+                    show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: "easeOut" } }
+                  }}
+                >
+                  <div
+                    onMouseEnter={() => setHoveredIndex(idx)}
+                    onMouseLeave={() => setHoveredIndex(null)}
+                    className={`foundation-card card-float-${idx} group bg-white border-2 flex flex-col overflow-hidden relative max-w-[240px] mx-auto w-full ${
+                      isHovered 
+                        ? "border-blue-600 shadow-[0_0_20px_rgba(37,99,235,0.25),_6px_6px_0px_#2563eb] z-30" 
+                        : isAnyCardHovered
+                          ? "border-slate-900 shadow-[3px_3px_0px_#000] opacity-75 z-10"
+                          : "border-slate-900 shadow-[4px_4px_0px_#000] opacity-100 z-10"
+                    }`}
+                  >
+                    {/* Technical Light Sweep Overlay */}
+                    <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+                      <motion.div
+                        initial={{ x: "-150%" }}
+                        animate={isHovered ? { x: "150%" } : { x: "-150%" }}
+                        transition={{ duration: 0.6, ease: "easeInOut" }}
+                        className="absolute inset-y-0 w-24 bg-gradient-to-r from-transparent via-blue-500/10 to-transparent -skew-x-12"
                       />
-                    ) : (
-                      <div className="absolute inset-0 flex flex-col items-center justify-center bg-blue-50/30">
-                        <div className="absolute inset-0 bg-grid-pattern opacity-[0.07] pointer-events-none" />
-                        <span className="text-xl font-mono font-black text-slate-300 group-hover:text-blue-500 transition-colors duration-300">
-                          {member.name.split(" ").map((n) => n[0]).join("")}
-                        </span>
-                        <span className="text-[8px] font-mono font-bold text-slate-400 group-hover:text-blue-500 mt-1 uppercase tracking-widest transition-colors duration-300">
-                          No Photo
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                    </div>
 
-                {/* Details Section */}
-                <div className="px-4 pb-4 flex flex-col justify-between flex-grow space-y-3">
-                  <div className="space-y-2 text-center w-full">
-                    <h4 className="text-sm font-black text-slate-900 group-hover:text-blue-600 transition-colors duration-300 uppercase tracking-tight">
-                      {member.name}
-                    </h4>
-                    <span className="text-[9px] text-slate-500 font-mono font-bold block uppercase tracking-wider">
-                      {member.role}
-                    </span>
-
-                    {/* Hover contribution reveal info */}
-                    <div className="h-4 overflow-hidden relative">
-                      <span className="text-[9px] font-mono font-extrabold text-blue-600 absolute inset-x-0 bottom-0 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                        PART OF THE CODERITHUM FOUNDATION
+                    {/* Top Badge bar */}
+                    <div className="flex justify-between items-center w-full px-4 pt-3.5 pb-2.5 border-b border-slate-100 bg-slate-50/50">
+                      <span className="px-2 py-0.5 border border-blue-600 bg-blue-50 text-blue-700 text-[9px] font-mono font-bold tracking-wider uppercase relative overflow-hidden">
+                        FOUNDING MEMBER
+                        <motion.div
+                          animate={shouldReduceMotion ? {} : { x: ["-100%", "200%"] }}
+                          transition={{ repeat: Infinity, duration: 1.5, ease: "linear", repeatDelay: 4 }}
+                          className="absolute inset-0 w-[40%] h-full bg-gradient-to-r from-transparent via-white/70 to-transparent -skew-x-12"
+                        />
                       </span>
+                      <span className="text-[9px] text-slate-400 font-mono font-bold">EST. 2024</span>
+                    </div>
+
+                    {/* Portrait wrapper with reduced size */}
+                    <div className="relative pt-6 pb-4 flex justify-center items-center">
+                      {/* Subtle blur glow behind portrait on hover */}
+                      <div className={`absolute w-24 h-24 bg-blue-500/10 rounded-full blur-xl transition-opacity duration-300 pointer-events-none ${
+                        isHovered ? "opacity-100" : "opacity-0"
+                      }`} />
+
+                      <div className={`relative size-24 border-2 bg-blue-50/50 overflow-hidden transition-all duration-300 ${
+                        isHovered
+                          ? "border-blue-600 shadow-[0_0_12px_rgba(37,99,235,0.3),_4px_4px_0px_#2563eb]"
+                          : "border-slate-900 shadow-[3px_3px_0px_#000]"
+                      }`}>
+                        {member.image ? (
+                          <img
+                            src={withBasePath(member.image)}
+                            alt={`${member.name} — Foundation Team Member`}
+                            className={`absolute inset-0 w-full h-full object-cover filter grayscale transition-all duration-300 ${
+                              isHovered 
+                                ? `grayscale-0 ${shouldReduceMotion ? "scale-100" : "scale-108"}` 
+                                : ""
+                            }`}
+                          />
+                        ) : (
+                          <div className="absolute inset-0 flex flex-col items-center justify-center bg-blue-50/30">
+                            <div className="absolute inset-0 bg-grid-pattern opacity-[0.07] pointer-events-none" />
+                            <span className={`text-xl font-mono font-black transition-colors duration-300 ${
+                              isHovered ? "text-blue-500" : "text-slate-300"
+                            }`}>
+                              {member.name.split(" ").map((n) => n[0]).join("")}
+                            </span>
+                            <span className={`text-[8px] font-mono font-bold mt-1 uppercase tracking-widest transition-colors duration-300 ${
+                              isHovered ? "text-blue-500" : "text-slate-400"
+                            }`}>
+                              No Photo
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Details Section */}
+                    <div className="px-4 pb-4 flex flex-col justify-between flex-grow space-y-3">
+                      <div className="space-y-2 text-center w-full">
+                        <h4 className={`text-sm font-black uppercase tracking-tight transition-colors duration-300 ${
+                          isHovered ? "text-blue-600" : "text-slate-900"
+                        }`}>
+                          {member.name}
+                        </h4>
+                        <span className="text-[9px] text-slate-500 font-mono font-bold block uppercase tracking-wider">
+                          {member.role}
+                        </span>
+
+                        {/* Hover contribution reveal info */}
+                        <div className="h-4 overflow-hidden relative">
+                          <span className={`text-[9px] font-mono font-extrabold text-blue-600 absolute inset-x-0 bottom-0 transition-all duration-300 ${
+                            isHovered 
+                              ? "opacity-100 translate-y-0" 
+                              : "opacity-0 translate-y-2"
+                          }`}>
+                            BUILDING THE FOUNDATION • 2024
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Social links */}
+                      <div className={`flex items-center justify-center gap-3 pt-3 border-t border-slate-100 w-full transition-all duration-300 ${
+                        isHovered ? "opacity-100" : "opacity-60"
+                      }`}>
+                        {member.github ? (
+                          <a
+                            href={member.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`p-1.5 bg-white text-slate-700 border rounded-none transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+                              isHovered 
+                                ? "border-blue-400 text-blue-600 shadow-[2px_2px_0px_rgba(37,99,235,0.4)] scale-105 hover:scale-110 hover:border-blue-600 hover:text-white hover:bg-blue-600 hover:shadow-[2px_2px_0px_#1d4ed8]" 
+                                : "border-slate-300 shadow-[1px_1px_0px_#000]"
+                            }`}
+                            title={`${member.name}'s GitHub`}
+                          >
+                            <Github className="w-3.5 h-3.5" />
+                          </a>
+                        ) : (
+                          <span className="p-1.5 border border-slate-200 text-slate-300 cursor-not-allowed">
+                            <Github className="w-3.5 h-3.5 opacity-30" />
+                          </span>
+                        )}
+
+                        {member.linkedin ? (
+                          <a
+                            href={member.linkedin}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={`p-1.5 bg-white text-slate-700 border rounded-none transition-all duration-300 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-600 ${
+                              isHovered 
+                                ? "border-blue-400 text-blue-600 shadow-[2px_2px_0px_rgba(37,99,235,0.4)] scale-105 hover:scale-110 hover:border-blue-600 hover:text-white hover:bg-blue-600 hover:shadow-[2px_2px_0px_#1d4ed8]" 
+                                : "border-slate-300 shadow-[1px_1px_0px_#000]"
+                            }`}
+                            title={`${member.name}'s LinkedIn`}
+                          >
+                            <Linkedin className="w-3.5 h-3.5" />
+                          </a>
+                        ) : (
+                          <span className="p-1.5 border border-slate-200 text-slate-300 cursor-not-allowed">
+                            <Linkedin className="w-3.5 h-3.5 opacity-30" />
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
-
-                  {/* Social links */}
-                  <div className="flex items-center justify-center gap-3 pt-3 border-t border-slate-100 w-full">
-                    {member.github ? (
-                      <a
-                        href={member.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-600 rounded-none shadow-[2px_2px_0px_#000] hover:shadow-[2px_2px_0px_#2563eb] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000] transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        title={`${member.name}'s GitHub`}
-                      >
-                        <Github className="w-3.5 h-3.5" />
-                      </a>
-                    ) : (
-                      <span className="p-1.5 border border-slate-200 text-slate-300 cursor-not-allowed">
-                        <Github className="w-3.5 h-3.5 opacity-30" />
-                      </span>
-                    )}
-
-                    {member.linkedin ? (
-                      <a
-                        href={member.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="p-1.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-300 hover:border-blue-600 rounded-none shadow-[2px_2px_0px_#000] hover:shadow-[2px_2px_0px_#2563eb] active:translate-x-[1px] active:translate-y-[1px] active:shadow-[1px_1px_0px_#000] transition-all duration-200 cursor-pointer focus:outline-none focus:ring-1 focus:ring-blue-600"
-                        title={`${member.name}'s LinkedIn`}
-                      >
-                        <Linkedin className="w-3.5 h-3.5" />
-                      </a>
-                    ) : (
-                      <span className="p-1.5 border border-slate-200 text-slate-300 cursor-not-allowed">
-                        <Linkedin className="w-3.5 h-3.5 opacity-30" />
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </motion.div>
         </div>
       </section>
@@ -1007,9 +1112,6 @@ export default function AboutView({ team, setView }: AboutViewProps) {
       {/* ================================================================== */}
       <section className="space-y-8">
         <div className="text-center space-y-2">
-          <span className="text-[10px] font-mono font-bold text-blue-600 tracking-wider uppercase bg-blue-100 border-2 border-slate-900 px-3 py-1.5 shadow-[2px_2px_0px_#000] inline-block mb-2">
-            TECHNICAL ECOSYSTEM
-          </span>
           <InteractiveHeading
             text="Explore Our Technical Domains"
             as="h2"
@@ -1306,9 +1408,6 @@ export default function AboutView({ team, setView }: AboutViewProps) {
       {/* ================================================================== */}
       <section className="space-y-6">
         <div className="text-left space-y-1">
-          <span className="text-[10px] font-mono font-bold text-blue-600 tracking-wider uppercase">
-            INSTITUTIONAL VISION
-          </span>
           <InteractiveHeading
             text="Message from the Principal"
             as="h2"
@@ -1322,7 +1421,7 @@ export default function AboutView({ team, setView }: AboutViewProps) {
             <img
               src={principalConfig.avatar}
               alt={principalConfig.name}
-              className="absolute inset-0 w-full h-full object-cover filter grayscale hover:grayscale-0 transition-all duration-300"
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-300 hover:scale-[1.02]"
             />
           </div>
 
@@ -1399,7 +1498,7 @@ export default function AboutView({ team, setView }: AboutViewProps) {
             OUR VISION
           </span>
           <h2 className="text-xl sm:text-3xl font-black tracking-tight leading-relaxed">
-            "To build a student-led technology ecosystem where every learner gets the opportunity to learn, build, collaborate and create meaningful impact."
+            &quot;To build a student-led technology ecosystem where every learner gets the opportunity to learn, build, collaborate and create meaningful impact.&quot;
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto font-medium leading-relaxed pt-2">
             Coderithum aims to grow beyond a technical club into a platform where students can transform ideas 
